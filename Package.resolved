@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "smilesfontsmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/smilesiosteam/SmilesFontsManager.git",
+      "state" : {
+        "revision" : "c84212ed0003bea914602469ede4a8c07911ec1f",
+        "version" : "1.0.5"
+      }
+    }
+  ],
+  "version" : 2
+}
