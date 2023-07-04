@@ -184,7 +184,13 @@ public class UserRegisterationViewController: UIViewController {
                         
                     }
                 case .registerUserDidFail(let error):
-                    self?.didFailRegistration(error.localizedDescription)
+                    var errorDesc = error.localizedDescription
+                    switch error{
+                    case .apiError(_, let error):
+                        errorDesc = error
+                    default:break
+                    }
+                    self?.didFailRegistration(errorDesc)
                 case .showHideLoader(let shouldShow):
                     if shouldShow {
                         SmilesLoader.show(isClearBackground: true)

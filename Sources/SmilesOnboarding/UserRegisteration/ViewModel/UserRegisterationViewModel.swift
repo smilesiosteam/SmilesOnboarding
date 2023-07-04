@@ -24,7 +24,7 @@ public class UserRegisterationViewModel:NSObject {
         case fetchInfoDidSucceed(response: InfoResponse)
         case registerUserDidSucceed(response: RegisterUserResponse)
         case fetchDidFail(error: Error)
-        case registerUserDidFail(error: Error)
+        case registerUserDidFail(error: NetworkError)
         case showHideLoader(shouldShow: Bool)
     }
     
