@@ -77,7 +77,7 @@ public extension UserRegisterationViewModel {
         if ErrorDisplayMsgs.isResponseFaild(response: response){
             // in case of error, we will remove enrollment response object
             RegisterUserResponse.removeEnrollReponse()
-            self.output.send(.registerUserDidFail(error:  ErrorDisplayMsgs.returnServiceFailureMessage(response: response)))
+            self.output.send(.registerUserDidFail(error:NetworkError.apiError(code: -1, error: ErrorDisplayMsgs.returnServiceFailureMessage(response: response))))
             
         }else {
             UserDefaults.standard.set(true, forKey: .showOnboardScratchCard)
