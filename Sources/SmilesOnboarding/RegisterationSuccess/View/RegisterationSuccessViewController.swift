@@ -9,7 +9,7 @@
 import UIKit
 import LottieAnimationManager
 
-public class RegisterationSuccessViewController: UIViewController {
+class RegisterationSuccessViewController: UIViewController {
     
     @IBOutlet weak var btn_langauge: UIButton!
     
@@ -19,8 +19,8 @@ public class RegisterationSuccessViewController: UIViewController {
     @IBOutlet weak var btn_done: UIButton!
     var mobileNumber : String!
         
-    var resume = {}
-    public override func viewDidLoad() {
+    var registrationCompleted = {}
+    override func viewDidLoad() {
         super.viewDidLoad()
         LottieAnimationManager.showAnimation(onView: successImage, withJsonFileName: "Thank you for sending your feedback 198x169", removeFromSuper: false, loopMode: .loop) {(bool) in
             
@@ -35,7 +35,7 @@ public class RegisterationSuccessViewController: UIViewController {
 
         }
     
-    public static func get() -> RegisterationSuccessViewController {
+    static func get() -> RegisterationSuccessViewController {
         return UIStoryboard(name: "RegisterationSuccess", bundle: Bundle.module).instantiateViewController(withIdentifier: "RegisterationSuccessViewController") as! RegisterationSuccessViewController
     }
     
@@ -63,7 +63,7 @@ public class RegisterationSuccessViewController: UIViewController {
     
     
     @IBAction func didSelectDoneButtonAction(_ sender: Any) {
-        
+        registrationCompleted()
 //        if !self.presenter.checkIfTouchIdEnabled(){
 //            if self.presenter.checkIfDeviceSupportToucId(){
 //                openEnableTouchIdViewController()

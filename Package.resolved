@@ -19,12 +19,30 @@
       }
     },
     {
+      "identity" : "lottie-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-ios.git",
+      "state" : {
+        "revision" : "b4bd0604ded9574807f41b4004b57dd1226a30a4",
+        "version" : "3.5.0"
+      }
+    },
+    {
+      "identity" : "lottieanimationmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/smilesiosteam/LottieAnimationManager.git",
+      "state" : {
+        "revision" : "f25b53cbc39d2938144ba4cc64a0b00f49348ffb",
+        "version" : "1.0.1"
+      }
+    },
+    {
       "identity" : "networkinglayer",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/NetworkingLayer.git",
       "state" : {
-        "revision" : "6e48d9a0b3c3ed878dcbae13523255d047b8cf25",
-        "version" : "1.0.8"
+        "revision" : "39dece8c4d630686da89032ca26e504b89982dec",
+        "version" : "1.0.9"
       }
     },
     {
@@ -68,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesFontsManager.git",
       "state" : {
-        "revision" : "c84212ed0003bea914602469ede4a8c07911ec1f",
-        "version" : "1.0.5"
+        "revision" : "9c36e83a7dda85be417eda864981ccab5000a79f",
+        "version" : "1.0.9"
       }
     },
     {
@@ -104,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesUtilities.git",
       "state" : {
-        "revision" : "217600b9f69344521c23804d1c1dfae62445e928",
-        "version" : "1.1.2"
+        "revision" : "4edab9fa2c8c7d771d0b5d64bd939b3d2829d281",
+        "version" : "1.2.4"
       }
     }
   ],

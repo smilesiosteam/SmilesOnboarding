@@ -15,7 +15,7 @@ public class ReferralPromoPopupViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var panDismissView: UIView!
     
-    var data:[(String,String)]=[]
+    var data:InfoResponse!
     
     var calculatingCell:InfoTableViewCell!
     
@@ -31,16 +31,7 @@ public class ReferralPromoPopupViewController: UIViewController {
     }
     
     @IBOutlet weak var tableView: UITableView!
-    
-    
-    // MARK: -- Variables
-//    private let input: PassthroughSubject<ReferralPromoPopupViewModel.Input, Never> = .init()
-//    private let viewModel = ReferralPromoPopupViewModel()
-//    private var cancellables = Set<AnyCancellable>()
     private var dismissViewTranslation = CGPoint(x: 0, y: 0)
-    
-//    weak var coordinator: ReferralPromoPopupCoordinator?
-//    var popupData: ReferralPromoPopupObject?
     
     // MARK: -- View LifeCycle
     public override func viewDidLoad() {
@@ -48,7 +39,6 @@ public class ReferralPromoPopupViewController: UIViewController {
         calculatingCell = tableView.dequeueReusableCell(withIdentifier: "InfoTableViewCell") as? InfoTableViewCell
         panDismissView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleDismiss)))
         panDismissView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-//        bind(to: viewModel)
         setupUI()
     }
     
@@ -56,21 +46,11 @@ public class ReferralPromoPopupViewController: UIViewController {
         super.viewDidAppear(animated)
         
     }
-    public static func get() -> ReferralPromoPopupViewController {
-        return UIStoryboard(name: "ReferralPromoPopup", bundle: Bundle.module).instantiateViewController(withIdentifier: "ReferralPromoPopupViewController") as! ReferralPromoPopupViewController
+    static func get(data:InfoResponse) -> ReferralPromoPopupViewController {
+        let vc = UIStoryboard(name: "ReferralPromoPopup", bundle: Bundle.module).instantiateViewController(withIdentifier: "ReferralPromoPopupViewController") as! ReferralPromoPopupViewController
+        vc.data = data
+        return vc
     }
-    // MARK: -- Binding
-    
-//    func bind(to viewModel: ReferralPromoPopupViewModel) {
-//        let output = viewModel.transform(input: input.eraseToAnyPublisher())
-//        output
-//            .sink { [weak self] event in
-//                guard let self = self else {return}
-////                switch event {
-////
-////                }
-//            }.store(in: &cancellables)
-//    }
     
     @IBAction func crossBtnTapped(_ sender: Any) {
         self.dismiss(animated: true)
@@ -78,12 +58,8 @@ public class ReferralPromoPopupViewController: UIViewController {
     
     
     func setupUI() {
-        data.append(("Apply to activate Referal code ipiscing elit Apply to activ ipiscing elit Apply to activ","Lorem ipsum dolor sit amet, consectetur adipiscing elit Apply to activate Referal code"))
-//        data.append(("Apply to activate unlimited Buy 1 Get 1 offers","Lor"))
-//        data.append(("Apply to activate unlimited Buy 1 Get 1 offers","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"))
-//        data.append((" Apply to activate unlimited Buy 1 Get 1 offers","Lorem ipsum dolor sit amet, consectetur adipiscing it amet, consectetur adipiscing it amet, consectetur adipiscing elit, sed do"))
-        descriptionText.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, seit amet, consectetur adipiscing it amet, consectetur adipiscing d do"
-        titleLabel.text = "Appit amet, consectetur adipiscing lying referral/ promo code"
+        titleLabel.text = data.info.title
+        descriptionText.text = data.info.description
         tableView.dataSource = self
         tableView.delegate = self
         setTableViewHeight()
@@ -125,13 +101,14 @@ public class ReferralPromoPopupViewController: UIViewController {
 }
 extension ReferralPromoPopupViewController:UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        data.count
+        data.info.items.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "InfoTableViewCell") as! InfoTableViewCell
-        cell.titleLbl.text = data[indexPath.row].0
-        cell.descLbl.text = data[indexPath.row].1
+        cell.titleLbl.text = data.info.items[indexPath.row].title
+        cell.descLbl.text = data.info.items[indexPath.row].description
+        cell.icon.setImageWithUrlString(data.info.items[indexPath.row].iconURL)
         return cell
     }
     
@@ -141,9 +118,9 @@ extension ReferralPromoPopupViewController:UITableViewDataSource, UITableViewDel
             self.tableView.layoutIfNeeded()
             }) { (complete) in
                 var totalHeight: CGFloat = 0
-                for d in self.data {
-                    self.calculatingCell.titleLbl.text = d.0
-                    self.calculatingCell.descLbl.text = d.1
+                for d in self.data.info.items {
+                    self.calculatingCell.titleLbl.text = d.title
+                    self.calculatingCell.descLbl.text = d.description
                     self.calculatingCell.setNeedsLayout()
                     self.calculatingCell.layoutIfNeeded()
                     let targetSize = CGSize(width: self.tableView.frame.width, height: UIView.layoutFittingCompressedSize.height)
