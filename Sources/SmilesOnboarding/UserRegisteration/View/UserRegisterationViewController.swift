@@ -77,7 +77,7 @@ public class UserRegisterationViewController: UIViewController {
     public var termsAndConditions = {}
     public var didSucceedRegistration = {}
     public var registrationCompleted = {}
-    public var didFailRegistration = {}
+    public var didFailRegistration:(String?)->Void = {error in}
     
     var dob:Date?{
         didSet{
@@ -184,13 +184,7 @@ public class UserRegisterationViewController: UIViewController {
                         
                     }
                 case .registerUserDidFail(let error):
-                    self?.didFailRegistration()
-                    self?.showAlertWithOkayOnly(
-                        message: error.localizedDescription,
-                        title: "Error")
-                    { _ in
-                        
-                    }
+                    self?.didFailRegistration(error.localizedDescription)
                 case .showHideLoader(let shouldShow):
                     if shouldShow {
                         SmilesLoader.show(isClearBackground: true)
