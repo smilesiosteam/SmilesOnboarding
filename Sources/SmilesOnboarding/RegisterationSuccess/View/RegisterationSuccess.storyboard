@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gzH-OE-yhl">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="AM278.TTF">
+            <string>NeoTechAlt</string>
+        </array>
+        <array key="CircularXXTT-Medium.ttf">
+            <string>CircularXXTT-Medium</string>
+        </array>
+        <array key="CircularXXTT-Regular.ttf">
+            <string>CircularXXTT-Regular</string>
+        </array>
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Registeration Success View Controller-->
+        <scene sceneID="gD8-oi-wgs">
+            <objects>
+                <viewController storyboardIdentifier="RegisterationSuccessViewController" id="gzH-OE-yhl" customClass="RegisterationSuccessViewController" customModule="SmilesOnboarding" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yFs-Cc-sCy">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Yd-rI-TWa">
+                                <rect key="frame" x="0.0" y="59" width="393" height="793"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C1X-60-AMm">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="782.66666666666663"/>
+                                        <subviews>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cdw-V3-nPY" customClass="CustomThemButton" customModule="Smiles" customModuleProvider="target">
+                                                <rect key="frame" x="317" y="26" width="46" height="38"/>
+                                                <fontDescription key="fontDescription" name="NeoTechAlt" family="Neo Tech Alt" pointSize="20"/>
+                                                <state key="normal" title="العربية">
+                                                    <color key="titleColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="titleThemIdentifier" value="ButtonSecondaryTitleColor"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didSelectLanguageButtonAction:" destination="gzH-OE-yhl" eventType="touchUpInside" id="9Ot-rO-TMR"/>
+                                                </connections>
+                                            </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SmilesLogo_ENG" translatesAutoresizingMaskIntoConstraints="NO" id="Z0l-Sx-njq">
+                                                <rect key="frame" x="110" y="65" width="173" height="69"/>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KpJ-29-TAB" customClass="CustomThemButton" customModule="Smiles" customModuleProvider="target">
+                                                <rect key="frame" x="33.666666666666657" y="509.66666666666663" width="325.66666666666674" height="58"/>
+                                                <color key="backgroundColor" red="0.45882352941176469" green="0.25882352941176467" blue="0.55686274509803924" alpha="1" colorSpace="calibratedRGB"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Done"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="58" id="XTz-Sk-oYL"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
+                                                <state key="normal" title="DONE">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="29"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didSelectDoneButtonAction:" destination="gzH-OE-yhl" eventType="touchUpInside" id="3oE-1q-ePS"/>
+                                                </connections>
+                                            </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zL3-Te-IEw">
+                                                <rect key="frame" x="77.333333333333329" y="164" width="238.33333333333337" height="170.33333333333337"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="you are all set to start enjoying Smiles!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vd4-aR-lzT">
+                                                <rect key="frame" x="10" y="401.33333333333331" width="373" height="18"/>
+                                                <accessibility key="accessibilityConfiguration" hint="you are all set to start enjoying Smiles!"/>
+                                                <fontDescription key="fontDescription" name="CircularXXTT-Medium" family="CircularXX TT" pointSize="15"/>
+                                                <color key="textColor" red="0.14117647059999999" green="0.14117647059999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="you are all set to start enjoying Smiles!"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We have sent you a welcome email with a link to verify your Email address. Link expires in 24 hours." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g82-JY-zyB">
+                                                <rect key="frame" x="10" y="443.33333333333331" width="373" height="31.333333333333314"/>
+                                                <accessibility key="accessibilityConfiguration" hint="We have sent you a welcome email with a link to verify your Email address. Link expires in 24 hours."/>
+                                                <fontDescription key="fontDescription" name="CircularXXTT-Regular" family="CircularXX TT" pointSize="13"/>
+                                                <color key="textColor" red="0.41960784309999999" green="0.41960784309999999" blue="0.41960784309999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="We have sent you a welcome email with a link to verify your Email address. Link expires in 24 hours."/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCu-8e-VLB">
+                                                <rect key="frame" x="125.66666666666669" y="364.33333333333331" width="142" height="24"/>
+                                                <fontDescription key="fontDescription" name="CircularXXTT-Regular" family="CircularXX TT" pointSize="20"/>
+                                                <color key="textColor" red="0.14117647059999999" green="0.14117647059999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="ShareCongratulationsTitle"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="KpJ-29-TAB" secondAttribute="bottom" constant="215" id="0jN-T4-lIN"/>
+                                            <constraint firstItem="zL3-Te-IEw" firstAttribute="top" secondItem="Z0l-Sx-njq" secondAttribute="bottom" constant="30" id="CaG-kf-O73"/>
+                                            <constraint firstAttribute="trailing" secondItem="Cdw-V3-nPY" secondAttribute="trailing" constant="30" id="GB8-Ez-AuE"/>
+                                            <constraint firstItem="g82-JY-zyB" firstAttribute="leading" secondItem="C1X-60-AMm" secondAttribute="leading" constant="10" id="IJ0-Ng-yeg"/>
+                                            <constraint firstItem="Z0l-Sx-njq" firstAttribute="centerX" secondItem="C1X-60-AMm" secondAttribute="centerX" id="Lp3-d3-rCh"/>
+                                            <constraint firstItem="vd4-aR-lzT" firstAttribute="top" secondItem="sCu-8e-VLB" secondAttribute="bottom" constant="13" id="MBZ-jO-iXI"/>
+                                            <constraint firstItem="vd4-aR-lzT" firstAttribute="leading" secondItem="C1X-60-AMm" secondAttribute="leading" constant="10" id="MUn-sX-z5E"/>
+                                            <constraint firstItem="Z0l-Sx-njq" firstAttribute="width" secondItem="Z0l-Sx-njq" secondAttribute="height" multiplier="116:48" constant="6.2999999999999998" id="Mp0-qQ-Mia"/>
+                                            <constraint firstItem="sCu-8e-VLB" firstAttribute="top" secondItem="zL3-Te-IEw" secondAttribute="bottom" constant="30" id="Nq4-eX-9cU"/>
+                                            <constraint firstItem="KpJ-29-TAB" firstAttribute="centerX" secondItem="C1X-60-AMm" secondAttribute="centerX" id="Pxe-UA-eNU"/>
+                                            <constraint firstAttribute="trailing" secondItem="vd4-aR-lzT" secondAttribute="trailing" constant="10" id="Rmw-5I-NzE"/>
+                                            <constraint firstItem="sCu-8e-VLB" firstAttribute="centerX" secondItem="C1X-60-AMm" secondAttribute="centerX" id="VJQ-Np-wa2"/>
+                                            <constraint firstItem="zL3-Te-IEw" firstAttribute="centerX" secondItem="C1X-60-AMm" secondAttribute="centerX" id="Ve2-Tt-b7g"/>
+                                            <constraint firstItem="zL3-Te-IEw" firstAttribute="width" secondItem="zL3-Te-IEw" secondAttribute="height" multiplier="14:10" id="buP-C7-XQZ"/>
+                                            <constraint firstAttribute="trailing" secondItem="g82-JY-zyB" secondAttribute="trailing" constant="10" id="cm5-zs-8en"/>
+                                            <constraint firstItem="g82-JY-zyB" firstAttribute="top" secondItem="vd4-aR-lzT" secondAttribute="bottom" constant="24" id="hsn-b4-lC1"/>
+                                            <constraint firstItem="Z0l-Sx-njq" firstAttribute="top" secondItem="C1X-60-AMm" secondAttribute="top" constant="65" id="iOY-ZX-hup"/>
+                                            <constraint firstItem="Cdw-V3-nPY" firstAttribute="top" secondItem="C1X-60-AMm" secondAttribute="top" constant="26" id="m9k-6H-8PE"/>
+                                            <constraint firstItem="KpJ-29-TAB" firstAttribute="top" secondItem="g82-JY-zyB" secondAttribute="bottom" constant="35" id="q1Y-eA-oMT"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="C1X-60-AMm" secondAttribute="trailing" id="SYn-qZ-QMr"/>
+                                    <constraint firstItem="C1X-60-AMm" firstAttribute="leading" secondItem="7Yd-rI-TWa" secondAttribute="leading" id="amo-Un-7xY"/>
+                                    <constraint firstAttribute="bottom" secondItem="C1X-60-AMm" secondAttribute="bottom" id="i2z-h9-0Tt"/>
+                                    <constraint firstItem="C1X-60-AMm" firstAttribute="top" secondItem="7Yd-rI-TWa" secondAttribute="top" id="tSO-OP-2Fm"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="jdQ-rX-ycg"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Z0l-Sx-njq" firstAttribute="height" secondItem="yFs-Cc-sCy" secondAttribute="height" multiplier="0.07" constant="9.4499999999999993" id="08e-Et-bog"/>
+                            <constraint firstItem="zL3-Te-IEw" firstAttribute="height" secondItem="yFs-Cc-sCy" secondAttribute="height" multiplier="0.2" id="GD9-b9-kt6"/>
+                            <constraint firstItem="KpJ-29-TAB" firstAttribute="width" secondItem="yFs-Cc-sCy" secondAttribute="width" multiplier="0.829" id="PFG-oR-W6S"/>
+                            <constraint firstItem="7Yd-rI-TWa" firstAttribute="leading" secondItem="yFs-Cc-sCy" secondAttribute="leading" id="ipH-kz-guq"/>
+                            <constraint firstItem="7Yd-rI-TWa" firstAttribute="top" secondItem="jdQ-rX-ycg" secondAttribute="top" id="jMj-IK-Nfz"/>
+                            <constraint firstItem="7Yd-rI-TWa" firstAttribute="trailing" secondItem="yFs-Cc-sCy" secondAttribute="trailing" id="l5p-mO-ocg"/>
+                            <constraint firstAttribute="bottom" secondItem="7Yd-rI-TWa" secondAttribute="bottom" id="lfa-Xv-eq4"/>
+                            <constraint firstItem="C1X-60-AMm" firstAttribute="width" secondItem="yFs-Cc-sCy" secondAttribute="width" id="nbN-5j-DQ2"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="TRd-ld-qyi"/>
+                    <connections>
+                        <outlet property="btn_done" destination="KpJ-29-TAB" id="igz-GP-tge"/>
+                        <outlet property="btn_langauge" destination="Cdw-V3-nPY" id="sIH-vi-Vlc"/>
+                        <outlet property="img_smilesLogo" destination="Z0l-Sx-njq" id="cQG-gm-aZH"/>
+                        <outlet property="successImage" destination="zL3-Te-IEw" id="Nyi-l5-gkZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lT7-Xc-aAK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3193.125" y="-463.73239436619718"/>
+        </scene>
+    </scenes>
+    <designables>
+        <designable name="Cdw-V3-nPY">
+            <size key="intrinsicContentSize" width="46" height="38"/>
+        </designable>
+        <designable name="KpJ-29-TAB">
+            <size key="intrinsicContentSize" width="41" height="29"/>
+        </designable>
+    </designables>
+    <resources>
+        <image name="SmilesLogo_ENG" width="116" height="48.333332061767578"/>
+    </resources>
+</document>
