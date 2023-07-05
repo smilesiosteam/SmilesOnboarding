@@ -11,6 +11,7 @@ import SmilesUtilities
 import Combine
 import PhoneNumberKit
 import SmilesLanguageManager
+import SmilesLoader
 
 @objc public class LoginWithOtpViewController: UIViewController {
     
@@ -115,6 +116,9 @@ import SmilesLanguageManager
                     self?.configureGetOtpForNumber(result: response)
                 case .getOTPforMobileNumberDidFail(error: let error):
                     debugPrint(error.localizedDescription)
+                case .showLoader(shouldShow: let shouldShow):
+                    shouldShow ? SmilesLoader.show(isClearBackground: true) : SmilesLoader.dismiss()
+
                 }
             }.store(in: &cancellables)
     }

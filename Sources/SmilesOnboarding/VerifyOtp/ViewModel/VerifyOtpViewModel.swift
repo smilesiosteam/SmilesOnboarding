@@ -31,7 +31,7 @@ extension VerifyOtpViewModel {
             case .verifyOtp(otp: let otp):
                 self?.verifyOtp(otp: otp)
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
-                <#code#>
+                self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()

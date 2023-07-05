@@ -43,6 +43,7 @@ extension LoginWithOtpViewModel {
     
     
     func getCountries(lastModifiedDate: String ,firstCall: Bool, baseURL: String) {
+        self.output.send(.showLoader(shouldShow: true))
         let request = CountryListRequest()
         request.firstCallFlag = firstCall
         request.lastModifiedDate = lastModifiedDate
@@ -55,6 +56,7 @@ extension LoginWithOtpViewModel {
         service.getAllCountriesService(request: request)
             .sink { [weak self] completion in
                 debugPrint(completion)
+                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
                     self?.output.send(.fetchCountriesDidFail(error: error))
@@ -69,6 +71,7 @@ extension LoginWithOtpViewModel {
     }
     
     func getCaptcha(num: String) {
+        self.output.send(.showLoader(shouldShow: true))
         let request = CaptchValidtionRequest()
         request.msisdn = num
         request.channel = ""
@@ -83,6 +86,7 @@ extension LoginWithOtpViewModel {
         service.getCaptcha(request: request)
             .sink { [weak self] completion in
                 debugPrint(completion)
+                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
                     self?.output.send(.generateCaptchaDidFail(error: error))
@@ -115,7 +119,7 @@ extension LoginWithOtpViewModel {
     }
     
     func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
-        
+        self.output.send(.showLoader(shouldShow: true))
         let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
 
         let num = String(mobileNumber.dropFirst())
@@ -130,6 +134,7 @@ extension LoginWithOtpViewModel {
         service.getOTPforMobileNumber(request: request)
             .sink { [weak self] completion  in
                 debugPrint(completion)
+                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
                     self?.output.send(.getOTPforMobileNumberDidFail(error: error))
