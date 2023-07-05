@@ -11,6 +11,7 @@ extension VerifyOtpViewModel {
     enum Input {
         case verifyOtp(otp: String)
         case getProfileStatus(msisdn: String, authToken: String)
+        case getOTPforMobileNumber(mobileNumber: String)
     }
     
     enum Output {
@@ -18,5 +19,8 @@ extension VerifyOtpViewModel {
         case verifyOtpDidFail(error: Error)
         case getProfileStatusDidSucceed(response: GetProfileStatusResponse, msisdn: String, authToken: String)
         case getProfileStatusDidFail(error: Error)
+        case showLoader(shouldShow: Bool)
+        case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
+        case getOTPforMobileNumberDidFail(error: Error)
     }
 }

@@ -32,6 +32,8 @@ extension VerifyOtpViewModel {
                 self?.verifyOtp(otp: otp)
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
+            case .getOTPforMobileNumber(mobileNumber: let mobileNumber):
+                self?.getOtpForMobileNumber(mobileNumber: mobileNumber, captchaText: "", deviceCheckToken: "", appAttestation: "", challenge: "")
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -79,6 +81,35 @@ extension VerifyOtpViewModel {
                 }
             } receiveValue: { [weak self] response  in
                 self?.output.send(.getProfileStatusDidSucceed(response: response, msisdn: msisdn, authToken: authToken))
+            }
+            .store(in: &cancellables)
+    }
+    
+    func getOtpForMobileNumber(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
+        self.output.send(.showLoader(shouldShow: true))
+        let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
+
+        let num = String(mobileNumber.dropFirst())
+        request.msisdn = num
+        SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
+        
+        let service = LoginWithOtpRepository(
+            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
+            endPoint: .getOtpForMobileNumber
+        )
+        
+        service.getOTPforMobileNumber(request: request)
+            .sink { [weak self] completion  in
+                debugPrint(completion)
+                self?.output.send(.showLoader(shouldShow: false))
+                switch completion {
+                case .failure(let error):
+                    self?.output.send(.getOTPforMobileNumberDidFail(error: error))
+                case .finished:
+                    debugPrint("nothing much to do here")
+                }
+            } receiveValue: {   [weak self] response in
+                self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
             }
             .store(in: &cancellables)
     }

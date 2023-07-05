@@ -12,7 +12,7 @@ extension LoginWithOtpViewModel {
         case getCountriesList(lastModifiedDate: String ,firstCall: Bool)
         case generateCaptcha(mobileNumber: String)
         case getOTPforMobileNumber(mobileNumber: String, enableDeviceSecurityCheck:Bool)
-//        case loginAsGuestUser
+        case loginAsGuestUser
     }
     
     enum Output {
@@ -23,5 +23,7 @@ extension LoginWithOtpViewModel {
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
         case getOTPforMobileNumberDidFail(error: Error)
         case showLoader(shouldShow: Bool)
+        case loginAsGuestDidSucceed(response: GuestUserResponseModel)
+        case loginAsGuestDidFail(error: Error)
     }
 }

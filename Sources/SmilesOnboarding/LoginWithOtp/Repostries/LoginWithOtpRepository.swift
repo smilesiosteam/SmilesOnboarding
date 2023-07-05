@@ -15,6 +15,8 @@ protocol LoginWithOtpServiceable {
     AnyPublisher<CaptchaResponseModel, NetworkError>
     func getOTPforMobileNumber(request: OTPValidtionRequest) ->
     AnyPublisher<CreateOtpResponse, NetworkError>
+    func loginAsGuest(request: GuestUserRequestModel) ->
+    AnyPublisher<GuestUserResponseModel, NetworkError>
 }
 
 // GetCuisinesRepository
@@ -60,5 +62,17 @@ class LoginWithOtpRepository: LoginWithOtpServiceable {
         
         return self.networkRequest.request(request)
     }
+    
+    func loginAsGuest(request: GuestUserRequestModel) -> AnyPublisher<GuestUserResponseModel, NetworkingLayer.NetworkError> {
+        let endPoint = SmilesOnboardingRequestBuilder.loginAsGuest(request: request)
+        let request = endPoint.createRequest(
+            baseURL: self.baseURL,
+            endPoint: self.endPoint
+        )
+        
+        return self.networkRequest.request(request)
+    }
+    
+    
 }
 

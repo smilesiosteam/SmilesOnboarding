@@ -10,7 +10,7 @@ import UIKit
 
 @objc public class OnBoardingModuleManager: NSObject {
         
-    @objc public static func instantiateLoginWithOtpViewController(storyBoardName: String, controller: String, baseUrl: String) -> UIViewController? {
+    @objc public static func instantiateLoginWithOtpViewController(storyBoardName: String, controller: String, baseUrl: String) -> LoginWithOtpViewController? {
         let storyboard = UIStoryboard(name: storyBoardName, bundle: .module)
         let viewController = storyboard.instantiateViewController(identifier: controller, creator: { coder in
             LoginWithOtpViewController(coder: coder, baseURL: baseUrl)
