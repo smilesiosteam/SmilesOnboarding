@@ -9,6 +9,10 @@ import Foundation
 
 public enum SmilesOnboardingEndPoints: String, CaseIterable {
     case getCountries
+    case getCaptcha
+    case getOtpForMobileNumber
+    case verifyOtp
+    case getProfileStatus
 }
 
 extension SmilesOnboardingEndPoints {
@@ -16,6 +20,14 @@ extension SmilesOnboardingEndPoints {
         switch self {
         case .getCountries:
             return "home/get-country-list-v2"
+        case .getCaptcha:
+            return "login/v2/get-captcha"
+        case .getOtpForMobileNumber:
+            return "login/send-otp-v1"
+        case .verifyOtp:
+            return "login/verify-otp"
+        case .getProfileStatus:
+            return "login/get-profile-status"
         }
     }
 }

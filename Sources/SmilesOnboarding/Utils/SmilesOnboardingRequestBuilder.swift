@@ -14,6 +14,10 @@ enum SmilesOnboardingRequestBuilder {
     
     // organise all the end points here for clarity
     case getCountries(request: CountryListRequest)
+    case getCaptcha(request: CaptchValidtionRequest)
+    case getOTPforMobileNumber(request: OTPValidtionRequest)
+    case verifyOtp(request: VerifyOtpRequest)
+    case getProfileStatus(request: GetProfileStatusRequestModel)
     
     // gave a default timeout but can be different for each.
     var requestTimeOut: Int {
@@ -24,6 +28,14 @@ enum SmilesOnboardingRequestBuilder {
     var httpMethod: SmilesHTTPMethod {
         switch self {
         case .getCountries:
+            return .POST
+        case .getCaptcha:
+            return .POST
+        case .getOTPforMobileNumber:
+            return .POST
+        case .verifyOtp:
+            return .POST
+        case .getProfileStatus:
             return .POST
         }
     }
@@ -44,6 +56,14 @@ enum SmilesOnboardingRequestBuilder {
         switch self {
         case .getCountries(let request):
             return request
+        case .getCaptcha(let request):
+            return request
+        case .getOTPforMobileNumber(let request):
+            return request
+        case .verifyOtp(let request):
+            return request
+        case .getProfileStatus(let request):
+            return request
         }
     }
     
@@ -53,6 +73,14 @@ enum SmilesOnboardingRequestBuilder {
         let endPoint = endPoint.serviceEndPoints
         switch self {
         case .getCountries:
+            return "\(baseURL)\(endPoint)"
+        case .getCaptcha:
+            return "\(baseURL)\(endPoint)"
+        case .getOTPforMobileNumber:
+            return "\(baseURL)\(endPoint)"
+        case .verifyOtp:
+            return "\(baseURL)\(endPoint)"
+        case .getProfileStatus:
             return "\(baseURL)\(endPoint)"
         }
         
