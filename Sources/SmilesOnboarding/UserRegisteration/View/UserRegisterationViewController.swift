@@ -81,7 +81,7 @@ public class UserRegisterationViewController: UIViewController {
     private var viewModel: UserRegisterationViewModel!
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String = ""
-    
+    private nationality:CountryList?
     public var termsAndConditions = {}
     public var didSucceedRegistration = {}
     public var registrationCompleted = {}
@@ -112,8 +112,8 @@ public class UserRegisterationViewController: UIViewController {
     
     func setupUI(){
         setupTermsUI()
-        titleLbl.text = !isExistingUser ? "Let’s get started".localizedString : "DetailsTitle".capitalizingFirstLetter()
-        subtitleLbl.text = !isExistingUser ? "Tell us a few details about yourself".localizedString : ""
+        titleLbl.text = !isExistingUser ? "Let’s get started".localizedString : "Verify your details".localizedString
+        subtitleLbl.text = !isExistingUser ? "Tell us a few details about yourself".localizedString : nil
         firstNameTxtFld.validationType = [.requiredField(errorMessage: "EnterFirstName".localizedString)]
         firstNameLbl.text = "First Name*".localizedString
         firstNameTxtFld.continousValidation = true
@@ -291,7 +291,7 @@ public class UserRegisterationViewController: UIViewController {
         self.present(options:options){index in
             self.genderTxtFld.text = options[index]
             self.updateContinueButtonUI()
-            if !self.promoCodeWrapper.isHidden && self.promoTxtFld.text?.isEmpty ?? true {
+            if !self.promoCodeWrapper.isHidden {
                 self.promoTxtFld.becomeFirstResponder()
             }
         }
@@ -317,12 +317,16 @@ public class UserRegisterationViewController: UIViewController {
             }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
             request.nationality = "186" //TODO: todo
+            request.isExistingUser = isExistingUser
             self.input.send(!isExistingUser ? .registerUser(request: request) : .verifyUserDetails(request: request))
         }
     }
     func isDataValid() -> Bool {
         var isValid = true
-        let fields = [firstNameTxtFld, lastNameTxtFld, emailFld, genderTxtFld, dayTxtFld, monthTxtFld, yearTxtFld]
+        var fields = [firstNameTxtFld, lastNameTxtFld, dayTxtFld, monthTxtFld, yearTxtFld]
+        if !isExistingUser{
+            fields.append(contentsOf: [emailFld, genderTxtFld])
+        }
         for field in fields {
             if !field!.validate() {
                 isValid = false
@@ -365,18 +369,17 @@ extension UserRegisterationViewController : UITextFieldDelegate
             lastNameTxtFld.becomeFirstResponder()
         }
         else if textField == lastNameTxtFld {
-            emailFld.becomeFirstResponder()
+            if !isExistingUser{
+                emailFld.becomeFirstResponder()
+            }
         }
         else if textField == emailFld {
             emailFld .resignFirstResponder()
-            if dob == nil {
-                dobPressed(textField)
-            }
         }
         else if textField == genderTxtFld {
             if isExistingUser {
                 genderTxtFld .resignFirstResponder()
-            }else if !promoCodeWrapper.isHidden{
+            }else if !isExistingUser {
                 promoTxtFld.becomeFirstResponder()
             }
             
