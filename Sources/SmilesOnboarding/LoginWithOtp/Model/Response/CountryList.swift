@@ -9,7 +9,7 @@ import Foundation
 import SmilesLanguageManager
 import SmilesUtilities
 
-class CountryList : Codable {
+public class CountryList : Codable {
     
     
     let countryId : Int?
@@ -27,7 +27,7 @@ class CountryList : Codable {
         case countryNameAR = "countryNameAR"
     }
     
-    required init(from decoder: Decoder) throws {
+    required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         countryId = try values.decodeIfPresent(Int.self, forKey: .countryId)
         flagIconUrl = try values.decodeIfPresent(String.self, forKey: .flagIconUrl)

@@ -101,7 +101,7 @@ import SmilesBaseMainRequestManager
     //MARK: CallBacks
     public var termsAndConditionTappCallback: (() -> Void)?
     public var loginAsGuestUserCallback:((String) -> Void)?
-    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool, [CountryList]) -> Void)?
     public var loginWithTouchIdCallback: (() -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
@@ -336,7 +336,7 @@ extension LoginWithOtpViewController {
             VerifyOtpViewController(coder: coder, baseURL: self.baseURL)
         })
         vc.navigateToRegisterViewCallBack = { msisdn, token, loginType, isExistingUser in
-            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser)
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
         }
         vc.otpHeaderText = otpHeaderText
         vc.otpTimeOut = otpTimeOut

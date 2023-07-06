@@ -81,7 +81,13 @@ public class UserRegisterationViewController: UIViewController {
     private var viewModel: UserRegisterationViewModel!
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String = ""
-    var nationality:CountryList?
+    public var nationality:CountryList?=nil{
+        didSet{
+            self.nationalityTxtFld.text = nationality?.countryName
+            updateContinueButtonUI()
+        }
+    }
+    public var nationalities:[CountryList]=[]
     public var termsAndConditions = {}
     public var didSucceedRegistration = {}
     public var registrationCompleted = {}
@@ -283,7 +289,22 @@ public class UserRegisterationViewController: UIViewController {
     
     
     @IBAction func nationalityPressed(_ sender: Any) {
-        //on pick, if gender not selected, self.genderPressed(sender), self.updateContinueButtonUI()
+        
+        let moduleStoryboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
+        
+        if let vc = moduleStoryboard.instantiateViewController(withIdentifier: "CountriesListViewController") as? CountriesListViewController {
+            
+            let countriesResp = CountryListResponse()
+            countriesResp.countryList = self.nationalities
+            vc.countriesList = countriesResp
+            
+            vc.modalPresentationStyle = .overFullScreen
+            
+            vc.delegate = self
+            
+            present(vc, animated: true, completion: nil)
+            
+        }
     }
     
     @IBAction func genderPressed(_ sender: Any) {
@@ -316,14 +337,14 @@ public class UserRegisterationViewController: UIViewController {
                 request.referralCode = promoTxtFld.text
             }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
-            request.nationality = "186" //TODO: todo
+            request.nationality = "\(self.nationality?.countryId ?? -1)"
             request.isExistingUser = isExistingUser
             self.input.send(!isExistingUser ? .registerUser(request: request) : .verifyUserDetails(request: request))
         }
     }
     func isDataValid() -> Bool {
         var isValid = true
-        var fields = [firstNameTxtFld, lastNameTxtFld, dayTxtFld, monthTxtFld, yearTxtFld]
+        var fields = [firstNameTxtFld, lastNameTxtFld, dayTxtFld, monthTxtFld, yearTxtFld,nationalityTxtFld]
         if !isExistingUser{
             fields.append(contentsOf: [emailFld, genderTxtFld])
         }
@@ -528,4 +549,14 @@ extension UserRegisterationViewController {
     }
     
     
+}
+
+extension UserRegisterationViewController: CountrySelectionDelegate {
+
+    func didSelectCountry(_ country: CountryList) {
+
+        self.nationality = country
+
+    }
+
 }
