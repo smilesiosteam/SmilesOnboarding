@@ -15,6 +15,9 @@
         <array key="CircularXXTT-Medium.ttf">
             <string>CircularXXTT-Medium</string>
         </array>
+        <array key="CircularXXTT-Regular.ttf">
+            <string>CircularXXTT-Regular</string>
+        </array>
         <array key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
         </array>
@@ -520,13 +523,44 @@
                                                     <constraint firstItem="AwE-BF-LZb" firstAttribute="top" secondItem="KQC-Km-Qdo" secondAttribute="top" id="wPz-Hw-jIN"/>
                                                 </constraints>
                                             </scrollView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="26w-IP-sMe">
+                                                <rect key="frame" x="0.0" y="0.0" width="393" height="0.0"/>
+                                                <subviews>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" text="Information you have entered does not match our records, try again." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9j-8f-3BF">
+                                                        <rect key="frame" x="20" y="9" width="353" height="36"/>
+                                                        <fontDescription key="fontDescription" name="CircularXXTT-Regular" family="CircularXX TT" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note that your membership will be blocked on 3rd incorrect try." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ceC-23-DMa">
+                                                        <rect key="frame" x="20" y="-30.666666666666657" width="353" height="14.666666666666666"/>
+                                                        <fontDescription key="fontDescription" name="CircularXXTT-Regular" family="CircularXX TT" pointSize="12"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.74509803919999995" green="0.070588235289999995" blue="0.094117647060000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="ceC-23-DMa" firstAttribute="top" secondItem="X9j-8f-3BF" secondAttribute="bottom" priority="500" constant="10" id="7Og-iM-P4t"/>
+                                                    <constraint firstItem="X9j-8f-3BF" firstAttribute="leading" secondItem="26w-IP-sMe" secondAttribute="leading" constant="20" id="HD8-k2-k8o"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ceC-23-DMa" secondAttribute="trailing" constant="20" id="WNp-cR-a3N"/>
+                                                    <constraint firstItem="ceC-23-DMa" firstAttribute="leading" secondItem="26w-IP-sMe" secondAttribute="leading" constant="20" id="Y4P-nA-3gc"/>
+                                                    <constraint firstAttribute="height" id="bWP-b1-oCD"/>
+                                                    <constraint firstItem="X9j-8f-3BF" firstAttribute="top" secondItem="26w-IP-sMe" secondAttribute="top" constant="9" id="huA-zU-RX6"/>
+                                                    <constraint firstAttribute="trailing" secondItem="X9j-8f-3BF" secondAttribute="trailing" constant="20" id="oOQ-g4-FzP"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ceC-23-DMa" secondAttribute="bottom" constant="16" id="uwQ-iv-8Il"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="KQC-Km-Qdo" secondAttribute="bottom" id="7Dh-m2-mN8"/>
+                                            <constraint firstItem="26w-IP-sMe" firstAttribute="leading" secondItem="KQC-Km-Qdo" secondAttribute="leading" id="8iR-Df-dOK"/>
                                             <constraint firstItem="KQC-Km-Qdo" firstAttribute="top" secondItem="Pfz-h8-p87" secondAttribute="top" id="EJ5-Xn-x4g"/>
+                                            <constraint firstItem="26w-IP-sMe" firstAttribute="trailing" secondItem="KQC-Km-Qdo" secondAttribute="trailing" id="SR5-wN-PDd"/>
                                             <constraint firstAttribute="trailing" secondItem="KQC-Km-Qdo" secondAttribute="trailing" id="atK-iQ-Mwu"/>
                                             <constraint firstItem="KQC-Km-Qdo" firstAttribute="leading" secondItem="Pfz-h8-p87" secondAttribute="leading" id="tCU-YZ-YAA"/>
+                                            <constraint firstItem="26w-IP-sMe" firstAttribute="top" secondItem="KQC-Km-Qdo" secondAttribute="top" id="ymK-Ip-mT2"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -563,6 +597,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="constraint_bannerHeight" destination="bWP-b1-oCD" id="zYm-9V-25w"/>
                         <outlet property="continueBtn" destination="pmC-lc-Jza" id="Zid-hj-tL9"/>
                         <outlet property="dayLbl" destination="GDn-ju-KTe" id="ZUD-WM-ncc"/>
                         <outlet property="dayTxtFld" destination="DTx-jO-ceP" id="fXH-1c-E1m"/>
@@ -570,12 +605,16 @@
                         <outlet property="dobPickerBtn" destination="Lu4-AP-DEI" id="Xje-5F-yPe"/>
                         <outlet property="emailFld" destination="QWu-US-uJZ" id="Fga-IK-HXb"/>
                         <outlet property="emailLbl" destination="EkO-MA-lAC" id="Lgg-ok-LRQ"/>
+                        <outlet property="emailWrapperVu" destination="uqJ-j1-uXH" id="UTH-mM-Tve"/>
                         <outlet property="firstNameLbl" destination="Gr6-9c-RcP" id="Ffa-Ir-nKG"/>
                         <outlet property="firstNameTxtFld" destination="Ups-3I-pvi" id="oEH-H7-u2f"/>
                         <outlet property="genderLbl" destination="DQf-ZO-QCy" id="fra-2J-6Dn"/>
                         <outlet property="genderTxtFld" destination="kqW-sw-zEW" id="PKN-3L-dJZ"/>
+                        <outlet property="genderWrapper" destination="MUP-zt-0BX" id="OMS-FY-Z6L"/>
                         <outlet property="lastNameLbl" destination="rge-hz-QKJ" id="783-yQ-0g6"/>
                         <outlet property="lastNameTxtFld" destination="a8D-ij-6Fz" id="S07-Eb-5Ia"/>
+                        <outlet property="lbl_bannerSubTitle" destination="ceC-23-DMa" id="av2-1n-uCP"/>
+                        <outlet property="lbl_bannerTitle" destination="X9j-8f-3BF" id="Dax-hF-STD"/>
                         <outlet property="monthLbl" destination="kbu-zD-ZEE" id="Bg7-hf-hhx"/>
                         <outlet property="monthTxtFld" destination="vPs-uh-mkv" id="osV-pO-z9o"/>
                         <outlet property="nationalityLbl" destination="zL8-ic-xJJ" id="YnH-EJ-PEl"/>
@@ -585,8 +624,10 @@
                         <outlet property="promoTxtFld" destination="QoJ-ya-fkr" id="9yT-Yk-N4e"/>
                         <outlet property="scrollView" destination="KQC-Km-Qdo" id="Rad-Gc-WNx"/>
                         <outlet property="subtitleLbl" destination="TAj-AZ-E9v" id="2BP-yr-MuK"/>
+                        <outlet property="termsAndConditionsWrapper" destination="3Sw-do-CvG" id="NSq-nl-BUE"/>
                         <outlet property="termsLbl" destination="pCL-8f-d6p" id="dzs-Nk-CjG"/>
                         <outlet property="titleLbl" destination="RdI-qo-9mJ" id="Tga-cp-WkJ"/>
+                        <outlet property="view_banner" destination="26w-IP-sMe" id="Uf9-Vi-aY0"/>
                         <outlet property="yearLbl" destination="jFI-Je-tlE" id="ZE4-t0-EiC"/>
                         <outlet property="yearTxtFld" destination="D68-FZ-5KS" id="uVQ-5s-cBl"/>
                     </connections>

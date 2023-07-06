@@ -66,6 +66,14 @@ public class UserRegisterationViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     
+    @IBOutlet weak var view_banner: UIView!
+    @IBOutlet weak var lbl_bannerTitle: UILabel!
+    @IBOutlet weak var lbl_bannerSubTitle: UILabel!
+    @IBOutlet weak var constraint_bannerHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var emailWrapperVu: UIView!
+    @IBOutlet weak var genderWrapper: UIView!
+    @IBOutlet weak var termsAndConditionsWrapper: UIView!
     
     //------------
     
@@ -78,6 +86,7 @@ public class UserRegisterationViewController: UIViewController {
     public var didSucceedRegistration = {}
     public var registrationCompleted = {}
     public var didFailRegistration:(String?)->Void = {error in}
+    public var didFailExistingVerificationFailed:(String,String,@escaping()->Void)->Void = {_,_,_ in}
     
     var dob:Date?{
         didSet{
@@ -89,7 +98,7 @@ public class UserRegisterationViewController: UIViewController {
         }
     }
     
-    var isFromExistingUser = false
+    public var isExistingUser = false
     //MARK: - LifeCycle
     
     
@@ -103,8 +112,8 @@ public class UserRegisterationViewController: UIViewController {
     
     func setupUI(){
         setupTermsUI()
-        titleLbl.text = "Let’s get started".localizedString
-        subtitleLbl.text = "Tell us a few details about yourself".localizedString
+        titleLbl.text = !isExistingUser ? "Let’s get started".localizedString : "DetailsTitle".capitalizingFirstLetter()
+        subtitleLbl.text = !isExistingUser ? "Tell us a few details about yourself".localizedString : ""
         firstNameTxtFld.validationType = [.requiredField(errorMessage: "EnterFirstName".localizedString)]
         firstNameLbl.text = "First Name*".localizedString
         firstNameTxtFld.continousValidation = true
@@ -113,9 +122,26 @@ public class UserRegisterationViewController: UIViewController {
         lastNameLbl.text = "Last Name*".localizedString
         lastNameTxtFld.continousValidation = true
         
-        emailFld.validationType = [.email(errorMessage: "InvaildEmail".localizedString)]
-        emailLbl.text = "Email Address*".localizedString
-        emailFld.placeholder = "e.g abcd@gmail.com".localizedString
+        emailWrapperVu.isHidden = isExistingUser
+        genderWrapper.isHidden = isExistingUser
+        termsAndConditionsWrapper.isHidden = isExistingUser
+        promoCodeWrapper.isHidden = isExistingUser
+        if !isExistingUser{
+            emailFld.validationType = [.email(errorMessage: "InvaildEmail".localizedString)]
+            emailLbl.text = "Email Address*".localizedString
+            emailFld.placeholder = "e.g abcd@gmail.com".localizedString
+            
+            genderTxtFld.validationType = [.requiredField(errorMessage: "Select gender".localizedString)]
+            genderTxtFld.continousValidation = true
+            genderTxtFld.placeholder = "Select gender".localizedString
+            
+            genderLbl.text = "Gender*".localizedString
+            
+            promoLbl.text = "Have a referral/promo code?".localizedString
+            continueBtn.setTitle("ContinueText".localizedString, for: .normal)
+        }else{
+            continueBtn.setTitle("btn_VERIFY".localizedString.capitalizingFirstLetter(), for: .normal)
+        }
         
         
         dobLbl.text = "lbl_DOB".localizedString
@@ -138,17 +164,6 @@ public class UserRegisterationViewController: UIViewController {
         nationalityTxtFld.continousValidation = true
         nationalityTxtFld.placeholder = "Select nationality".localizedString
         
-        genderTxtFld.validationType = [.requiredField(errorMessage: "Select gender".localizedString)]
-        genderTxtFld.continousValidation = true
-        genderTxtFld.placeholder = "Select gender".localizedString
-        
-        genderLbl.text = "Gender*".localizedString
-        
-        promoLbl.text = "Have a referral/promo code?".localizedString
-        
-        continueBtn.setTitle("ContinueText".localizedString, for: .normal)
-        
-        promoCodeWrapper.isHidden = isFromExistingUser
         
         let flds = [firstNameTxtFld,lastNameTxtFld,emailFld,dayTxtFld,monthTxtFld,yearTxtFld,nationalityTxtFld,genderTxtFld,promoTxtFld]
         for fld in flds {
@@ -200,11 +215,40 @@ public class UserRegisterationViewController: UIViewController {
                 case .registerUserDidSucceed:
                     self?.didSucceedRegistration()
                     self?.moveToWelcome()
+                case .verifyUserDetailsDidSucceed(let response):
+                    self?.handleVerifyUserDetailsResponse(response: response)
+                case .verifyingDetailsDidFail(let error):
+                    self?.didGetErrorResponse(error.localizedDescription)
                 }
             }
             .store(in: &cancellables)
     }
-    
+    public func handleVerifyUserDetailsResponse(response:VerifyUserDetailsResponse){
+        SmilesLoader.dismiss()
+        if let isVaild = response.isValid, isVaild == true{
+            if let isVerified = response.isVerified, isVerified == true{
+                self.enableTouchIdIfNotExist(self.getAccountMobileNum()!)
+            }else{
+                didFailExistingVerificationFailed(response.responseMsg.asStringOrEmpty(),response.responseDesc.asStringOrEmpty()){
+                    self.enableTouchIdIfNotExist(self.getAccountMobileNum()!)
+                }
+            }
+        }
+        else{
+            if let responseCode = response.responseCode, responseCode == "1"{
+                //show pop up
+                if let errorTitle = response.responseMsg, !errorTitle.isEmpty, let errorSubTitle = response.responseDesc,!errorSubTitle.isEmpty{
+                    self.didShowPopUp(responseTitle: errorTitle, responseSubtitle: errorSubTitle)
+                }
+            }
+            else{
+                //show banner
+                if let errorTitle = response.responseMsg, !errorTitle.isEmpty, let errorSubTitle = response.responseDesc,!errorSubTitle.isEmpty{
+                    self.didShowBanner(responseTitle: errorTitle, responseSubtitle: errorSubTitle)
+                }
+            }
+        }
+    }
     public static func get(baseUrl:String) -> UserRegisterationViewController {
         let vc = UIStoryboard(name: "UserRegisteration", bundle: Bundle.module).instantiateViewController(withIdentifier: "UserRegisterationViewController") as! UserRegisterationViewController
         vc.baseURL = baseUrl
@@ -266,18 +310,20 @@ public class UserRegisterationViewController: UIViewController {
             let request = RegisterUserRequest()
             request.firstName = firstNameTxtFld.text?.removingWhitespaces()
             request.lastName = lastNameTxtFld.text?.removingWhitespaces()
-            request.email = emailFld.text
+            if !isExistingUser {
+                request.email = emailFld.text
+                request.gender = "\(genderTxtFld.text!.first!)"
+                request.referralCode = promoTxtFld.text
+            }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
             request.nationality = "186" //TODO: todo
-            request.gender = "\(genderTxtFld.text!.first!)"
-            self.input.send(.registerUser(request: request))
+            self.input.send(!isExistingUser ? .registerUser(request: request) : .verifyUserDetails(request: request))
         }
     }
     func isDataValid() -> Bool {
         var isValid = true
         let fields = [firstNameTxtFld, lastNameTxtFld, emailFld, genderTxtFld, dayTxtFld, monthTxtFld, yearTxtFld]
         for field in fields {
-            print("\(field?.text ?? "Empty field") : \(field!.validate())")
             if !field!.validate() {
                 isValid = false
             }
@@ -328,7 +374,7 @@ extension UserRegisterationViewController : UITextFieldDelegate
             }
         }
         else if textField == genderTxtFld {
-            if isFromExistingUser {
+            if isExistingUser {
                 genderTxtFld .resignFirstResponder()
             }else if !promoCodeWrapper.isHidden{
                 promoTxtFld.becomeFirstResponder()
@@ -355,6 +401,92 @@ extension UserRegisterationViewController : UITextFieldDelegate
         updateContinueButtonUI()
     }
     
+    //MARK: - Verify details for existing user
+    
+    func enableTouchIdIfNotExist(_ mobileNumber : String) {
+        
+        if !UserDefaults.standard.bool(forKey: "hasTouchId")
+        {
+//            self.performSegue(withIdentifier: "TouchIdModel", sender: nil)
+        }
+        else{
+            if let mobileNumberForTouchId = UserDefaults.standard.string(forKey: "mobileNumberForTouchId"),!mobileNumberForTouchId.isEmpty
+            {
+                registrationCompleted()
+            }
+            else{
+//                self.performSegue(withIdentifier: "TouchIdModel", sender: nil)
+            }
+        }
+    }
+    
+    //MARK: - Show Banner and error Pop ups
+
+    func showBanner(){
+
+        view.layoutIfNeeded()
+
+        UIView.animate(withDuration: 0.4, animations: { () -> Void in
+            self.constraint_bannerHeight.constant = 99
+            self.lbl_bannerTitle.alpha = 1.0
+            self.lbl_bannerSubTitle.alpha = 1.0
+            self.view.layoutIfNeeded()
+            self.perform(#selector(self.hideBanner), with:nil , afterDelay: 5.0)
+        })
+    }
+
+
+    @objc func hideBanner(){
+        UIView.animate(withDuration: 0.4, animations: { () -> Void in
+            self.constraint_bannerHeight.constant = 0
+            self.lbl_bannerTitle.alpha = 0.0
+            self.lbl_bannerSubTitle.alpha = 0.0
+            self.view.layoutIfNeeded()
+        })
+    }
+
+    func updateBannerTexts(title : String = "", subTitle : String = ""){
+        lbl_bannerTitle.text = title
+        lbl_bannerSubTitle.text = subTitle
+    }
+
+
+    
+    func getAccountMobileNum() -> String? {
+        if let msisdn = UserDefaults.standard.string(forKey: "msisdn"), !msisdn.isEmpty {
+            return msisdn
+        }
+        return ""
+    }
+    //touch id done
+    func didDismissView(viewController: UIViewController) {
+        viewController.dismiss(animated: true) {
+            self.registrationCompleted()
+        }
+    }
+    
+    
+    func didGetUserDetailsVerifiedAndHasNoVaildEmail(responseTitle: String, responseSubtitle: String, isEmailVerified: Bool) {
+        
+    }
+
+    func didShowBanner(responseTitle: String, responseSubtitle: String) {
+
+        updateBannerTexts(title:responseTitle, subTitle: responseSubtitle)
+        showBanner()
+    }
+
+    func didShowPopUp(responseTitle: String, responseSubtitle: String) {
+
+//        self.presenter.changeNe xtButtonStyle(button: btn_verify, disable: true)
+        didFailExistingVerificationFailed(responseTitle,responseSubtitle){}
+    }
+
+    func didGetErrorResponse(_ errorText: String) {
+        updateBannerTexts(title:errorText)
+        showBanner()
+    }
+
 }
 
 // MARK: - Keyboard Handling

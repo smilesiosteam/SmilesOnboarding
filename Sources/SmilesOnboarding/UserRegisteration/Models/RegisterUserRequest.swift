@@ -18,6 +18,7 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
     var lastName : String?
     var nationality : String?
     var referralCode : String?
+    var isExistingUser = false
     
     enum CodingKeys: String, CodingKey {
         case birthDate = "birthDate"
@@ -27,6 +28,7 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
         case lastName = "lastName"
         case nationality = "nationality"
         case referralCode = "referralCode"
+        case dateOfBirth = "dateOfBirth"
     }
     
     
@@ -39,7 +41,7 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
     public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.birthDate, forKey: .birthDate)
+        try container.encodeIfPresent(self.birthDate, forKey: !isExistingUser ? .birthDate : .dateOfBirth)
         try container.encodeIfPresent(self.email, forKey: .email)
         try container.encodeIfPresent(self.firstName, forKey: .firstName)
         try container.encodeIfPresent(self.gender, forKey: .gender)

@@ -11,21 +11,10 @@ import NetworkingLayer
 fileprivate typealias Headers = [String: String]
 
 enum UserRegisterationRequestBuilder {
-    case fetchInfo(request: FetchInfoRequest)
-    case registerUser(request: RegisterUserRequest)
-    
-    var requestTimeOut: Int {
-        return 20
-    }
-    
+    case general(request: Encodable)
     
     var httpMethod: SmilesHTTPMethod {
-        switch self {
-        case .fetchInfo:
-            return .POST
-        case .registerUser:
-            return .POST
-        }
+        return .POST
     }
     
     // compose the NetworkRequest
@@ -36,24 +25,13 @@ enum UserRegisterationRequestBuilder {
         headers["Accept"] = "application/json"
         headers["CUSTOM_HEADER"] = "pre_prod"
         
-        return NetworkRequest(url: getURL(from: baseURL, for: endPoint), headers: headers, reqBody: requestBody, httpMethod: httpMethod)
+        return NetworkRequest(url: "\(baseURL)\(endPoint.serviceEndPoints)", headers: headers, reqBody: requestBody, httpMethod: httpMethod)
     }
     
     var requestBody: Encodable? {
         switch self {
-        case .fetchInfo(let request):
+        case .general(let request):
             return request
-        case .registerUser(let request):
-            return request
-        }
-    }
-    
-    func getURL(from baseURL: String, for endPoint: UserRegisterationEndPoints) -> String {
-        
-        let endPoint = endPoint.serviceEndPoints
-        switch self {
-        case .fetchInfo,.registerUser:
-            return "\(baseURL)\(endPoint)"
         }
     }
 }
