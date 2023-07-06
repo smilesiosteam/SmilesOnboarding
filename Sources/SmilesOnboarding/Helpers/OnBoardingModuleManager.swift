@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+public enum LoginType : String {
+    case otp, touchId ,none
+}
+
 @objc public class OnBoardingModuleManager: NSObject {
         
     @objc public static func instantiateLoginWithOtpViewController(storyBoardName: String, controller: String, baseUrl: String) -> LoginWithOtpViewController? {

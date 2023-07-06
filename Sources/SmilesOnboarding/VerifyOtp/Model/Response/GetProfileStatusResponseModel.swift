@@ -9,9 +9,9 @@ import Foundation
 import NetworkingLayer
 
 
-class GetProfileStatusResponse : BaseMainResponse {
+public class GetProfileStatusResponse : BaseMainResponse {
     
-    let profileStatus : Int?
+    public let profileStatus : Int?
     
     enum ProfileStatusCodingKeys: String, CodingKey {
         case profileStatus = "profileStatus"
