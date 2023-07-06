@@ -12,6 +12,8 @@ import NetworkingLayer
 
 protocol UserRegisterationServiceable {
     func fetchInfo(request: FetchInfoRequest) -> AnyPublisher<InfoResponse, NetworkError>
+    func registerUser(request: RegisterUserRequest) -> AnyPublisher<RegisterUserResponse, NetworkError>
+    func verifyUserDetails(request: RegisterUserRequest) -> AnyPublisher<VerifyUserDetailsResponse, NetworkError>
 }
 
 class UserRegisterationRepository: UserRegisterationServiceable {
@@ -28,7 +30,7 @@ class UserRegisterationRepository: UserRegisterationServiceable {
     }
     
     func fetchInfo(request: FetchInfoRequest) -> AnyPublisher<InfoResponse, NetworkError> {
-        let endPoint = UserRegisterationRequestBuilder.fetchInfo(request: request)
+        let endPoint = UserRegisterationRequestBuilder.general(request: request)
         let request = endPoint.createRequest(
             baseURL: baseURL,
             endPoint: self.endPoint
@@ -37,7 +39,7 @@ class UserRegisterationRepository: UserRegisterationServiceable {
         return self.networkRequest.request(request)
     }
     func registerUser(request: RegisterUserRequest) -> AnyPublisher<RegisterUserResponse, NetworkError> {
-        let endPoint = UserRegisterationRequestBuilder.registerUser(request: request)
+        let endPoint = UserRegisterationRequestBuilder.general(request: request)
         let request = endPoint.createRequest(
             baseURL: baseURL,
             endPoint: self.endPoint
@@ -45,10 +47,18 @@ class UserRegisterationRepository: UserRegisterationServiceable {
         
         return self.networkRequest.request(request)
     }
+    func verifyUserDetails(request: RegisterUserRequest) -> AnyPublisher<VerifyUserDetailsResponse, NetworkingLayer.NetworkError> {
+        let endPoint = UserRegisterationRequestBuilder.general(request: request)
+        let request = endPoint.createRequest(
+            baseURL: baseURL,
+            endPoint: self.endPoint
+        )
+        return self.networkRequest.request(request)
+    }
 }
 
 public enum UserRegisterationEndPoints: String, CaseIterable {
-    case fetchInfo,register
+    case fetchInfo,register,verifyDetails
 }
 
 extension UserRegisterationEndPoints {
@@ -58,6 +68,8 @@ extension UserRegisterationEndPoints {
             return "config/info-items"
         case .register:
             return "login/enroll"
+        case .verifyDetails:
+            return "login/verify-login-details"
         }
     }
 }

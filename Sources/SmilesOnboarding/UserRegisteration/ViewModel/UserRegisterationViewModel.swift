@@ -18,13 +18,16 @@ public class UserRegisterationViewModel:NSObject {
     public enum Input {
         case fetchInfo(type:InfoType)
         case registerUser(request:RegisterUserRequest)
+        case verifyUserDetails(request:RegisterUserRequest)
     }
     
     public enum Output {
         case fetchInfoDidSucceed(response: InfoResponse)
         case registerUserDidSucceed(response: RegisterUserResponse)
+        case verifyUserDetailsDidSucceed(response: VerifyUserDetailsResponse)
         case fetchDidFail(error: Error)
         case registerUserDidFail(error: NetworkError)
+        case verifyingDetailsDidFail(error: NetworkError)
         case showHideLoader(shouldShow: Bool)
     }
     
@@ -62,6 +65,14 @@ public extension UserRegisterationViewModel {
             case .registerUser(request: let request):
                 self.registerUser(request: request, baseURL: self.baseURL) { response in
                     self.handleResponse(response: response)
+                    self.output.send(.showHideLoader(shouldShow: false))
+                } failure: { error in
+                    self.output.send(.registerUserDidFail(error: error))
+                    self.output.send(.showHideLoader(shouldShow: false))
+                }
+            case .verifyUserDetails(request: let request):
+                self.verifyUserDetails(request: request, baseURL: self.baseURL) { response in
+                    self.output.send(.verifyUserDetailsDidSucceed(response: response))
                     self.output.send(.showHideLoader(shouldShow: false))
                 } failure: { error in
                     self.output.send(.registerUserDidFail(error: error))
@@ -156,6 +167,26 @@ public extension UserRegisterationViewModel {
         )
         
         service.registerUser(request: request)
+            .sink { completion in
+                debugPrint(completion)
+                switch completion {
+                case .failure(let error):
+                    failure(error)
+                default: break
+                }
+            } receiveValue: { response in
+                success(response)
+            }
+            .store(in: &cancellables)
+    }
+    
+    func verifyUserDetails(request: RegisterUserRequest, baseURL: String, success: @escaping (VerifyUserDetailsResponse) -> Void, failure: @escaping (NetworkError) -> Void) {
+        let service = UserRegisterationRepository(
+            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
+            endPoint: .verifyDetails
+        )
+        
+        service.verifyUserDetails(request: request)
             .sink { completion in
                 debugPrint(completion)
                 switch completion {
