@@ -36,6 +36,8 @@ extension LoginWithOtpViewModel {
                 self?.getCaptcha(num: mobileNumber)
             case .getOTPforMobileNumber(mobileNumber: let mobileNumber, enableDeviceSecurityCheck: let enableDeviceSecurityCheck):
                 self?.getOtpForMobileNumber(number: mobileNumber, isSecurityCheck: enableDeviceSecurityCheck)
+            case .loginAsGuestUser:
+                self?.loginAsGuestUser()
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -143,6 +145,31 @@ extension LoginWithOtpViewModel {
                 }
             } receiveValue: {   [weak self] response in
                 self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
+            }
+            .store(in: &cancellables)
+    }
+    
+    func loginAsGuestUser() {
+        self.output.send(.showLoader(shouldShow: true))
+        let request = GuestUserRequestModel(operationName: "/login/login-guest-user")
+        
+        let service = LoginWithOtpRepository(
+            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
+            endPoint: .loginAsGuest
+        )
+        
+        service.loginAsGuest(request: request)
+            .sink { [weak self] completion   in
+                debugPrint(completion)
+                self?.output.send(.showLoader(shouldShow: false))
+                switch completion {
+                case .failure(let error):
+                    self?.output.send(.loginAsGuestDidFail(error: error))
+                case .finished:
+                    debugPrint("nothing much to do here")
+                }
+            } receiveValue: { [weak self] response  in
+                self?.output.send(.loginAsGuestDidSucceed(response: response))
             }
             .store(in: &cancellables)
     }

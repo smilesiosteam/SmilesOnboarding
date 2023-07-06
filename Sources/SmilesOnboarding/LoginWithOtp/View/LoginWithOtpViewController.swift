@@ -12,10 +12,21 @@ import Combine
 import PhoneNumberKit
 import SmilesLanguageManager
 import SmilesLoader
+import SmilesBaseMainRequestManager
 
 @objc public class LoginWithOtpViewController: UIViewController {
     
     //MARK: IBOutlets
+    
+    @IBOutlet weak var changeLangBtn: UIButton! {
+        didSet {
+            if SmilesLanguageManager.shared.currentLanguage == .en {
+                changeLangBtn.setTitle("arabicTitle".localizedString, for: .normal)
+            } else {
+                changeLangBtn.setTitle("EnglishTitle".localizedString, for: .normal)
+            }
+        }
+    }
     @IBOutlet weak var titleLbl: UILabel! {
         didSet {
             //            titleLbl.fontTextStyle = .smilesBody1
@@ -75,6 +86,10 @@ import SmilesLoader
     private var mobileNumber = ""
     public var isComingFromGuestPopup = false
     
+    //MARK: CallBacks
+    @objc public var termsAndConditionTappCallback: (() -> Void)?
+    @objc public var loginAsGuestUserCallback:((String) -> Void)?
+    
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
         self.baseURL = baseURL
@@ -90,7 +105,7 @@ import SmilesLoader
         bind(to: viewModel)
         getCountiresFromWebService()
         enableSendCodeButton(isEnable: false)
-        termsAndCondLbl.attributedText = getAgreetoTermsAndConditionText(hint: "By continuing, I agree to Smiles by Etisalat’s Terms & conditions and privacy policy")
+        getAgreetoTermsAndConditionText(text: "By continuing, I agree to Smiles by Etisalat’s Terms & conditions and privacy policy")
         setupGuestButton()
     }
     
@@ -119,6 +134,12 @@ import SmilesLoader
                 case .showLoader(shouldShow: let shouldShow):
                     shouldShow ? SmilesLoader.show(isClearBackground: true) : SmilesLoader.dismiss()
 
+                case .loginAsGuestDidSucceed(response: let response):
+                    if let token = response.guestSessionDetails?.authToken {
+                        self?.loginAsGuestUserCallback?(token)
+                    }
+                case .loginAsGuestDidFail(error: let error):
+                    debugPrint(error.localizedDescription)
                 }
             }.store(in: &cancellables)
     }
@@ -131,6 +152,11 @@ import SmilesLoader
             lastModifiedDate = countryListResponse.lastModifiedDate.asStringOrEmpty()
         }
         self.input.send(.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall))
+    }
+    
+    @IBAction func changeLangBtnTapped(_ sender: Any) {
+        self.view.endEditing(true)
+        self.perform(#selector(self.changeLang), with: self, afterDelay: 0.7)
     }
     
     @IBAction func sendCodeTapped(_ sender: Any) {
@@ -147,6 +173,10 @@ import SmilesLoader
             vc.delegate = self
             present(vc, animated: true, completion: nil)
         }
+    }
+    
+    @IBAction func guestBtnTapped(_ sender: Any) {
+        self.input.send(.loginAsGuestUser)
     }
     
     func configureGetCaptchaData(response: CaptchaResponseModel) {
@@ -233,21 +263,24 @@ extension LoginWithOtpViewController {
         }
     }
     
-    func getAgreetoTermsAndConditionText(hint: String) -> NSMutableAttributedString {
-        let attributedString = NSMutableAttributedString(string: hint, attributes: [
+    func getAgreetoTermsAndConditionText(text: String) {
+        
+        let attributedString = NSMutableAttributedString(string: text, attributes: [
             .font: UIFont.circularXXTTBookFont(size: 14),
             .foregroundColor: #colorLiteral(red: 0.5019607843, green: 0.5019607843, blue: 0.5019607843, alpha: 1),
             .kern: 0.0
         ])
-        var range = (hint as NSString).range(of: "Terms & conditions and privacy policy")
+        var range = (text as NSString).range(of: "Terms & conditions and privacy policy")
         if SmilesLanguageManager.shared.currentLanguage == .ar {
-            range = NSRange(location: 9, length: hint.count - 9)
+            range = NSRange(location: 9, length: text.count - 9)
         }
         attributedString.addAttributes([.foregroundColor: UIColor.appPurpleColor1,
                                         .underlineStyle: NSUnderlineStyle.single.rawValue,
-                                        .font: UIFont.circularXXTTBookFont(size: 14)], range: range)
-        
-        return attributedString
+                                        .font: UIFont.circularXXTTBookFont(size: 14),
+                                        .underlineColor: UIColor.appPurpleColor1], range: range)
+        self.termsAndCondLbl.attributedText = attributedString
+        self.termsAndCondLbl.isUserInteractionEnabled = true
+        self.termsAndCondLbl.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapLabel(gesture:))))
     }
     
     func setupGuestButton() {
@@ -281,6 +314,52 @@ extension LoginWithOtpViewController {
         vc.otpTimeOut = otpTimeOut
         vc.mobileNumber = self.mobileNumber
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func tapLabel(gesture: UITapGestureRecognizer) {
+        let termsRange = (self.termsAndCondLbl.text! as NSString).range(of: "Terms & conditions and privacy policy")
+        if gesture.didTapAttributedTextInLabel(label: self.termsAndCondLbl, inRange: termsRange) {
+            self.termsAndConditionTappCallback?()
+        }
+    }
+    
+    @objc func changeLang() {
+        
+        if SmilesLanguageManager.shared.currentLanguage == .en {
+            
+            SmilesLanguageManager.shared.setLanguage(language: .ar)
+            
+            SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "ar"
+            changeLangBtn.setTitle("EnglishTitle".localizedString, for: .normal)
+        }
+        else {
+            SmilesLanguageManager.shared.setLanguage(language: .en)
+            SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "en"
+            changeLangBtn.setTitle("arabicTitle".localizedString, for: .normal)
+        }
+        
+        var firstCall = true
+        var lastModifiedDate = ""
+        if let countryListResponse = CountryListResponse.getCountryListResponse() {
+            firstCall = false
+            lastModifiedDate = countryListResponse.lastModifiedDate.asStringOrEmpty()
+        }
+        self.input.send(.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall))
+        mobileNumberTxtField.semanticContentAttribute = .forceLeftToRight
+        mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
+        countryCodeLbl.semanticContentAttribute = .forceLeftToRight
+        setupGuestButton()
+        reloadViewControllerAfterChangeLanguage()
+    }
+    
+    func reloadViewControllerAfterChangeLanguage() {
+        let windows = UIApplication.shared.windows
+        for window: UIWindow in windows {
+            for view: UIView in window.subviews {
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
+        }
     }
 }
 

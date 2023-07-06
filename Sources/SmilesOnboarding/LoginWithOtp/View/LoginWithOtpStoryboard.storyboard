@@ -34,12 +34,15 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Maa-wc-rww" userLabel="BackgroundView" customClass="HeaderGradientView" customModule="SmilesUtilities">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6fI-c6-IPV" customClass="CustomThemButton" customModule="Smiles" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6fI-c6-IPV">
                                         <rect key="frame" x="330" y="56" width="46" height="36"/>
                                         <fontDescription key="fontDescription" name="CircularXXTT-Medium" family="CircularXX TT" pointSize="20"/>
                                         <state key="normal" title="العربية">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <action selector="changeLangBtnTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="RF5-ez-i3B"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKh-qQ-jeL">
                                         <rect key="frame" x="16" y="112.00000000000001" width="71.666666666666671" height="33.666666666666671"/>
@@ -229,6 +232,9 @@ Terms &amp; conditions and privacy policy</string>
                                                                                 <state key="normal" title="Guest User Login">
                                                                                     <color key="titleColor" red="0.52941176469999995" green="0.3294117647" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 </state>
+                                                                                <connections>
+                                                                                    <action selector="guestBtnTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="jNv-i4-cqd"/>
+                                                                                </connections>
                                                                             </button>
                                                                         </subviews>
                                                                         <constraints>
@@ -314,6 +320,7 @@ Terms &amp; conditions and privacy policy</string>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="changeLangBtn" destination="6fI-c6-IPV" id="lIV-4a-r52"/>
                         <outlet property="countiresFieldView" destination="Hg8-RT-rWw" id="Oxm-Pm-kRy"/>
                         <outlet property="countryCodeLbl" destination="lwv-go-old" id="K3S-Zu-X8R"/>
                         <outlet property="countryFlagImg" destination="3cJ-IE-LCg" id="8Lh-Zt-7M8"/>
@@ -448,14 +455,8 @@ Terms &amp; conditions and privacy policy</string>
         </scene>
     </scenes>
     <designables>
-        <designable name="2bu-Om-9ao">
-            <size key="intrinsicContentSize" width="7.666666666666667" height="29"/>
-        </designable>
         <designable name="6fI-c6-IPV">
             <size key="intrinsicContentSize" width="46" height="36"/>
-        </designable>
-        <designable name="m2D-KP-uzJ">
-            <size key="intrinsicContentSize" width="5.333333333333333" height="18"/>
         </designable>
     </designables>
     <resources>

@@ -10,6 +10,8 @@ import DPOTPView
 import Combine
 import SmilesBaseMainRequestManager
 import SmilesLocationHandler
+import SmilesLanguageManager
+import SmilesLoader
 
 public class VerifyOtpViewController: UIViewController {
     //MARK: IBOutlets
@@ -40,7 +42,8 @@ public class VerifyOtpViewController: UIViewController {
         }
     }
     @IBOutlet weak var timerLabel: UILabel!
-    @IBOutlet weak var resendLabel: UILabel!
+    
+    @IBOutlet weak var resendBtn: UIButton!
     @IBOutlet weak var loginBtn: UIButton! {
         didSet {
             loginBtn.layer.cornerRadius = 24
@@ -56,7 +59,13 @@ public class VerifyOtpViewController: UIViewController {
     public var mobileNumber: String?
     private var otpNumber = ""
     private var baseURL: String = ""
-        
+    var countdownTimer: Timer?
+    var timeRemaining = 0 {
+        didSet {
+            updateTimerLabel()
+        }
+    }
+    
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
         self.baseURL = baseURL
@@ -71,7 +80,13 @@ public class VerifyOtpViewController: UIViewController {
         super.viewDidLoad()
         bind(to: viewModel)
         enableLoginButton(isEnable: false)
-        descLbl2.text = otpHeaderText
+        if let otptext = otpHeaderText {
+            descLbl2.text = otptext
+        } else {
+            descLbl2.text = getVerifyOtpHint(mobileNumber: mobileNumber.asStringOrEmpty())
+        }
+        setupResendButton()
+        startTimer()
     }
     
     
@@ -93,6 +108,18 @@ public class VerifyOtpViewController: UIViewController {
                     self?.configureProfileStatus(response: response, msisdn: msisdn, token: authToken)
                 case .getProfileStatusDidFail(error: let error):
                     debugPrint(error.localizedDescription)
+                case .showLoader(shouldShow: let shouldShow):
+                    shouldShow ? SmilesLoader.show(isClearBackground: true) : SmilesLoader.dismiss()
+                case .getOTPforMobileNumberDidSucceed(response: let response):
+                    if let time = response.timeout {
+                        self?.otpTimeOut = time
+                        self?.resendBtn.isHidden = true
+                        self?.enableLoginButton(isEnable: false)
+                        self?.startTimer()
+                    }
+                    
+                case .getOTPforMobileNumberDidFail(error: let error):
+                    debugPrint(error.localizedDescription)
                 }
             }.store(in: &cancellables)
     }
@@ -105,6 +132,9 @@ public class VerifyOtpViewController: UIViewController {
         self.input.send(.verifyOtp(otp: self.otpNumber))
     }
     
+    @IBAction func resendBtnTapped(_ sender: Any) {
+        self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
+    }
     func configureProfileStatus(response: GetProfileStatusResponse, msisdn: String, token: String) {
 //            self.presenter.updateMainRequestWithData(msidsn: mobNumber, authToken: authenticationToken, loginType: .otp)
         if let status = response.profileStatus
@@ -112,7 +142,7 @@ public class VerifyOtpViewController: UIViewController {
             SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.userInfo = nil
             LocationStateSaver.removeLocation()
             LocationStateSaver.removeRecentLocations()
-//            self.presenter.saveUserLoginType(loginType: .otp)
+
             switch status {
             case 1 :
                 //TODO: Enable Touch ID
@@ -120,7 +150,7 @@ public class VerifyOtpViewController: UIViewController {
                 return
             case 2 :
                 //TODO: Navigate to Register User
-//                navigateToRegistrationViewController()
+                
                 return
             case 3 :
                 //TODO: Navigate to Existing User Flow
@@ -145,6 +175,61 @@ extension VerifyOtpViewController {
             loginBtn.backgroundColor = .appRevampCellBorderGrayColor
             loginBtn.isUserInteractionEnabled = false
         }
+    }
+    
+    func getVerifyOtpHint( mobileNumber : String) -> String {
+        let text = "OtpHint".localizedString
+        
+        if mobileNumber.count > 10 , mobileNumber.count < 15
+        {
+            var hintText = text
+            var nubmer = mobileNumber
+            nubmer.replacingCharacter(value: mobileNumber, startIndexOffsetBy:6, endIndexOffsetBy: 11, replaceWith: "*****")
+            if SmilesLanguageManager.shared.currentLanguage == .en {
+                hintText += nubmer
+            } else {
+                hintText += "\n" + nubmer
+            }
+            return hintText
+            
+        }
+        return text
+    }
+    
+    func startTimer() {
+        timeRemaining = otpTimeOut
+        updateTimerLabel()
+        
+        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateTime() {
+        if timeRemaining > 0 {
+            timeRemaining -= 1
+        } else {
+            // Timer reached 0, enable the resend button
+            countdownTimer?.invalidate()
+            resendBtn.isHidden = false
+        }
+    }
+    
+    func updateTimerLabel() {
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func setupResendButton() {
+        let attrs = [
+            NSAttributedString.Key.font : UIFont.montserratBoldFont(size: 16),
+            NSAttributedString.Key.foregroundColor : UIColor.appPurpleColor,
+            NSAttributedString.Key.underlineStyle : 1] as [NSAttributedString.Key : Any]
+
+        let attributedString = NSMutableAttributedString(string:"")
+        let buttonTitleStr = NSMutableAttributedString(string:"Resend Code".localizedString, attributes:attrs)
+        attributedString.append(buttonTitleStr)
+        self.resendBtn.setAttributedTitle(attributedString, for: .normal)
+
     }
 }
 
