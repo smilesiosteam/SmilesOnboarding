@@ -67,7 +67,7 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     //MARK: CallBacks
-    public var navigateToRegisterViewCallBack: ((String, String, LoginType) -> Void)?
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -153,10 +153,10 @@ public class VerifyOtpViewController: UIViewController {
                 return
             case 2 :
                 // Navigate to Register User
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp)
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false)
             case 3 :
                 // Navigate to Existing User Flow
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp)
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, true)
             default:
                 return
             }

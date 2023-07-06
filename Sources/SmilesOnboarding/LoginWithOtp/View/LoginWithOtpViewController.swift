@@ -101,7 +101,7 @@ import SmilesBaseMainRequestManager
     //MARK: CallBacks
     public var termsAndConditionTappCallback: (() -> Void)?
     public var loginAsGuestUserCallback:((String) -> Void)?
-    public var navigateToRegisterViewCallBack: ((String, String, LoginType) -> Void)?
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
     public var loginWithTouchIdCallback: (() -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
@@ -147,7 +147,7 @@ import SmilesBaseMainRequestManager
                 case .getOTPforMobileNumberDidFail(error: let error):
                     debugPrint(error.localizedDescription)
                 case .showLoader(shouldShow: let shouldShow):
-                    shouldShow ? SmilesLoader.show(isClearBackground: true) : SmilesLoader.dismiss()
+                    shouldShow ? SmilesLoader.show(isClearBackground: false) : SmilesLoader.dismiss()
 
                 case .loginAsGuestDidSucceed(response: let response):
                     if let token = response.guestSessionDetails?.authToken {
@@ -335,8 +335,8 @@ extension LoginWithOtpViewController {
         let vc = moduleStoryboard.instantiateViewController(identifier: "VerifyOtpViewController", creator: { coder in
             VerifyOtpViewController(coder: coder, baseURL: self.baseURL)
         })
-        vc.navigateToRegisterViewCallBack = { msisdn, token, loginType in
-            self.navigateToRegisterViewCallBack?(msisdn, token, loginType)
+        vc.navigateToRegisterViewCallBack = { msisdn, token, loginType, isExistingUser in
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser)
         }
         vc.otpHeaderText = otpHeaderText
         vc.otpTimeOut = otpTimeOut
