@@ -208,6 +208,9 @@ Terms &amp; conditions and privacy policy</string>
                                                                                         <state key="normal">
                                                                                             <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         </state>
+                                                                                        <connections>
+                                                                                            <action selector="touchIdtapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="dxs-ov-15H"/>
+                                                                                        </connections>
                                                                                     </button>
                                                                                 </subviews>
                                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -335,6 +338,8 @@ Terms &amp; conditions and privacy policy</string>
                         <outlet property="sendCodeBtn" destination="G9I-QZ-XkJ" id="aLk-UZ-2rD"/>
                         <outlet property="termsAndCondLbl" destination="c5x-qZ-Wc1" id="RLd-NY-L6X"/>
                         <outlet property="titleLbl" destination="aKh-qQ-jeL" id="KQZ-cl-uqt"/>
+                        <outlet property="touchIdImage" destination="Fc9-V6-bAD" id="jtO-xw-ESt"/>
+                        <outlet property="touchIdTtitle" destination="9Z1-av-n32" id="Cfn-OT-pyV"/>
                         <outlet property="touchIdView" destination="cFT-jK-2El" id="FBx-Ta-Jph"/>
                     </connections>
                 </viewController>
@@ -454,11 +459,6 @@ Terms &amp; conditions and privacy policy</string>
             <point key="canvasLocation" x="981" y="4"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="6fI-c6-IPV">
-            <size key="intrinsicContentSize" width="46" height="36"/>
-        </designable>
-    </designables>
     <resources>
         <image name="TouchID" width="30" height="30"/>
         <image name="arrowBlack" width="13" height="8"/>

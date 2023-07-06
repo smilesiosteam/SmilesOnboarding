@@ -66,6 +66,9 @@ public class VerifyOtpViewController: UIViewController {
         }
     }
     
+    //MARK: CallBacks
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType) -> Void)?
+    
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
         self.baseURL = baseURL
@@ -149,14 +152,11 @@ public class VerifyOtpViewController: UIViewController {
 //                enableTouchIdIfNotExist(mobNumber)
                 return
             case 2 :
-                //TODO: Navigate to Register User
-                
-                return
+                // Navigate to Register User
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp)
             case 3 :
-                //TODO: Navigate to Existing User Flow
-//                navigateToCheckExistingUserViewController()
-                
-                return
+                // Navigate to Existing User Flow
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp)
             default:
                 return
             }

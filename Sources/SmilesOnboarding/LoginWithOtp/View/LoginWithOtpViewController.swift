@@ -29,10 +29,14 @@ import SmilesBaseMainRequestManager
     }
     @IBOutlet weak var titleLbl: UILabel! {
         didSet {
-            //            titleLbl.fontTextStyle = .smilesBody1
+            titleLbl.text = "Login".localizedString
         }
     }
-    @IBOutlet weak var descLbl: UILabel!
+    @IBOutlet weak var descLbl: UILabel! {
+        didSet {
+            descLbl.text = "WelcomeText".localizedString
+        }
+    }
     @IBOutlet weak var mainView: UIView! {
         didSet {
             mainView.layer.cornerRadius = 20
@@ -40,7 +44,11 @@ import SmilesBaseMainRequestManager
             mainView.layer.masksToBounds = true
         }
     }
-    @IBOutlet weak var descLbl2: UILabel!
+    @IBOutlet weak var descLbl2: UILabel! {
+        didSet {
+            descLbl2.text = "LoginInstructions".localizedString
+        }
+    }
     @IBOutlet weak var countiresFieldView: UIView! {
         didSet {
             countiresFieldView.layer.cornerRadius = 12
@@ -74,6 +82,9 @@ import SmilesBaseMainRequestManager
         }
     }
     @IBOutlet weak var touchIdView: UIView!
+    
+    @IBOutlet weak var touchIdImage: UIImageView!
+    @IBOutlet weak var touchIdTtitle: UILabel!
     @IBOutlet weak var guestUserBtn: UIButton!
     
     //MARK: Variables
@@ -85,10 +96,13 @@ import SmilesBaseMainRequestManager
     private let phoneNumberKit = PhoneNumberKit()
     private var mobileNumber = ""
     public var isComingFromGuestPopup = false
+    public var shouldShowTouchId = false
     
     //MARK: CallBacks
-    @objc public var termsAndConditionTappCallback: (() -> Void)?
-    @objc public var loginAsGuestUserCallback:((String) -> Void)?
+    public var termsAndConditionTappCallback: (() -> Void)?
+    public var loginAsGuestUserCallback:((String) -> Void)?
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType) -> Void)?
+    public var loginWithTouchIdCallback: (() -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -105,8 +119,9 @@ import SmilesBaseMainRequestManager
         bind(to: viewModel)
         getCountiresFromWebService()
         enableSendCodeButton(isEnable: false)
-        getAgreetoTermsAndConditionText(text: "By continuing, I agree to Smiles by Etisalat’s Terms & conditions and privacy policy")
+        getAgreetoTermsAndConditionText(text: "LoginTermsNew".localizedString)
         setupGuestButton()
+        setupTouchId()
     }
     
     //MARK: Binding
@@ -179,11 +194,15 @@ import SmilesBaseMainRequestManager
         self.input.send(.loginAsGuestUser)
     }
     
+    @IBAction func touchIdtapped(_ sender: Any) {
+        self.loginWithTouchIdCallback?()
+    }
+    
+    
     func configureGetCaptchaData(response: CaptchaResponseModel) {
         if let captchaString = response.captchaDetails?.captcha, !captchaString.isEmpty, let timer = response.captchaDetails?.captchaExpiry, timer > 0 {
             print("Captcha exists, navigate to captcha screen with captcha")
             //TODO: Captcha Redirection
-//            self.loginDelegate?.didGetCaptchWithString(captchaString: captchaString,mobileNumber: mobileNumber, and: timer)
         } else {
             if let limitExceededMsg = response.limitExceededMsg, !limitExceededMsg.isEmpty, let limitExceededTitle = response.limitExceededTitle, !limitExceededTitle.isEmpty {
                 self.showLimitExceedPopup(title: limitExceededTitle, subTitle: limitExceededMsg)
@@ -296,6 +315,12 @@ extension LoginWithOtpViewController {
 
     }
     
+    func setupTouchId() {
+        self.touchIdImage.image = UIImage(named: self.setUseTouchIdImage())
+        self.touchIdTtitle.text = self.setUseTouchIdTitle()
+        self.touchIdView.isHidden = !shouldShowTouchId
+    }
+    
     func navigateToVerifyOtp(response: CreateOtpResponse) {
         var otpTimeOut = 0
         var otpHeaderText: String?
@@ -310,6 +335,9 @@ extension LoginWithOtpViewController {
         let vc = moduleStoryboard.instantiateViewController(identifier: "VerifyOtpViewController", creator: { coder in
             VerifyOtpViewController(coder: coder, baseURL: self.baseURL)
         })
+        vc.navigateToRegisterViewCallBack = { msisdn, token, loginType in
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType)
+        }
         vc.otpHeaderText = otpHeaderText
         vc.otpTimeOut = otpTimeOut
         vc.mobileNumber = self.mobileNumber
@@ -349,6 +377,7 @@ extension LoginWithOtpViewController {
         mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
         countryCodeLbl.semanticContentAttribute = .forceLeftToRight
         setupGuestButton()
+        setupTouchId()
         reloadViewControllerAfterChangeLanguage()
     }
     
@@ -360,6 +389,14 @@ extension LoginWithOtpViewController {
                 window.addSubview(view)
             }
         }
+    }
+    
+    func setUseTouchIdTitle() -> String {
+        return UIDeviceHelper().isIphoneX() ? "UseFaceId".localizedString : "UseTouchID".localizedString
+    }
+    
+    func setUseTouchIdImage() -> String {
+        return UIDeviceHelper().isIphoneX() ? "face_id_consumer" : "TouchID"
     }
 }
 
