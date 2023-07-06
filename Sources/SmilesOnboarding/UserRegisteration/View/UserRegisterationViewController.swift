@@ -81,7 +81,7 @@ public class UserRegisterationViewController: UIViewController {
     private var viewModel: UserRegisterationViewModel!
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String = ""
-    private nationality:CountryList?
+    var nationality:CountryList?
     public var termsAndConditions = {}
     public var didSucceedRegistration = {}
     public var registrationCompleted = {}
@@ -379,7 +379,7 @@ extension UserRegisterationViewController : UITextFieldDelegate
         else if textField == genderTxtFld {
             if isExistingUser {
                 genderTxtFld .resignFirstResponder()
-            }else if !isExistingUser {
+            }else {
                 promoTxtFld.becomeFirstResponder()
             }
             
