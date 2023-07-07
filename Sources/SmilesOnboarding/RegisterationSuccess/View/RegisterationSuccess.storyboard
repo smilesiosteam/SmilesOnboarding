@@ -2,14 +2,12 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gzH-OE-yhl">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="AM278.TTF">
-            <string>NeoTechAlt</string>
-        </array>
         <array key="CircularXXTT-Medium.ttf">
             <string>CircularXXTT-Medium</string>
         </array>
@@ -35,19 +33,6 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C1X-60-AMm">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="782.66666666666663"/>
                                         <subviews>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cdw-V3-nPY" customClass="CustomThemButton" customModule="Smiles" customModuleProvider="target">
-                                                <rect key="frame" x="317" y="26" width="46" height="38"/>
-                                                <fontDescription key="fontDescription" name="NeoTechAlt" family="Neo Tech Alt" pointSize="20"/>
-                                                <state key="normal" title="العربية">
-                                                    <color key="titleColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="titleThemIdentifier" value="ButtonSecondaryTitleColor"/>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="didSelectLanguageButtonAction:" destination="gzH-OE-yhl" eventType="touchUpInside" id="9Ot-rO-TMR"/>
-                                                </connections>
-                                            </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SmilesLogo_ENG" translatesAutoresizingMaskIntoConstraints="NO" id="Z0l-Sx-njq">
                                                 <rect key="frame" x="110" y="65" width="173" height="69"/>
                                             </imageView>
@@ -108,7 +93,6 @@
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="KpJ-29-TAB" secondAttribute="bottom" constant="215" id="0jN-T4-lIN"/>
                                             <constraint firstItem="zL3-Te-IEw" firstAttribute="top" secondItem="Z0l-Sx-njq" secondAttribute="bottom" constant="30" id="CaG-kf-O73"/>
-                                            <constraint firstAttribute="trailing" secondItem="Cdw-V3-nPY" secondAttribute="trailing" constant="30" id="GB8-Ez-AuE"/>
                                             <constraint firstItem="g82-JY-zyB" firstAttribute="leading" secondItem="C1X-60-AMm" secondAttribute="leading" constant="10" id="IJ0-Ng-yeg"/>
                                             <constraint firstItem="Z0l-Sx-njq" firstAttribute="centerX" secondItem="C1X-60-AMm" secondAttribute="centerX" id="Lp3-d3-rCh"/>
                                             <constraint firstItem="vd4-aR-lzT" firstAttribute="top" secondItem="sCu-8e-VLB" secondAttribute="bottom" constant="13" id="MBZ-jO-iXI"/>
@@ -123,7 +107,6 @@
                                             <constraint firstAttribute="trailing" secondItem="g82-JY-zyB" secondAttribute="trailing" constant="10" id="cm5-zs-8en"/>
                                             <constraint firstItem="g82-JY-zyB" firstAttribute="top" secondItem="vd4-aR-lzT" secondAttribute="bottom" constant="24" id="hsn-b4-lC1"/>
                                             <constraint firstItem="Z0l-Sx-njq" firstAttribute="top" secondItem="C1X-60-AMm" secondAttribute="top" constant="65" id="iOY-ZX-hup"/>
-                                            <constraint firstItem="Cdw-V3-nPY" firstAttribute="top" secondItem="C1X-60-AMm" secondAttribute="top" constant="26" id="m9k-6H-8PE"/>
                                             <constraint firstItem="KpJ-29-TAB" firstAttribute="top" secondItem="g82-JY-zyB" secondAttribute="bottom" constant="35" id="q1Y-eA-oMT"/>
                                         </constraints>
                                     </view>
@@ -152,8 +135,10 @@
                     <navigationItem key="navigationItem" id="TRd-ld-qyi"/>
                     <connections>
                         <outlet property="btn_done" destination="KpJ-29-TAB" id="igz-GP-tge"/>
-                        <outlet property="btn_langauge" destination="Cdw-V3-nPY" id="sIH-vi-Vlc"/>
+                        <outlet property="congratulationsLbl" destination="sCu-8e-VLB" id="hhh-vE-NSe"/>
                         <outlet property="img_smilesLogo" destination="Z0l-Sx-njq" id="cQG-gm-aZH"/>
+                        <outlet property="infoLbl" destination="g82-JY-zyB" id="0li-fe-ftD"/>
+                        <outlet property="subtitleLbl" destination="vd4-aR-lzT" id="oFL-Q2-4aZ"/>
                         <outlet property="successImage" destination="zL3-Te-IEw" id="Nyi-l5-gkZ"/>
                     </connections>
                 </viewController>
@@ -163,9 +148,6 @@
         </scene>
     </scenes>
     <designables>
-        <designable name="Cdw-V3-nPY">
-            <size key="intrinsicContentSize" width="46" height="38"/>
-        </designable>
         <designable name="KpJ-29-TAB">
             <size key="intrinsicContentSize" width="41" height="29"/>
         </designable>

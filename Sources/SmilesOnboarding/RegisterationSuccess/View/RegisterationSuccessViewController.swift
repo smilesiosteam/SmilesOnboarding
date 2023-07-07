@@ -8,104 +8,56 @@
 
 import UIKit
 import LottieAnimationManager
+import SmilesUtilities
 
 class RegisterationSuccessViewController: UIViewController {
-    
-    @IBOutlet weak var btn_langauge: UIButton!
-    
     @IBOutlet weak var img_smilesLogo: UIImageView!
     
     @IBOutlet weak var successImage: UIImageView!
     @IBOutlet weak var btn_done: UIButton!
     var mobileNumber : String!
-        
+    
+    @IBOutlet weak var congratulationsLbl: UILabel!
+    
+    @IBOutlet weak var subtitleLbl: UILabel!
+    
+    @IBOutlet weak var infoLbl: UILabel!
+    
+    
+    
     var registrationCompleted = {}
     override func viewDidLoad() {
         super.viewDidLoad()
-        LottieAnimationManager.showAnimation(onView: successImage, withJsonFileName: "Thank you for sending your feedback 198x169", removeFromSuper: false, loopMode: .loop) {(bool) in
-            
-        }
-//        self.presenter.applyLanguageChange(view: self.view, button: btn_done)
-        // Do any additional setup after loading the view.
+        LottieAnimationManager.showAnimation(onView: successImage, withJsonFileName: "Thank you for sending your feedback 198x169", removeFromSuper: false, loopMode: .loop) {(bool) in }
+        
+        btn_done.setTitle("DoneTitle".localizedString, for: .normal)
+        congratulationsLbl.text = "ShareCongratulationsTitle".localizedString
+        subtitleLbl.text = "you are all set to start enjoying Smiles!".localizedString
+        infoLbl.text = "We have sent you a welcome email with a link to verify your Email address. Link expires in 24 hours.".localizedString
     }
     
     public override  func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(true)
-//            UIApplication.delegte().currentPresentedViewController = self
-
-        }
-    
-    static func get() -> RegisterationSuccessViewController {
-        return UIStoryboard(name: "RegisterationSuccess", bundle: Bundle.module).instantiateViewController(withIdentifier: "RegisterationSuccessViewController") as! RegisterationSuccessViewController
+        super.viewWillAppear(true)
     }
     
-    @IBAction func didSelectLanguageButtonAction(_ sender: Any) {
-//        if LanguageManager.sharedInstance()?.currentLanguage == English {
-//
-//            LanguageManager.sharedInstance()?.switchLanguageToArabic()
-//
-//            btn_langauge.setTitle(LanguageManager.sharedInstance()?.getLocalizedString(forKey: "EnglishTitle"), for: .normal)
-//
-//        }
-//        else {
-//
-//            LanguageManager.sharedInstance()?.switchLanguageToEnglish()
-//
-//            btn_langauge.setTitle(LanguageManager.sharedInstance()?.getLocalizedString(forKey: "arabicTitle"), for: .normal)
-//
-//        }
-//        self.presenter.reloadViewControllerAfterChangeLanguage()
-//        img_smilesLogo.image = self.presenter.showSmilesLogoBasedOnLanguage()
-//
-//        self.presenter.applyLanguageChange(view: self.view, button: btn_done)
-        
+    static func get() -> RegisterationSuccessViewController {
+        UIStoryboard(name: "RegisterationSuccess", bundle: Bundle.module).instantiateViewController(withIdentifier: "RegisterationSuccessViewController") as! RegisterationSuccessViewController
     }
     
     
     @IBAction func didSelectDoneButtonAction(_ sender: Any) {
-        registrationCompleted()
-//        if !self.presenter.checkIfTouchIdEnabled(){
-//            if self.presenter.checkIfDeviceSupportToucId(){
-//                openEnableTouchIdViewController()
+        if !UserDefaults.standard.bool(forKey: "hasTouchId") {
+//            if touchMe.canEvaluatePolicy(){
+//                let enableTouchIdViewControlelr = segue.destination as! EnableTouchIdViewController
+//                enableTouchIdViewControlelr.delegate = self
+//                enableTouchIdViewControlelr.mobileNumber = self.presenter.getAccountMobileNum()!
 //            }
 //            else{
-//                navigateToHomeScreen()
+//                registrationCompleted()
 //            }
-//        }
-//        else{
-//            navigateToHomeScreen()
-//        }
-        
+        }
+        else{
+            registrationCompleted()
+        }
     }
-    
-    func openEnableTouchIdViewController()  {
-        
-        self.performSegue(withIdentifier: "TouchIdModel", sender: nil)
-        
-    }
-    
-    
-    
-    // MARK: - Navigation
-    
-    public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-//        if segue.identifier == "TouchIdModel" {
-//            let enableTouchIdViewControlelr = segue.destination as! EnableTouchIdViewController
-//            enableTouchIdViewControlelr.delegate = self
-//            enableTouchIdViewControlelr.mobileNumber = self.presenter.getAccountMobileNum()!
-//        }
-    }
-    func showDoneButtonTitle(button : UIButton) {
-//        button.setTitle(LanguageManager.sharedInstance()?.getLocalizedString(forKey: button.accessibilityHint), for: .normal)
-    }
-    
-    func applyLanguageChange(view : UIView, button : UIButton)  {
-        
-//        CommonMethods.applyLocalizedStrings(toAllViews:view)
-        
-        showDoneButtonTitle(button: button)
-        
-    }
-    
 }
