@@ -47,7 +47,7 @@ public class UserRegisterationViewController: UIViewController {
     @IBOutlet weak var dobPickerBtn: UIButton!
     
     @IBOutlet weak var nationalityLbl: UILabel!
-    
+    @IBOutlet weak var countryFlagImg: UIImageView!
     @IBOutlet weak var nationalityTxtFld: TextFieldWithValidation!
     
     @IBOutlet weak var genderLbl: UILabel!
@@ -84,6 +84,8 @@ public class UserRegisterationViewController: UIViewController {
     public var nationality:CountryList?=nil{
         didSet{
             self.nationalityTxtFld.text = nationality?.countryName
+            self.countryFlagImg.sd_setImage(with: URL(string: nationality?.flagIconUrl ?? ""))
+            self.nationalityTxtFld.paddingLeft = 47
             updateContinueButtonUI()
         }
     }
