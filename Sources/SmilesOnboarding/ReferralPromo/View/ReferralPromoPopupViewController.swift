@@ -8,6 +8,7 @@
 
 import UIKit
 import Combine
+import SmilesLanguageManager
 
 public class ReferralPromoPopupViewController: UIViewController {
     
@@ -58,6 +59,8 @@ public class ReferralPromoPopupViewController: UIViewController {
     
     
     func setupUI() {
+        titleLabel.semanticContentAttribute = SmilesLanguageManager.shared.currentLanguage == .ar ? .forceRightToLeft : .forceLeftToRight
+        descriptionText.semanticContentAttribute = titleLabel.semanticContentAttribute
         titleLabel.text = data.info.title
         descriptionText.text = data.info.description
         tableView.dataSource = self

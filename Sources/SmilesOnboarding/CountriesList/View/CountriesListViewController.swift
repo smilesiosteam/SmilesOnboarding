@@ -42,6 +42,7 @@ public class CountriesListViewController: UIViewController {
     
     var countriesList: CountryListResponse?
     weak var delegate: CountrySelectionDelegate?
+    var showCountryCodeInList=true
     
     private var sections = [(title: String, countries: [CountryList])]()
     private var sectionTitles = [String]()
@@ -117,6 +118,7 @@ extension CountriesListViewController: UITableViewDelegate, UITableViewDataSourc
         cell.countryName.text = country.countryName
         cell.countryCode.text = "+" + (country.iddCode ?? "")
         cell.countryimage.sd_setImage(with: URL(string: country.flagIconUrl ?? ""))
+        cell.countryCode.isHidden = !showCountryCodeInList
         return cell
     }
     
