@@ -8,7 +8,7 @@
 import Foundation
 import NetworkingLayer
 
-class CreateOtpResponse : BaseMainResponse {
+class CreateOtpResponse: BaseMainResponse {
     
     let timeout : Int?
     let limitExceededTitle : String?

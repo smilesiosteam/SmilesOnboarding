@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Medium.ttf">
+            <string>Lato-Medium</string>
+        </array>
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+        <array key="neotechalt.ttf">
+            <string>NeoTechAlt</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Enable Touch Id View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="EnableTouchIdViewController" id="Y6W-OH-hqX" customClass="EnableTouchIdViewController" customModule="SmilesOnboarding" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDO-CQ-lCU">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TouchID" translatesAutoresizingMaskIntoConstraints="NO" id="E8C-lV-fTL">
+                                        <rect key="frame" x="181.66666666666666" y="158" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="WRG-XC-wCq"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activate your Touch ID for quicker access" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wiU-bg-Dqo">
+                                        <rect key="frame" x="0.0" y="201" width="393" height="42.666666666666657"/>
+                                        <fontDescription key="fontDescription" name="NeoTechAlt" family="Neo Tech Alt" pointSize="17"/>
+                                        <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can enable/disable this option in Settings Screen" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9I3-sU-xdb">
+                                        <rect key="frame" x="37.333333333333343" y="268.66666666666669" width="318.33333333333326" height="17"/>
+                                        <accessibility key="accessibilityConfiguration" hint="You can enable/disable this option in Settings Screen"/>
+                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
+                                        <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="You can enable/disable this option in Settings Screen"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6YA-Tz-p5s">
+                                        <rect key="frame" x="0.0" y="739.66666666666663" width="393" height="112.33333333333337"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7dp-WM-j0e">
+                                                <rect key="frame" x="30" y="0.0" width="333" height="50"/>
+                                                <color key="backgroundColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Enable Touch Id"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="d02-Gf-snZ"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
+                                                <state key="normal" title="Enable Touch Id">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="enableBtntapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Chc-bN-hzX"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jzv-Rt-s3o">
+                                                <rect key="frame" x="48.666666666666657" y="70" width="296" height="29"/>
+                                                <accessibility key="accessibilityConfiguration" hint="mayBeLater"/>
+                                                <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
+                                                <state key="normal" title="Maybe later">
+                                                    <color key="titleColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="maybeBtntapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="JNQ-zz-jQ2"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="jzv-Rt-s3o" secondAttribute="trailing" constant="48.5" id="1VS-rb-feK"/>
+                                            <constraint firstAttribute="bottom" secondItem="jzv-Rt-s3o" secondAttribute="bottom" constant="13.5" id="9Dw-BI-dQR"/>
+                                            <constraint firstItem="jzv-Rt-s3o" firstAttribute="leading" secondItem="6YA-Tz-p5s" secondAttribute="leading" constant="48.5" id="Yud-BY-2TK"/>
+                                            <constraint firstAttribute="trailing" secondItem="7dp-WM-j0e" secondAttribute="trailing" constant="30" id="aMM-NX-SQH"/>
+                                            <constraint firstItem="7dp-WM-j0e" firstAttribute="top" secondItem="6YA-Tz-p5s" secondAttribute="top" id="g51-bo-Ann"/>
+                                            <constraint firstItem="7dp-WM-j0e" firstAttribute="leading" secondItem="6YA-Tz-p5s" secondAttribute="leading" constant="30" id="go2-kN-nXN"/>
+                                            <constraint firstItem="jzv-Rt-s3o" firstAttribute="top" secondItem="7dp-WM-j0e" secondAttribute="bottom" constant="20" id="puT-VQ-wmp"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="6YA-Tz-p5s" secondAttribute="bottom" id="5f4-L5-BGI"/>
+                                    <constraint firstItem="wiU-bg-Dqo" firstAttribute="leading" secondItem="ZDO-CQ-lCU" secondAttribute="leading" id="8Cf-T0-QX0"/>
+                                    <constraint firstItem="E8C-lV-fTL" firstAttribute="centerX" secondItem="ZDO-CQ-lCU" secondAttribute="centerX" id="Hhc-VM-TPr"/>
+                                    <constraint firstAttribute="trailing" secondItem="6YA-Tz-p5s" secondAttribute="trailing" id="MTg-ko-vnt"/>
+                                    <constraint firstItem="9I3-sU-xdb" firstAttribute="top" secondItem="wiU-bg-Dqo" secondAttribute="bottom" constant="25" id="Sdu-hp-0Nj"/>
+                                    <constraint firstItem="6YA-Tz-p5s" firstAttribute="leading" secondItem="ZDO-CQ-lCU" secondAttribute="leading" id="Urs-ZO-JKg"/>
+                                    <constraint firstItem="wiU-bg-Dqo" firstAttribute="top" secondItem="E8C-lV-fTL" secondAttribute="bottom" constant="13" id="hFX-Hx-DGM"/>
+                                    <constraint firstItem="9I3-sU-xdb" firstAttribute="centerX" secondItem="ZDO-CQ-lCU" secondAttribute="centerX" id="kwh-5s-U1C"/>
+                                    <constraint firstItem="E8C-lV-fTL" firstAttribute="top" secondItem="ZDO-CQ-lCU" secondAttribute="top" constant="158" id="v1t-kD-feU"/>
+                                    <constraint firstAttribute="trailing" secondItem="wiU-bg-Dqo" secondAttribute="trailing" id="wCC-UR-jN9"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ZDO-CQ-lCU" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="Q4J-Zn-D42"/>
+                            <constraint firstItem="ZDO-CQ-lCU" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="f3S-uS-clv"/>
+                            <constraint firstAttribute="bottom" secondItem="ZDO-CQ-lCU" secondAttribute="bottom" id="gav-QT-UMZ"/>
+                            <constraint firstAttribute="trailing" secondItem="ZDO-CQ-lCU" secondAttribute="trailing" id="qUP-Gt-5CW"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="enableTouchId" destination="7dp-WM-j0e" id="Gda-qo-vdV"/>
+                        <outlet property="enableTouchIdTitle" destination="wiU-bg-Dqo" id="Iui-Ou-eLd"/>
+                        <outlet property="maybeBtn" destination="jzv-Rt-s3o" id="qNO-U5-aGd"/>
+                        <outlet property="touchIDImg" destination="E8C-lV-fTL" id="xcg-fH-PQ6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-62" y="-17"/>
+        </scene>
+    </scenes>
+    <designables>
+        <designable name="7dp-WM-j0e">
+            <size key="intrinsicContentSize" width="103" height="30"/>
+        </designable>
+        <designable name="jzv-Rt-s3o">
+            <size key="intrinsicContentSize" width="74" height="29"/>
+        </designable>
+    </designables>
+    <resources>
+        <image name="TouchID" width="30" height="30"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
