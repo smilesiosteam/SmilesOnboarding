@@ -184,6 +184,7 @@ public class UserRegisterationViewController: UIViewController {
     func moveToWelcome(){
         let vc = RegisterationSuccessViewController.get()
         vc.registrationCompleted = registrationCompleted
+        vc.baseUrl = self.baseURL
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -433,17 +434,28 @@ extension UserRegisterationViewController : UITextFieldDelegate
         
         if !UserDefaults.standard.bool(forKey: "hasTouchId")
         {
-//            self.performSegue(withIdentifier: "TouchIdModel", sender: nil)
+            presentEnableTouchIdViewController()
         }
         else{
             if let mobileNumberForTouchId = UserDefaults.standard.string(forKey: "mobileNumberForTouchId"),!mobileNumberForTouchId.isEmpty
             {
                 registrationCompleted()
             }
-            else{
-//                self.performSegue(withIdentifier: "TouchIdModel", sender: nil)
+            else {
+                presentEnableTouchIdViewController()
             }
         }
+    }
+    
+    func presentEnableTouchIdViewController() {
+        let moduleStoryboard = UIStoryboard(name: "EnableTouchIdStoryboard", bundle: .module)
+        let vc = moduleStoryboard.instantiateViewController(identifier: "EnableTouchIdViewController", creator: { coder in
+            EnableTouchIdViewController(coder: coder, baseURL: self.baseURL)
+        })
+        vc.mobileNumber = self.getAccountMobileNum() ?? ""
+        vc.delegate = self
+        self.navigationController?.present(vc)
+        
     }
     
     //MARK: - Show Banner and error Pop ups
@@ -484,12 +496,6 @@ extension UserRegisterationViewController : UITextFieldDelegate
         }
         return ""
     }
-    //touch id done
-    func didDismissView(viewController: UIViewController) {
-        viewController.dismiss(animated: true) {
-            self.registrationCompleted()
-        }
-    }
     
     func didGetUserDetailsVerifiedAndHasNoVaildEmail(responseTitle: String, responseSubtitle: String, isEmailVerified: Bool) {
         
@@ -502,8 +508,6 @@ extension UserRegisterationViewController : UITextFieldDelegate
     }
 
     func didShowPopUp(responseTitle: String, responseSubtitle: String) {
-
-//        self.presenter.changeNe xtButtonStyle(button: btn_verify, disable: true)
         didFailExistingVerificationFailed(responseTitle,responseSubtitle){}
     }
 
@@ -560,4 +564,11 @@ extension UserRegisterationViewController: CountrySelectionDelegate {
 
     }
 
+}
+
+extension UserRegisterationViewController: EnableTouchIdDelegate {
+    public func didDismissEnableTouchVC(_ viewController: UIViewController) {
+        viewController.dismiss(animated: true)
+        self.registrationCompleted()
+    }
 }

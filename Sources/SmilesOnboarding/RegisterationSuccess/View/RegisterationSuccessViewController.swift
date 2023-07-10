@@ -16,6 +16,7 @@ class RegisterationSuccessViewController: UIViewController {
     @IBOutlet weak var successImage: UIImageView!
     @IBOutlet weak var btn_done: UIButton!
     var mobileNumber : String!
+    var baseUrl: String?
     
     @IBOutlet weak var congratulationsLbl: UILabel!
     
@@ -47,17 +48,27 @@ class RegisterationSuccessViewController: UIViewController {
     
     @IBAction func didSelectDoneButtonAction(_ sender: Any) {
         if !UserDefaults.standard.bool(forKey: "hasTouchId") {
-//            if touchMe.canEvaluatePolicy(){
-//                let enableTouchIdViewControlelr = segue.destination as! EnableTouchIdViewController
-//                enableTouchIdViewControlelr.delegate = self
-//                enableTouchIdViewControlelr.mobileNumber = self.presenter.getAccountMobileNum()!
-//            }
-//            else{
-//                registrationCompleted()
-//            }
+            presentEnableTouchIdViewController()
         }
         else{
             registrationCompleted()
         }
+    }
+    
+    func presentEnableTouchIdViewController() {
+        let moduleStoryboard = UIStoryboard(name: "EnableTouchIdStoryboard", bundle: .module)
+        let vc = moduleStoryboard.instantiateViewController(identifier: "EnableTouchIdViewController", creator: { coder in
+            EnableTouchIdViewController(coder: coder, baseURL: self.baseUrl ?? "")
+        })
+        vc.mobileNumber = self.mobileNumber
+        vc.delegate = self
+        self.navigationController?.present(vc)
+    }
+}
+
+extension RegisterationSuccessViewController: EnableTouchIdDelegate {
+    public func didDismissEnableTouchVC(_ viewController: UIViewController) {
+        viewController.dismiss(animated: true)
+        self.registrationCompleted()
     }
 }

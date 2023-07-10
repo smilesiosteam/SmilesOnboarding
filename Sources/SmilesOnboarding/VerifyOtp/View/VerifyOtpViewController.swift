@@ -59,6 +59,7 @@ public class VerifyOtpViewController: UIViewController {
     public var mobileNumber: String?
     private var otpNumber = ""
     private var baseURL: String = ""
+    private var authToken = ""
     var countdownTimer: Timer?
     var timeRemaining = 0 {
         didSet {
@@ -148,9 +149,9 @@ public class VerifyOtpViewController: UIViewController {
 
             switch status {
             case 1 :
-                //TODO: Enable Touch ID
-//                enableTouchIdIfNotExist(mobNumber)
-                return
+                // Present Enable TouchID popup
+                self.authToken = token
+                presentEnableTouchIdViewController()
             case 2 :
                 // Navigate to Register User
                 self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false)
@@ -161,6 +162,16 @@ public class VerifyOtpViewController: UIViewController {
                 return
             }
         }
+    }
+    func presentEnableTouchIdViewController() {
+        let moduleStoryboard = UIStoryboard(name: "EnableTouchIdStoryboard", bundle: .module)
+        let vc = moduleStoryboard.instantiateViewController(identifier: "EnableTouchIdViewController", creator: { coder in
+            EnableTouchIdViewController(coder: coder, baseURL: self.baseURL)
+        })
+        vc.mobileNumber = self.mobileNumber ?? ""
+        vc.delegate = self
+        self.navigationController?.present(vc)
+        
     }
 }
 
@@ -263,5 +274,12 @@ extension VerifyOtpViewController: DPOTPViewDelegate {
     
     public func dpOTPViewResignFirstResponder() {
         
+    }
+}
+
+extension VerifyOtpViewController: EnableTouchIdDelegate {
+    public func didDismissEnableTouchVC(_ viewController: UIViewController) {
+        viewController.dismiss(animated: true)
+        self.navigateToRegisterViewCallBack?(self.mobileNumber ?? "", self.authToken, .touchId, true)
     }
 }

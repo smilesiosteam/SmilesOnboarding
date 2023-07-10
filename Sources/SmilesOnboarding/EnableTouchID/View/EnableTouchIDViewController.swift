@@ -58,8 +58,8 @@ public class EnableTouchIdViewController: UIViewController {
             .sink { [weak self] event in
                 switch event {
                 case .authenticateTouchIdDidSucceed(let response):
-                    if let status = response.status, status = 204 {
-                        
+                    if let status = response.status, status == 204 {
+                        self?.saveTouchIdFlagWithMobile(self?.mobileNumber ?? "")
                     }
                 case .authenticateTouchIdDidfail(let error):
                     debugPrint(error.localizedDescription)
@@ -112,5 +112,21 @@ extension EnableTouchIdViewController {
     func showTouchIdText() -> String
     {
         return  UIDeviceHelper().isIphoneX() ? "Activate your Face Id for quicker access".localizedString : "Activate your Touch ID for quicker access".localizedString
+    }
+    
+    func saveTouchIdFlagWithMobile(_ mobile: String) {
+        let hasTouchId = UserDefaults.standard.bool(forKey: "hasTouchId")
+        if !hasTouchId {
+            UserDefaults.standard.set(true, forKey: "hasTouchId")
+            saveMobileNumberForTouchId(mobile)
+        }
+    }
+    
+    func saveMobileNumberForTouchId(_ mobileNumber: String) {
+        UserDefaults.standard.removeObject(forKey: "mobileNumberForTouchId")
+        let numberForTouchId = UserDefaults.standard.string(forKey: "mobileNumberForTouchId")
+        if numberForTouchId == nil {
+            UserDefaults.standard.set(mobileNumber, forKey: "mobileNumberForTouchId")
+        }
     }
 }
