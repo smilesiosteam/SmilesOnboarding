@@ -489,7 +489,6 @@ extension UserRegisterationViewController : UITextFieldDelegate
         }
     }
     
-    
     func didGetUserDetailsVerifiedAndHasNoVaildEmail(responseTitle: String, responseSubtitle: String, isEmailVerified: Bool) {
         
     }
