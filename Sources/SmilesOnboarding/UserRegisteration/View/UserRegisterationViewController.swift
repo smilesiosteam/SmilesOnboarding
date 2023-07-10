@@ -189,6 +189,7 @@ public class UserRegisterationViewController: UIViewController {
         let vc = RegisterationSuccessViewController.get()
         vc.registrationCompleted = registrationCompleted
         vc.baseUrl = self.baseURL
+        vc.mobileNumber = self.getAccountMobileNum()!
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

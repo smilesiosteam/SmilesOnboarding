@@ -15,7 +15,7 @@ class RegisterationSuccessViewController: UIViewController {
     
     @IBOutlet weak var successImage: UIImageView!
     @IBOutlet weak var btn_done: UIButton!
-    var mobileNumber : String!
+    var mobileNumber: String?
     var baseUrl: String?
     
     @IBOutlet weak var congratulationsLbl: UILabel!
@@ -60,7 +60,7 @@ class RegisterationSuccessViewController: UIViewController {
         let vc = moduleStoryboard.instantiateViewController(identifier: "EnableTouchIdViewController", creator: { coder in
             EnableTouchIdViewController(coder: coder, baseURL: self.baseUrl ?? "")
         })
-        vc.mobileNumber = self.mobileNumber
+        vc.mobileNumber = self.mobileNumber ?? ""
         vc.delegate = self
         self.navigationController?.present(vc)
     }
