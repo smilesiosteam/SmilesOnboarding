@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SmilesLanguageManager
 class InfoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var icon: UIImageView!
@@ -20,7 +20,7 @@ class InfoTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        semanticContentAttribute = SmilesLanguageManager.shared.currentLanguage == .ar ? .forceRightToLeft : .forceLeftToRight
         // Configure the view for the selected state
     }
 

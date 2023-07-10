@@ -85,7 +85,11 @@ public class UserRegisterationViewController: UIViewController {
         didSet{
             self.nationalityTxtFld.text = nationality?.countryName
             self.countryFlagImg.sd_setImage(with: URL(string: nationality?.flagIconUrl ?? ""))
-            self.nationalityTxtFld.paddingLeft = 47
+            if SmilesLanguageManager.shared.currentLanguage == .ar {
+                self.nationalityTxtFld.paddingRight = 47
+            } else {
+                self.nationalityTxtFld.paddingLeft = 47
+            }
             updateContinueButtonUI()
         }
     }
@@ -281,7 +285,7 @@ public class UserRegisterationViewController: UIViewController {
         ])
         var range = NSRange(location:33, length: hint.count-33)
         if SmilesLanguageManager.shared.currentLanguage == .ar {
-            range = NSRange(location:24, length: hint.count-24)
+            range = NSRange(location:21, length: hint.count-21)
         }
         attributedString.addAttributes([.foregroundColor: UIColor.appRevampPurpleMainColor,
                                         .underlineStyle: NSUnderlineStyle.single.rawValue, .font: SmilesFonts.circular.getFont(style: .book, size: 14)], range: range)
@@ -301,7 +305,7 @@ public class UserRegisterationViewController: UIViewController {
             vc.countriesList = countriesResp
             
             vc.modalPresentationStyle = .overFullScreen
-            
+            vc.showCountryCodeInList = false
             vc.delegate = self
             
             present(vc, animated: true, completion: nil)
