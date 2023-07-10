@@ -2,20 +2,21 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="AM278.TTF">
+            <string>NeoTechAlt</string>
+        </array>
         <array key="Lato-Medium.ttf">
             <string>Lato-Medium</string>
         </array>
         <array key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
-        </array>
-        <array key="neotechalt.ttf">
-            <string>NeoTechAlt</string>
         </array>
     </customFonts>
     <scenes>
@@ -57,7 +58,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7dp-WM-j0e">
                                                 <rect key="frame" x="30" y="0.0" width="333" height="50"/>
-                                                <color key="backgroundColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" red="0.45882352941176469" green="0.25882352941176467" blue="0.55686274509803924" alpha="1" colorSpace="calibratedRGB"/>
                                                 <accessibility key="accessibilityConfiguration" hint="Enable Touch Id"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="d02-Gf-snZ"/>
@@ -66,6 +67,11 @@
                                                 <state key="normal" title="Enable Touch Id">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="25"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                                 <connections>
                                                     <action selector="enableBtntapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Chc-bN-hzX"/>
                                                 </connections>
@@ -75,7 +81,7 @@
                                                 <accessibility key="accessibilityConfiguration" hint="mayBeLater"/>
                                                 <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
                                                 <state key="normal" title="Maybe later">
-                                                    <color key="titleColor" red="0.49803921569999998" green="0.37254901959999998" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="titleColor" red="0.45882352939999999" green="0.25882352939999997" blue="0.5568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="maybeBtntapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="JNQ-zz-jQ2"/>
@@ -130,14 +136,6 @@
             <point key="canvasLocation" x="-62" y="-17"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="7dp-WM-j0e">
-            <size key="intrinsicContentSize" width="103" height="30"/>
-        </designable>
-        <designable name="jzv-Rt-s3o">
-            <size key="intrinsicContentSize" width="74" height="29"/>
-        </designable>
-    </designables>
     <resources>
         <image name="TouchID" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
