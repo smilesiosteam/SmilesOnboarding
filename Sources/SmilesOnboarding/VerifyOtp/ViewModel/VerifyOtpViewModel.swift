@@ -41,7 +41,7 @@ extension VerifyOtpViewModel {
     
     func verifyOtp(otp: String) {
         let request = VerifyOtpRequest(otp: otp)
-        
+        self.output.send(.showLoader(shouldShow: true))
         let service = VerifyOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
             endPoint: .verifyOtp
@@ -49,6 +49,7 @@ extension VerifyOtpViewModel {
         
         service.verifyOtp(request: request)
             .sink {[weak self] completion in
+                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
                     self?.output.send(.verifyOtpDidFail(error: error))
@@ -62,6 +63,7 @@ extension VerifyOtpViewModel {
     }
     
     func getProfileStatus(msisdn: String, authToken: String) {
+        self.output.send(.showLoader(shouldShow: true))
         let request = GetProfileStatusRequestModel()
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.authToken = authToken
@@ -73,6 +75,7 @@ extension VerifyOtpViewModel {
         
         service.getProfileStatus(request: request)
             .sink { [weak self] completion  in
+                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
                     self?.output.send(.getProfileStatusDidFail(error: error))

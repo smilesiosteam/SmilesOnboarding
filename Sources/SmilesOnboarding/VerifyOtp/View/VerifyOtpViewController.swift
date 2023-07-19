@@ -135,7 +135,7 @@ public class VerifyOtpViewController: UIViewController {
                 case .getProfileStatusDidFail(error: let error):
                     debugPrint(error.localizedDescription)
                 case .showLoader(shouldShow: let shouldShow):
-                    shouldShow ? SmilesLoader.show(isClearBackground: true) : SmilesLoader.dismiss()
+                    shouldShow ? SmilesLoader.show(isClearBackground: false) : SmilesLoader.dismiss()
                 case .getOTPforMobileNumberDidSucceed(response: let response):
                     if let time = response.timeout {
                         self?.otpTimeOut = time
