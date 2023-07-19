@@ -21,7 +21,6 @@ let package = Package(
         .package(url: "https://github.com/smilesiosteam/SmilesLoader.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/smilesiosteam/SmilesLanguageManager.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "3.6.0"),
-        .package(url: "https://github.com/Datt1994/DPOTPView.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/smilesiosteam/LottieAnimationManager.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/smilesiosteam/SmilesFontsManager.git", .upToNextMinor(from: "1.0.0"))
     ],
@@ -36,7 +35,6 @@ let package = Package(
                 .product(name: "SmilesLoader", package: "SmilesLoader"),
                 .product(name: "SmilesLanguageManager", package: "SmilesLanguageManager"),
                 .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
-                .product(name: "DPOTPView", package: "DPOTPView"),
                 .product(name: "LottieAnimationManager", package: "LottieAnimationManager"),
                 .product(name: "SmilesFontsManager", package: "SmilesFontsManager")
             ], resources: [.process("Resources")]),

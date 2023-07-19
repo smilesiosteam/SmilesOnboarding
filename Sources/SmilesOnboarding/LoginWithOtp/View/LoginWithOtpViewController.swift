@@ -17,9 +17,15 @@ import SmilesBaseMainRequestManager
 @objc public class LoginWithOtpViewController: UIViewController {
     
     //MARK: IBOutlets
+    @IBOutlet weak var errorLabel: UILabel! {
+        didSet {
+            errorLabel.fontTextStyle = .smilesBody3
+        }
+    }
     
     @IBOutlet weak var changeLangBtn: UIButton! {
         didSet {
+            changeLangBtn.fontTextStyle = .smilesHeadline3
             if SmilesLanguageManager.shared.currentLanguage == .en {
                 changeLangBtn.setTitle("arabicTitle".localizedString, for: .normal)
             } else {
@@ -29,11 +35,13 @@ import SmilesBaseMainRequestManager
     }
     @IBOutlet weak var titleLbl: UILabel! {
         didSet {
+            titleLbl.fontTextStyle = .smilesHeadline1
             titleLbl.text = "Login".localizedString
         }
     }
     @IBOutlet weak var descLbl: UILabel! {
         didSet {
+            descLbl.fontTextStyle = .smilesBody3
             descLbl.text = "WelcomeText".localizedString
         }
     }
@@ -46,6 +54,7 @@ import SmilesBaseMainRequestManager
     }
     @IBOutlet weak var descLbl2: UILabel! {
         didSet {
+            descLbl2.fontTextStyle = .smilesBody3
             descLbl2.text = "LoginInstructions".localizedString
         }
     }
@@ -57,7 +66,11 @@ import SmilesBaseMainRequestManager
         }
     }
     @IBOutlet weak var countryFlagImg: UIImageView!
-    @IBOutlet weak var countryName: UILabel!
+    @IBOutlet weak var countryName: UILabel! {
+        didSet {
+            countryName.fontTextStyle = .smilesTitle1
+        }
+    }
     @IBOutlet weak var downArrowImg: UIImageView!
     
     @IBOutlet weak var mobileNumberFieldView: UIView! {
@@ -68,23 +81,37 @@ import SmilesBaseMainRequestManager
         }
     }
     
-    @IBOutlet weak var countryCodeLbl: UILabel!
+    @IBOutlet weak var countryCodeLbl: UILabel! {
+        didSet {
+            countryCodeLbl.fontTextStyle = .smilesBody3
+        }
+    }
     @IBOutlet weak var mobileNumberTxtField: UITextField! {
         didSet {
             mobileNumberTxtField.delegate = self
+            mobileNumberTxtField.fontTextStyle = .smilesTitle1
         }
     }
     
-    @IBOutlet weak var termsAndCondLbl: UILabel!
+    @IBOutlet weak var termsAndCondLbl: UILabel! {
+        didSet {
+            termsAndCondLbl.fontTextStyle = .smilesBody3
+        }
+    }
     @IBOutlet weak var sendCodeBtn: UIButton! {
         didSet {
+            sendCodeBtn.fontTextStyle = .smilesTitle1
             sendCodeBtn.layer.cornerRadius = 24
         }
     }
     @IBOutlet weak var touchIdView: UIView!
     
     @IBOutlet weak var touchIdImage: UIImageView!
-    @IBOutlet weak var touchIdTtitle: UILabel!
+    @IBOutlet weak var touchIdTtitle: UILabel! {
+        didSet {
+            touchIdTtitle.fontTextStyle = .smilesBody3
+        }
+    }
     @IBOutlet weak var guestUserBtn: UIButton!
     
     //MARK: Variables
@@ -103,6 +130,7 @@ import SmilesBaseMainRequestManager
     public var loginAsGuestUserCallback:((String) -> Void)?
     public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool, [CountryList]) -> Void)?
     public var loginWithTouchIdCallback: (() -> Void)?
+    public var sendCountryListToVcCallback: (([CountryList]) -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -134,27 +162,35 @@ import SmilesBaseMainRequestManager
                 switch event {
                 case .fetchCountriesDidSucceed(response: let response):
                     self?.countriesList = response
+                    self?.sendCountryListToVcCallback?(response.countryList ?? [])
                     self?.populateUIViewWithCountry(country: self?.getCurrentCountry())
                 case .fetchCountriesDidFail(error: let error):
-                    debugPrint(error.localizedDescription)
+                    self?.errorLabel.isHidden = false
+                    self?.errorLabel.text = error.localizedDescription
                 case .generateCaptchaDidSucced(response: let response):
                     guard let data = response else {return}
                     self?.configureGetCaptchaData(response: data)
                 case .generateCaptchaDidFail(error: let error):
-                    debugPrint(error.localizedDescription)
+                    self?.errorLabel.isHidden = false
+                    self?.errorLabel.text = error.localizedDescription
                 case .getOTPforMobileNumberDidSucceed(response: let response):
                     self?.configureGetOtpForNumber(result: response)
                 case .getOTPforMobileNumberDidFail(error: let error):
-                    debugPrint(error.localizedDescription)
+                    self?.errorLabel.isHidden = false
+                    self?.errorLabel.text = error.localizedDescription
                 case .showLoader(shouldShow: let shouldShow):
                     shouldShow ? SmilesLoader.show(isClearBackground: false) : SmilesLoader.dismiss()
-
                 case .loginAsGuestDidSucceed(response: let response):
                     if let token = response.guestSessionDetails?.authToken {
                         self?.loginAsGuestUserCallback?(token)
                     }
                 case .loginAsGuestDidFail(error: let error):
-                    debugPrint(error.localizedDescription)
+                    self?.errorLabel.isHidden = false
+                    self?.errorLabel.text = error.localizedDescription
+                case .errorOutPut(error: let error):
+                    DispatchQueue.main.async {
+                        self?.showAlertWithOkayOnly(message: error, title: "NoNet_Title".localizedString)
+                    }
                 }
             }.store(in: &cancellables)
     }
@@ -404,6 +440,9 @@ extension LoginWithOtpViewController {
 extension LoginWithOtpViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // Get the updated text with the replacement string
+        if !self.errorLabel.isHidden {
+            self.errorLabel.isHidden = true
+        }
         let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
         
         // Validate the phone number

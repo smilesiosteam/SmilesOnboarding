@@ -9,11 +9,11 @@ import Foundation
 import NetworkingLayer
 import SmilesUtilities
 
-class CountryListResponse: BaseMainResponse {
-    var countryList: [CountryList]? = []
-    var lastModifiedDate: String? = ""
+public class CountryListResponse: BaseMainResponse {
+    public var countryList: [CountryList]? = []
+    public var lastModifiedDate: String? = ""
     
-    enum CountryListResponseCodingKeys: String, CodingKey {
+    public enum CountryListResponseCodingKeys: String, CodingKey {
         case countryList
         case lastModifiedDate
     }
@@ -29,7 +29,7 @@ class CountryListResponse: BaseMainResponse {
         try super.init(from: decoder)
     }
     
-    override func encode(to encoder: Encoder) throws {
+    public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CountryListResponseCodingKeys.self)
         try container.encode(countryList, forKey: .countryList)
         try container.encode(lastModifiedDate, forKey: .lastModifiedDate)
@@ -89,7 +89,7 @@ class CountryListResponse: BaseMainResponse {
     }
     
     
-    func asDictionary() -> [String: Any] {
+    public func asDictionary() -> [String: Any] {
         let encoder = DictionaryEncoder()
         guard let encoded = try? encoder.encode(self) as [String: Any] else {
             return [:]

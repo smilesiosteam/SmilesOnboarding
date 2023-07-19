@@ -9,6 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="CircularXXTT-Bold.ttf">
+            <string>CircularXXTT-Bold</string>
+        </array>
         <array key="CircularXXTT-Book.ttf">
             <string>CircularXXTT-Book</string>
         </array>
@@ -150,6 +153,12 @@
                                                                             <constraint firstItem="lwv-go-old" firstAttribute="leading" secondItem="VOU-tv-x0U" secondAttribute="leading" constant="12" id="s7c-RL-YsB"/>
                                                                         </constraints>
                                                                     </view>
+                                                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rou-33-T7L">
+                                                                        <rect key="frame" x="0.0" y="96" width="353" height="0.0"/>
+                                                                        <fontDescription key="fontDescription" name="CircularXXTT-Bold" family="CircularXX TT" pointSize="12"/>
+                                                                        <color key="textColor" systemColor="systemRedColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
                                                                 </subviews>
                                                             </stackView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c5x-qZ-Wc1">
@@ -331,6 +340,7 @@ Terms &amp; conditions and privacy policy</string>
                         <outlet property="descLbl" destination="9sa-wC-G0E" id="Kbt-GX-Dci"/>
                         <outlet property="descLbl2" destination="Zc8-ic-GC5" id="fwY-2E-feH"/>
                         <outlet property="downArrowImg" destination="v3i-99-glU" id="Qva-ws-qfF"/>
+                        <outlet property="errorLabel" destination="Rou-33-T7L" id="IUm-k6-piw"/>
                         <outlet property="guestUserBtn" destination="5Ad-b5-gpv" id="joH-WM-J2u"/>
                         <outlet property="mainView" destination="tPc-Dl-j1B" id="1MH-bN-v7Z"/>
                         <outlet property="mobileNumberFieldView" destination="VOU-tv-x0U" id="AWr-Zf-obN"/>
@@ -360,7 +370,7 @@ Terms &amp; conditions and privacy policy</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.799127684" colorSpace="calibratedWhite"/>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RjA-ev-Xjh">
-                                <rect key="frame" x="30" y="305.66666666666669" width="333" height="266.00000000000006"/>
+                                <rect key="frame" x="30" y="306.66666666666663" width="333" height="263.66666666666663"/>
                                 <subviews>
                                     <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="promptIcon" translatesAutoresizingMaskIntoConstraints="NO" id="yo6-hw-kPg">
                                         <rect key="frame" x="92.666666666666686" y="25" width="148" height="108"/>
@@ -370,19 +380,19 @@ Terms &amp; conditions and privacy policy</string>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bu-Om-9ao">
-                                        <rect key="frame" x="10" y="149" width="313" height="29"/>
+                                        <rect key="frame" x="10" y="149" width="313" height="27"/>
                                         <fontDescription key="fontDescription" name="NeoTechAlt" family="Neo Tech Alt" pointSize="23"/>
                                         <color key="textColor" red="0.20784313730000001" green="0.2156862745" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2D-KP-uzJ">
-                                        <rect key="frame" x="15" y="188" width="303" height="18"/>
+                                        <rect key="frame" x="15" y="186" width="303" height="17.666666666666657"/>
                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
                                         <color key="textColor" red="0.51764705879999995" green="0.52941176469999995" blue="0.53725490200000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qBe-qu-rqn">
-                                        <rect key="frame" x="0.0" y="215.99999999999994" width="333" height="50"/>
+                                        <rect key="frame" x="0.0" y="213.66666666666669" width="333" height="50"/>
                                         <subviews>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p9S-QK-JML">
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="50"/>
@@ -465,6 +475,9 @@ Terms &amp; conditions and privacy policy</string>
         <image name="promptIcon" width="222" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>

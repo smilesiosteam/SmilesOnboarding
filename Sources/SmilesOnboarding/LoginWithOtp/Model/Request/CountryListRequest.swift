@@ -8,20 +8,24 @@
 import Foundation
 import SmilesUtilities
 
-class CountryListRequest : Codable   {
+public class CountryListRequest : Codable   {
     
-    var firstCallFlag : Bool?
-    var lastModifiedDate : String?
+    public var firstCallFlag : Bool?
+    public var lastModifiedDate : String?
     
-    enum CountryListResponseCodingKeys: String, CodingKey {
+    public enum CountryListResponseCodingKeys: String, CodingKey {
         case countryList = "firstCallFlag"
         case lastModifiedDate = "lastModifiedDate"
     }
     
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        firstCallFlag = try values.decodeIfPresent(Bool.self, forKey: .firstCallFlag)
-        lastModifiedDate = try values.decodeIfPresent(String.self, forKey: .lastModifiedDate)
+    required public init(from decoder: Decoder) throws {
+        do {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            firstCallFlag = try values.decodeIfPresent(Bool.self, forKey: .firstCallFlag)
+            lastModifiedDate = try values.decodeIfPresent(String.self, forKey: .lastModifiedDate)
+        } catch {
+            print("Error initializing CountryListRequest: \(error)")
+        }
     }
     
     init() {
@@ -30,7 +34,7 @@ class CountryListRequest : Codable   {
     }
     
     
-    func asDictionary(dictionary :[String : Any]) -> [String : Any] {
+    public func asDictionary(dictionary :[String : Any]) -> [String : Any] {
         
         let encoder = DictionaryEncoder()
         guard  let encoded = try? encoder.encode(self) as [String:Any]  else {

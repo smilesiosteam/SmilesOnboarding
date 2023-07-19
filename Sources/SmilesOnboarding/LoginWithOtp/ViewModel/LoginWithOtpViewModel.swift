@@ -10,6 +10,7 @@ import Combine
 import NetworkingLayer
 import SmilesBaseMainRequestManager
 import DeviceAppCheck
+import SmilesLanguageManager
 
 class LoginWithOtpViewModel: NSObject {
     // MARK: -- Variables
@@ -67,7 +68,11 @@ extension LoginWithOtpViewModel {
                 }
             } receiveValue: { [weak self] response in
                 debugPrint("got my response here \(response)")
-                self?.output.send(.fetchCountriesDidSucceed(response: response))
+                if response.countryList?.count ?? 0 > 0 {
+                    self?.output.send(.fetchCountriesDidSucceed(response: response))
+                } else {
+                    self?.output.send(.errorOutPut(error: "lbl_Error"))
+                }
             }
         .store(in: &cancellables)
     }
@@ -111,7 +116,12 @@ extension LoginWithOtpViewModel {
                     errorModel.errorCode = -1
                     errorModel.errorDescriptionEn = "DeviceJailBreakMsgText".localizedString
                     errorModel.errorDescriptionAr = "DeviceJailBreakMsgText".localizedString
-                }else{
+                    if SmilesLanguageManager.shared.currentLanguage == .en {
+                        self.output.send(.errorOutPut(error: errorModel.errorDescriptionEn!))
+                    } else {
+                        self.output.send(.errorOutPut(error: errorModel.errorDescriptionAr!))
+                    }
+                } else {
                     self.didGetDeviceAppValidationData(mobileNumber: number, captchaText: captchaText, deviceCheckToken: dcCheck, appAttestation: attestation, challenge: challenge)
                 }
             }

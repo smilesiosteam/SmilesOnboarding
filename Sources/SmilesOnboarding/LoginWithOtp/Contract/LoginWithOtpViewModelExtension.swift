@@ -25,5 +25,6 @@ extension LoginWithOtpViewModel {
         case showLoader(shouldShow: Bool)
         case loginAsGuestDidSucceed(response: GuestUserResponseModel)
         case loginAsGuestDidFail(error: Error)
+        case errorOutPut(error: String)
     }
 }
