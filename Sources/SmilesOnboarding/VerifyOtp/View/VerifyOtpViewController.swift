@@ -5,8 +5,7 @@
 //  Created by Shahroze Zaheer on 04/07/2023.
 //
 
-import UIKit
-import DPOTPView
+import UIKitqzΩ
 import Combine
 import SmilesBaseMainRequestManager
 import SmilesLocationHandler
