@@ -423,8 +423,6 @@ extension LoginWithOtpViewController {
     
     @objc func changeLang() {
         if SmilesLanguageManager.shared.currentLanguage == .en {
-            SmilesLanguageManager.shared.setLanguage(language: .ar)
-            SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "ar"
             self.languageChangeCallback?()
             changeLangBtn.setTitle("EnglishTitle".localizedString, for: .normal)
             descLbl.textAlignment = .right
@@ -433,8 +431,6 @@ extension LoginWithOtpViewController {
             termsAndCondLbl.textAlignment = .right
         }
         else {
-            SmilesLanguageManager.shared.setLanguage(language: .en)
-            SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "en"
             self.languageChangeCallback?()
             changeLangBtn.setTitle("arabicTitle".localizedString, for: .normal)
             descLbl.textAlignment = .left
