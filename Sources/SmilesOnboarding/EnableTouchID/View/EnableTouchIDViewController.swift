@@ -16,6 +16,8 @@ public protocol EnableTouchIdDelegate: AnyObject {
 public class EnableTouchIdViewController: UIViewController {
     
     //MARK: IBOutlets
+    
+    @IBOutlet weak var touchIDdesc: UILabel!
     @IBOutlet weak var touchIDImg: UIImageView!
     @IBOutlet weak var enableTouchId: UIButton!
     @IBOutlet weak var enableTouchIdTitle: UILabel!
@@ -48,6 +50,10 @@ public class EnableTouchIdViewController: UIViewController {
         super.viewDidLoad()
         
         bind(to: viewModel)
+        enableTouchId.setTitle("Enable Touch Id".localizedString, for: .normal)
+        maybeBtn.setTitle("mayBeLater".localizedString, for: .normal)
+        touchIDdesc.text = "You can enable/disable this option in Settings Screen".localizedString
+        enableTouchIdTitle.text = "Activate your Touch ID for quicker access".localizedString
     }
         
     // MARK: -- Binding
@@ -56,10 +62,12 @@ public class EnableTouchIdViewController: UIViewController {
         let output = viewModel.transform(input: input.eraseToAnyPublisher())
         output
             .sink { [weak self] event in
+                guard let self = self else {return}
                 switch event {
                 case .authenticateTouchIdDidSucceed(let response):
                     if let status = response.status, status == 204 {
-                        self?.saveTouchIdFlagWithMobile(self?.mobileNumber ?? "")
+                        self.saveTouchIdFlagWithMobile(self.mobileNumber)
+                        self.delegate?.didDismissEnableTouchVC(self)
                     }
                 case .authenticateTouchIdDidfail(let error):
                     debugPrint(error.localizedDescription)

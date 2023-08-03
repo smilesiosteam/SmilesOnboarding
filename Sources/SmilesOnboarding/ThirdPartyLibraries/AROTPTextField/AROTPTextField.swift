@@ -56,6 +56,7 @@ public class AROTPTextField: UITextField {
         configureTextField()
         
         let labelsStackView = createLabelsStackView(with: slotCount)
+        labelsStackView.semanticContentAttribute = .forceLeftToRight
         addSubview(labelsStackView)
         addGestureRecognizer(tapRecognizer)
         NSLayoutConstraint.activate([

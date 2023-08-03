@@ -17,6 +17,8 @@ import SmilesBaseMainRequestManager
 @objc public class LoginWithOtpViewController: UIViewController {
     
     //MARK: IBOutlets
+    
+    @IBOutlet weak var termsBtn: UIButton!
     @IBOutlet weak var errorLabel: UILabel! {
         didSet {
             errorLabel.fontTextStyle = .smilesBody3
@@ -36,13 +38,11 @@ import SmilesBaseMainRequestManager
     @IBOutlet weak var titleLbl: UILabel! {
         didSet {
             titleLbl.fontTextStyle = .smilesHeadline1
-            titleLbl.text = "Login".localizedString
         }
     }
     @IBOutlet weak var descLbl: UILabel! {
         didSet {
             descLbl.fontTextStyle = .smilesBody3
-            descLbl.text = "WelcomeText".localizedString
         }
     }
     @IBOutlet weak var mainView: UIView! {
@@ -55,7 +55,6 @@ import SmilesBaseMainRequestManager
     @IBOutlet weak var descLbl2: UILabel! {
         didSet {
             descLbl2.fontTextStyle = .smilesBody3
-            descLbl2.text = "LoginInstructions".localizedString
         }
     }
     @IBOutlet weak var countiresFieldView: UIView! {
@@ -131,6 +130,8 @@ import SmilesBaseMainRequestManager
     public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool, [CountryList]) -> Void)?
     public var loginWithTouchIdCallback: (() -> Void)?
     public var sendCountryListToVcCallback: (([CountryList]) -> Void)?
+    public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
+    public var languageChangeCallback: (() -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -147,9 +148,10 @@ import SmilesBaseMainRequestManager
         bind(to: viewModel)
         getCountiresFromWebService()
         enableSendCodeButton(isEnable: false)
-        getAgreetoTermsAndConditionText(text: "LoginTermsNew".localizedString)
         setupGuestButton()
+        setupTermsButton()
         setupTouchId()
+        setupStrings()
     }
     
     //MARK: Binding
@@ -204,6 +206,9 @@ import SmilesBaseMainRequestManager
         }
         self.input.send(.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall))
     }
+    @IBAction func termsBtnTapped(_ sender: Any) {
+        self.termsAndConditionTappCallback?()
+    }
     
     @IBAction func changeLangBtnTapped(_ sender: Any) {
         self.view.endEditing(true)
@@ -216,13 +221,15 @@ import SmilesBaseMainRequestManager
     }
     
     @IBAction func countrySelectionTapped(_ sender: Any) {
-        let moduleStoryboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
-        if let vc = moduleStoryboard.instantiateViewController(withIdentifier: "CountriesListViewController") as? CountriesListViewController {
-            // Present the instantiated view controller
-            vc.countriesList = self.countriesList
-            vc.modalPresentationStyle = .overFullScreen
-            vc.delegate = self
-            present(vc, animated: true, completion: nil)
+        if self.countriesList?.countryList?.count ?? 0 > 0 {
+            let moduleStoryboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
+            if let vc = moduleStoryboard.instantiateViewController(withIdentifier: "CountriesListViewController") as? CountriesListViewController {
+                // Present the instantiated view controller
+                vc.countriesList = self.countriesList
+                vc.modalPresentationStyle = .overFullScreen
+                vc.delegate = self
+                present(vc, animated: true, completion: nil)
+            }
         }
     }
     
@@ -234,6 +241,28 @@ import SmilesBaseMainRequestManager
         self.loginWithTouchIdCallback?()
     }
     
+    func setupStrings() {
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            descLbl.textAlignment = .right
+            titleLbl.textAlignment = .right
+            descLbl2.textAlignment = .right
+            termsAndCondLbl.textAlignment = .right
+        }
+        else {
+            descLbl.textAlignment = .left
+            titleLbl.textAlignment = .left
+            descLbl2.textAlignment = .left
+            termsAndCondLbl.textAlignment = .left
+        }
+        descLbl.text = "WelcomeText".localizedString
+        titleLbl.text = "LoginTitle".localizedString
+        descLbl2.text = "LoginInstructions".localizedString
+        sendCodeBtn.setTitle("sendCodeTitle".localizedString, for: .normal)
+        termsAndCondLbl.text = "LoginTermsNew".localizedString
+        mobileNumberTxtField.semanticContentAttribute = .forceLeftToRight
+        mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
+        countryCodeLbl.semanticContentAttribute = .forceLeftToRight
+    }
     
     func configureGetCaptchaData(response: CaptchaResponseModel) {
         if let captchaString = response.captchaDetails?.captcha, !captchaString.isEmpty, let timer = response.captchaDetails?.captchaExpiry, timer > 0 {
@@ -261,6 +290,8 @@ import SmilesBaseMainRequestManager
         else if result.responseCode == "2023" { //app integrity failed
 
             self.showAlertWithOkayOnly(message: result.errorMsg.asStringOrEmpty(), title: result.errorTitle.asStringOrEmpty())
+        } else if result.responseCode == "1" {
+            self.showAlertWithOkayOnly(message: result.responseMsg.asStringOrEmpty(), title: result.errorTitle.asStringOrEmpty())
         }
         else {
             if result.responseMsg != nil {
@@ -318,25 +349,6 @@ extension LoginWithOtpViewController {
         }
     }
     
-    func getAgreetoTermsAndConditionText(text: String) {
-        
-        let attributedString = NSMutableAttributedString(string: text, attributes: [
-            .font: UIFont.circularXXTTBookFont(size: 14),
-            .foregroundColor: #colorLiteral(red: 0.5019607843, green: 0.5019607843, blue: 0.5019607843, alpha: 1),
-            .kern: 0.0
-        ])
-        var range = (text as NSString).range(of: "Terms & conditions and privacy policy")
-        if SmilesLanguageManager.shared.currentLanguage == .ar {
-            range = NSRange(location: 9, length: text.count - 9)
-        }
-        attributedString.addAttributes([.foregroundColor: UIColor.appPurpleColor1,
-                                        .underlineStyle: NSUnderlineStyle.single.rawValue,
-                                        .font: UIFont.circularXXTTBookFont(size: 14),
-                                        .underlineColor: UIColor.appPurpleColor1], range: range)
-        self.termsAndCondLbl.attributedText = attributedString
-        self.termsAndCondLbl.isUserInteractionEnabled = true
-        self.termsAndCondLbl.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapLabel(gesture:))))
-    }
     
     func setupGuestButton() {
         let attrs = [
@@ -350,6 +362,32 @@ extension LoginWithOtpViewController {
         self.guestUserBtn.setAttributedTitle(attributedString, for: .normal)
 
     }
+    
+    func setupTermsButton() {
+        let attrs = [
+            NSAttributedString.Key.font: UIFont.circularXXTTBookFont(size: 14),
+            NSAttributedString.Key.foregroundColor: UIColor.appPurpleColor,
+            NSAttributedString.Key.underlineStyle: 1
+        ] as [NSAttributedString.Key: Any]
+
+        let attributedString = NSMutableAttributedString(string: "")
+        let buttonTitleStr = NSMutableAttributedString(string: "Terms & Conditions and Privacy Policy".localizedString, attributes: attrs)
+        attributedString.append(buttonTitleStr)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        self.termsBtn.contentVerticalAlignment = .top
+        self.termsBtn.setAttributedTitle(attributedString, for: .normal)
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            self.termsBtn.contentHorizontalAlignment = .right
+        } else {
+            self.termsBtn.contentHorizontalAlignment = .left
+        }
+    }
+
     
     func setupTouchId() {
         self.touchIdImage.image = UIImage(named: self.setUseTouchIdImage())
@@ -374,34 +412,36 @@ extension LoginWithOtpViewController {
         vc.navigateToRegisterViewCallBack = { msisdn, token, loginType, isExistingUser in
             self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
         }
+        vc.navigateToHomeViewControllerCallBack = { msisdn, token in
+            self.navigateToHomeViewControllerCallBack?(msisdn, token)
+        }
         vc.otpHeaderText = otpHeaderText
         vc.otpTimeOut = otpTimeOut
         vc.mobileNumber = self.mobileNumber
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc func tapLabel(gesture: UITapGestureRecognizer) {
-        let termsRange = (self.termsAndCondLbl.text! as NSString).range(of: "Terms & conditions and privacy policy")
-        if gesture.didTapAttributedTextInLabel(label: self.termsAndCondLbl, inRange: termsRange) {
-            self.termsAndConditionTappCallback?()
-        }
-    }
-    
     @objc func changeLang() {
-        
         if SmilesLanguageManager.shared.currentLanguage == .en {
-            
             SmilesLanguageManager.shared.setLanguage(language: .ar)
-            
             SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "ar"
+            self.languageChangeCallback?()
             changeLangBtn.setTitle("EnglishTitle".localizedString, for: .normal)
+            descLbl.textAlignment = .right
+            titleLbl.textAlignment = .right
+            descLbl2.textAlignment = .right
+            termsAndCondLbl.textAlignment = .right
         }
         else {
             SmilesLanguageManager.shared.setLanguage(language: .en)
             SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.lang = "en"
+            self.languageChangeCallback?()
             changeLangBtn.setTitle("arabicTitle".localizedString, for: .normal)
+            descLbl.textAlignment = .left
+            titleLbl.textAlignment = .left
+            descLbl2.textAlignment = .left
+            termsAndCondLbl.textAlignment = .left
         }
-        
         var firstCall = true
         var lastModifiedDate = ""
         if let countryListResponse = CountryListResponse.getCountryListResponse() {
@@ -409,11 +449,10 @@ extension LoginWithOtpViewController {
             lastModifiedDate = countryListResponse.lastModifiedDate.asStringOrEmpty()
         }
         self.input.send(.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall))
-        mobileNumberTxtField.semanticContentAttribute = .forceLeftToRight
-        mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
-        countryCodeLbl.semanticContentAttribute = .forceLeftToRight
         setupGuestButton()
+        setupTermsButton()
         setupTouchId()
+        setupStrings()
         reloadViewControllerAfterChangeLanguage()
     }
     

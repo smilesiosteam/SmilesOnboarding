@@ -5,7 +5,7 @@
 //  Created by Shahroze Zaheer on 04/07/2023.
 //
 
-import UIKitqzΩ
+import UIKit
 import Combine
 import SmilesBaseMainRequestManager
 import SmilesLocationHandler
@@ -81,6 +81,7 @@ public class VerifyOtpViewController: UIViewController {
     private var otpNumber = ""
     private var baseURL: String = ""
     private var authToken = ""
+    private let touchMe = BiometricIDAuth()
     var countdownTimer: Timer?
     var timeRemaining = 0 {
         didSet {
@@ -91,6 +92,7 @@ public class VerifyOtpViewController: UIViewController {
     
     //MARK: CallBacks
     public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
+    public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -106,6 +108,7 @@ public class VerifyOtpViewController: UIViewController {
         super.viewDidLoad()
         bind(to: viewModel)
         setupUI()
+        setupString()
     }
     
     
@@ -162,18 +165,33 @@ public class VerifyOtpViewController: UIViewController {
         self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
     }
     
+    func setupString() {
+        descLbl.text = "verifyOtpdesc".localizedString
+        descLbl2.text = "verifyOtpDesc2".localizedString
+        titleLbl.text = "verifyOtpTitle".localizedString
+        resendBtn.setTitle("resendOtp".localizedString, for: .normal)
+        loginBtn.setTitle("LoginTitle".localizedString, for: .normal)
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            descLbl2.textAlignment = .right
+            descLbl.textAlignment = .right
+            titleLbl.textAlignment = .right
+            backBtnView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
+        }
+    }
+    
     func configureProfileStatus(response: GetProfileStatusResponse, msisdn: String, token: String) {
         if let status = response.profileStatus
         {
             SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.userInfo = nil
             LocationStateSaver.removeLocation()
             LocationStateSaver.removeRecentLocations()
-
+            self.authToken = token
+            self.mobileNumber = msisdn
+            
             switch status {
             case 1 :
-                // Present Enable TouchID popup
-                self.authToken = token
-                presentEnableTouchIdViewController()
+                // Check for TouchID
+                enableTouchIDIfExist(number: msisdn)
             case 2 :
                 // Navigate to Register User
                 self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false)
@@ -185,6 +203,64 @@ public class VerifyOtpViewController: UIViewController {
             }
         }
     }
+    func enableTouchIDIfExist(number: String) {
+        if !self.checkIfTouchIdEnabled()
+        {
+            if self.checkIfDeviceSupportToucId()
+            {
+                presentEnableTouchIdViewController()
+            }
+            else{
+                navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
+            }
+            
+        } else {
+            
+            if let mobileNumberForTouchId = self.getMobileNumberForTouchId(),!mobileNumberForTouchId.isEmpty
+            {
+                if self.mobileNumber == mobileNumberForTouchId {
+                    navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
+                }
+                else{
+                    if self.checkIfDeviceSupportToucId()
+                    {
+                        presentEnableTouchIdViewController()
+                    }
+                    else{
+                        navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
+                    }
+                }
+            }
+            else{
+                if self.checkIfDeviceSupportToucId()
+                {
+                    presentEnableTouchIdViewController()
+                }
+                else{
+                    navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
+                }
+                
+            }
+            
+        }
+    }
+        
+    func getMobileNumberForTouchId() -> String? {
+        if let numberForTouchId = UserDefaults.standard.string(forKey: "mobileNumberForTouchId"), !numberForTouchId.isEmpty {
+            return numberForTouchId
+        }
+        return ""
+    }
+    
+    func checkIfDeviceSupportToucId() -> Bool {
+        return touchMe.canEvaluatePolicy()
+    }
+    
+    func checkIfTouchIdEnabled() -> Bool {
+        let hasTouchId = UserDefaults.standard.bool(forKey: "hasTouchId")
+        return hasTouchId
+    }
+    
     func presentEnableTouchIdViewController() {
         let moduleStoryboard = UIStoryboard(name: "EnableTouchIdStoryboard", bundle: .module)
         let vc = moduleStoryboard.instantiateViewController(identifier: "EnableTouchIdViewController", creator: { coder in
@@ -208,14 +284,21 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     func setupCallBtn() {
-        let phoneNumber = "call 101"
+        let fullStringEn = "TroubleText".localizedString
+        var phoneNumber = "call 101"
+        
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            phoneNumber = "تواصل علي 101"
+        }
+        
         let phoneNumberAttributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .foregroundColor: UIColor(red: 77/255, green: 81/255, blue: 103/255, alpha: 1),
             .font: UIFont.circularXXTTMediumFont(size: 14)
         ]
-        let attributedString = NSMutableAttributedString(string: "Having trouble? Please \(phoneNumber)")
-        attributedString.addAttributes(phoneNumberAttributes, range: NSRange(location: attributedString.length - phoneNumber.count, length: phoneNumber.count))
+        
+        let attributedString = NSMutableAttributedString(string: fullStringEn)
+        attributedString.addAttributes(phoneNumberAttributes, range: NSRange(location: attributedString.string.count - phoneNumber.count, length: phoneNumber.count))
         
         // Set the attributed string to the label
         call101Text.attributedText = attributedString
@@ -359,7 +442,7 @@ extension VerifyOtpViewController {
 extension VerifyOtpViewController: EnableTouchIdDelegate {
     public func didDismissEnableTouchVC(_ viewController: UIViewController) {
         viewController.dismiss(animated: true)
-        self.navigateToRegisterViewCallBack?(self.mobileNumber ?? "", self.authToken, .touchId, true)
+        navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
     }
 }
 

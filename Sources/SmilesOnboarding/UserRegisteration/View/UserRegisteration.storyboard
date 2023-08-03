@@ -675,6 +675,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backBtnView" destination="ZIb-v2-YvX" id="MpS-Uw-rOe"/>
                         <outlet property="constraint_bannerHeight" destination="bWP-b1-oCD" id="zYm-9V-25w"/>
                         <outlet property="continueBtn" destination="pmC-lc-Jza" id="Zid-hj-tL9"/>
                         <outlet property="countryFlagImg" destination="sA5-sE-uLB" id="63d-LB-nV7"/>

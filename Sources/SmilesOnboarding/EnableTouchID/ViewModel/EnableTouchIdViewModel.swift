@@ -30,7 +30,7 @@ extension EnableTouchIdViewModel {
         input.sink { [weak self] event in
             switch event {
             case .authenticateTouchId(let token, let isEnabled):
-                break
+                self?.authenticateTouchId(token: token, isEnabled: isEnabled)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()

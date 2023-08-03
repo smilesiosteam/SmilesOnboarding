@@ -9,14 +9,14 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="AM278.TTF">
-            <string>NeoTechAlt</string>
-        </array>
         <array key="Lato-Medium.ttf">
             <string>Lato-Medium</string>
         </array>
         <array key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
+        </array>
+        <array key="neotechalt.ttf">
+            <string>NeoTechAlt</string>
         </array>
     </customFonts>
     <scenes>
@@ -129,6 +129,7 @@
                         <outlet property="enableTouchIdTitle" destination="wiU-bg-Dqo" id="Iui-Ou-eLd"/>
                         <outlet property="maybeBtn" destination="jzv-Rt-s3o" id="qNO-U5-aGd"/>
                         <outlet property="touchIDImg" destination="E8C-lV-fTL" id="xcg-fH-PQ6"/>
+                        <outlet property="touchIDdesc" destination="9I3-sU-xdb" id="CiE-9s-GWT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

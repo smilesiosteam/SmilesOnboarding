@@ -14,6 +14,7 @@ import SmilesLoader
 
 public class UserRegisterationViewController: UIViewController {
     
+    @IBOutlet weak var backBtnView: UIView!
     @IBOutlet weak var titleLbl: UILabel!
     
     @IBOutlet weak var subtitleLbl: UILabel!
@@ -183,6 +184,9 @@ public class UserRegisterationViewController: UIViewController {
             fld?.addTarget(self, action: #selector(self.textFieldDidChange(sender:)), for: .editingChanged)
         }
         updateContinueButtonUI()
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            backBtnView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
+        }
     }
     // MARK: -- Actions
     func moveToWelcome(){

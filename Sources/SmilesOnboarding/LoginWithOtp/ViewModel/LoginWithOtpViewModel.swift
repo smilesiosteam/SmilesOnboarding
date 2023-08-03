@@ -71,7 +71,13 @@ extension LoginWithOtpViewModel {
                 if response.countryList?.count ?? 0 > 0 {
                     self?.output.send(.fetchCountriesDidSucceed(response: response))
                 } else {
-                    self?.output.send(.errorOutPut(error: "lbl_Error"))
+                    if CountryListResponse.isCountriesListAvailableInCache() {
+                        if let res = CountryListResponse.getCountryListResponse(), let list = res.countryList, list.count > 0 {
+                            self?.output.send(.fetchCountriesDidSucceed(response: res))
+                        }
+                    } else {
+                        self?.output.send(.errorOutPut(error: (response.responseMsg ?? response.errorMsg) ?? "Error"))
+                    }
                 }
             }
         .store(in: &cancellables)
