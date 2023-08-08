@@ -7,6 +7,7 @@
 
 import UIKit
 import SmilesUtilities
+import SmilesLanguageManager
 
 protocol CountrySelectionDelegate: AnyObject {
     func didSelectCountry(_ country: CountryList)
@@ -37,6 +38,8 @@ public class CountriesListViewController: UIViewController {
     @IBOutlet weak var searchTextField: UITextField! {
         didSet {
             searchTextField.delegate = self
+            searchTextField.fontTextStyle = .smilesBody3
+            searchTextField.placeholder = "selectCountry".localizedString
         }
     }
     
@@ -52,6 +55,9 @@ public class CountriesListViewController: UIViewController {
         super.viewDidLoad()
         
         generateSections()
+        if SmilesLanguageManager.shared.currentLanguage == .ar {
+            searchTextField.textAlignment = .right
+        }
     }
     
     @IBAction func crossBtnTapped(_ sender: Any) {

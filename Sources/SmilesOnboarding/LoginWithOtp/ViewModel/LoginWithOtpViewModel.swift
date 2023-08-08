@@ -85,11 +85,10 @@ extension LoginWithOtpViewModel {
     
     func getCaptcha(num: String) {
         self.output.send(.showLoader(shouldShow: true))
-        let request = CaptchValidtionRequest()
+        let request = CaptchValidtionRequest(reGenerate: false)
         request.msisdn = num
         request.channel = ""
         request.deviceId = SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.deviceId
-        request.reGenerate = false
         
         let service = LoginWithOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
