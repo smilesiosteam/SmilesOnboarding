@@ -49,14 +49,15 @@ extension VerifyOtpViewModel {
         
         service.verifyOtp(request: request)
             .sink {[weak self] completion in
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.verifyOtpDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {[weak self] response in
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.verifyOtpDidSucceed(response: response))
             }
             .store(in: &cancellables)
@@ -75,14 +76,15 @@ extension VerifyOtpViewModel {
         
         service.getProfileStatus(request: request)
             .sink { [weak self] completion  in
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.getProfileStatusDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response  in
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getProfileStatusDidSucceed(response: response, msisdn: msisdn, authToken: authToken))
             }
             .store(in: &cancellables)
@@ -104,14 +106,15 @@ extension VerifyOtpViewModel {
         service.getOTPforMobileNumber(request: request)
             .sink { [weak self] completion  in
                 debugPrint(completion)
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.getOTPforMobileNumberDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {   [weak self] response in
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
             }
             .store(in: &cancellables)

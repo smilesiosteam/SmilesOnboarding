@@ -59,15 +59,16 @@ extension LoginWithOtpViewModel {
         service.getAllCountriesService(request: request)
             .sink { [weak self] completion in
                 debugPrint(completion)
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.fetchCountriesDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response in
                 debugPrint("got my response here \(response)")
+                self?.output.send(.showLoader(shouldShow: false))
                 if response.countryList?.count ?? 0 > 0 {
                     self?.output.send(.fetchCountriesDidSucceed(response: response))
                 } else {
@@ -98,15 +99,16 @@ extension LoginWithOtpViewModel {
         service.getCaptcha(request: request)
             .sink { [weak self] completion in
                 debugPrint(completion)
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.generateCaptchaDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {  [weak self] response in
                 debugPrint("got my response here \(response)")
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.generateCaptchaDidSucced(response: response))
             }
             .store(in: &cancellables)
@@ -151,14 +153,15 @@ extension LoginWithOtpViewModel {
         service.getOTPforMobileNumber(request: request)
             .sink { [weak self] completion  in
                 debugPrint(completion)
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.getOTPforMobileNumberDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {   [weak self] response in
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
             }
             .store(in: &cancellables)
@@ -176,14 +179,15 @@ extension LoginWithOtpViewModel {
         service.loginAsGuest(request: request)
             .sink { [weak self] completion   in
                 debugPrint(completion)
-                self?.output.send(.showLoader(shouldShow: false))
                 switch completion {
                 case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.loginAsGuestDidFail(error: error))
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response  in
+                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.loginAsGuestDidSucceed(response: response))
             }
             .store(in: &cancellables)

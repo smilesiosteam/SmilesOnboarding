@@ -152,6 +152,8 @@ import SmilesBaseMainRequestManager
         setupTermsButton()
         setupTouchId()
         setupStrings()
+        mobileNumberTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+
     }
     
     //MARK: Binding
@@ -473,15 +475,15 @@ extension LoginWithOtpViewController {
 
 
 extension LoginWithOtpViewController: UITextFieldDelegate {
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Get the updated text with the replacement string
+    @objc func textFieldDidChange(_ textField: UITextField) {
         if !self.errorLabel.isHidden {
             self.errorLabel.isHidden = true
         }
-        let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
+        
+        let currentText = textField.text ?? ""
         
         // Validate the phone number
-        let phoneNumber =  (self.countryCodeLbl.text ?? "") + currentText
+        let phoneNumber = (self.countryCodeLbl.text ?? "") + currentText
         let isValid = phoneNumberKit.isValidPhoneNumber(phoneNumber)
         
         if isValid {
@@ -492,9 +494,8 @@ extension LoginWithOtpViewController: UITextFieldDelegate {
             // Invalid phone number
             enableSendCodeButton(isEnable: false)
         }
-        
-        return true
     }
+
 }
 
 extension LoginWithOtpViewController: CountrySelectionDelegate {
