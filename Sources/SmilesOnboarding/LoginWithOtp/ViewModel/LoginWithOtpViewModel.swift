@@ -71,6 +71,7 @@ extension LoginWithOtpViewModel {
                 self?.output.send(.showLoader(shouldShow: false))
                 if response.countryList?.count ?? 0 > 0 {
                     self?.output.send(.fetchCountriesDidSucceed(response: response))
+                    CountryListResponse.saveCountryListResponse(countries: response)
                 } else {
                     if CountryListResponse.isCountriesListAvailableInCache() {
                         if let res = CountryListResponse.getCountryListResponse(), let list = res.countryList, list.count > 0 {
