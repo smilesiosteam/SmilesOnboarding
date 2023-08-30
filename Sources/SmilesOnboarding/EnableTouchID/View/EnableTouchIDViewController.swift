@@ -50,10 +50,10 @@ public class EnableTouchIdViewController: UIViewController {
         super.viewDidLoad()
         
         bind(to: viewModel)
-        enableTouchId.setTitle("Enable Touch Id".localizedString, for: .normal)
         maybeBtn.setTitle("mayBeLater".localizedString, for: .normal)
         touchIDdesc.text = "You can enable/disable this option in Settings Screen".localizedString
         enableTouchIdTitle.text = "Activate your Touch ID for quicker access".localizedString
+        setupUI()
     }
         
     // MARK: -- Binding
@@ -96,7 +96,8 @@ public class EnableTouchIdViewController: UIViewController {
     func setupUI() {
         self.touchIDImg.image = UIImage(named: showTouchIdImage())
         self.enableTouchIdTitle.text = showTouchIdText()
-        
+        let btnText = UIDeviceHelper().isIphoneX() ? "Enable Face Id".localizedString : "Enable Touch Id".localizedString
+        enableTouchId.setTitle(btnText, for: .normal)
     }
     
     func saveMobileNumberInKeychain(_ mobileNumber: String) {

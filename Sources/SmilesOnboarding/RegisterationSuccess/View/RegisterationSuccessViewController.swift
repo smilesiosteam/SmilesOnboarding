@@ -62,6 +62,7 @@ class RegisterationSuccessViewController: UIViewController {
         })
         vc.mobileNumber = self.mobileNumber ?? ""
         vc.delegate = self
+        vc.modalPresentationStyle = .fullScreen
         self.navigationController?.present(vc)
     }
 }

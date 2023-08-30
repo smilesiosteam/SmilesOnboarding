@@ -463,6 +463,7 @@ extension UserRegisterationViewController : UITextFieldDelegate
         })
         vc.mobileNumber = self.getAccountMobileNum() ?? ""
         vc.delegate = self
+        vc.modalPresentationStyle = .fullScreen
         self.navigationController?.present(vc)
         
     }
