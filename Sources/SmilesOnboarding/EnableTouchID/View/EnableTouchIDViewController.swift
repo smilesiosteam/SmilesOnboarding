@@ -78,7 +78,9 @@ public class EnableTouchIdViewController: UIViewController {
     @IBAction func enableBtntapped(_ sender: Any) {
         touchMe.authenticateUser { (error) in
             if let errorText = error, !errorText.isEmpty{
-                self.showAlertWithOkayOnly(message: error ?? "", title: "")
+                DispatchQueue.main.async {
+                    self.showAlertWithOkayOnly(message: error ?? "", title: "")
+                }
             }
             else {
                 // Success
