@@ -9,7 +9,7 @@ import Foundation
 import SmilesUtilities
 import SmilesBaseMainRequestManager
 
-class CaptchValidtionRequest: SmilesBaseMainRequest {
+public class CaptchValidtionRequest: SmilesBaseMainRequest {
     
     var reGenerate: Bool?
     

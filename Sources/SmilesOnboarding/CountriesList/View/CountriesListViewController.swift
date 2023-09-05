@@ -9,7 +9,7 @@ import UIKit
 import SmilesUtilities
 import SmilesLanguageManager
 
-protocol CountrySelectionDelegate: AnyObject {
+public protocol CountrySelectionDelegate: AnyObject {
     func didSelectCountry(_ country: CountryList)
 }
 
@@ -44,8 +44,9 @@ public class CountriesListViewController: UIViewController {
     }
     
     var countriesList: CountryListResponse?
-    weak var delegate: CountrySelectionDelegate?
-    var showCountryCodeInList=true
+    public var countryList: [CountryList] = []
+    public weak var delegate: CountrySelectionDelegate?
+    public var showCountryCodeInList = true
     
     private var sections = [(title: String, countries: [CountryList])]()
     private var sectionTitles = [String]()
@@ -73,7 +74,12 @@ public class CountriesListViewController: UIViewController {
         var countriesDictionary: [String: [CountryList]] = [:]
         
         // Iterate through the countries list and group them by the first letter of their name
-        guard let countriesLists = countriesList?.countryList else {return}
+        var countriesLists: [CountryList] = []
+        if let list = countriesList?.countryList {
+            countriesLists = list
+        } else {
+            countriesLists = countryList
+        }
         let countriesToUse = filteredCountries.isEmpty ? countriesLists : filteredCountries
         for country in countriesToUse {
             guard let firstLetter = country.countryName?.prefix(1).uppercased() else {

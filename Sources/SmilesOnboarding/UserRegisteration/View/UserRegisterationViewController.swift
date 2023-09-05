@@ -302,9 +302,7 @@ public class UserRegisterationViewController: UIViewController {
     
     @IBAction func nationalityPressed(_ sender: Any) {
         
-        let moduleStoryboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
-        
-        if let vc = moduleStoryboard.instantiateViewController(withIdentifier: "CountriesListViewController") as? CountriesListViewController {
+        if let vc = OnBoardingModuleManager.instantiateCountryCodeViewController() {
             
             let countriesResp = CountryListResponse()
             countriesResp.countryList = self.nationalities
@@ -568,7 +566,7 @@ extension UserRegisterationViewController {
 
 extension UserRegisterationViewController: CountrySelectionDelegate {
 
-    func didSelectCountry(_ country: CountryList) {
+    public func didSelectCountry(_ country: CountryList) {
 
         self.nationality = country
 

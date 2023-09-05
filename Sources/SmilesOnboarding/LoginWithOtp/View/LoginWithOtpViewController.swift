@@ -224,8 +224,7 @@ import SmilesBaseMainRequestManager
     
     @IBAction func countrySelectionTapped(_ sender: Any) {
         if self.countriesList?.countryList?.count ?? 0 > 0 {
-            let moduleStoryboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
-            if let vc = moduleStoryboard.instantiateViewController(withIdentifier: "CountriesListViewController") as? CountriesListViewController {
+            if let vc = OnBoardingModuleManager.instantiateCountryCodeViewController() {
                 // Present the instantiated view controller
                 vc.countriesList = self.countriesList
                 vc.modalPresentationStyle = .overFullScreen
@@ -499,7 +498,7 @@ extension LoginWithOtpViewController: UITextFieldDelegate {
 }
 
 extension LoginWithOtpViewController: CountrySelectionDelegate {
-    func didSelectCountry(_ country: CountryList) {
+    public func didSelectCountry(_ country: CountryList) {
         self.populateUIViewWithCountry(country: country)
         self.enableSendCodeButton(isEnable: false)
     }

@@ -12,14 +12,14 @@ import SmilesUtilities
 public class CountryList : Codable {
     
     
-    public let countryId : Int?
-    public let countryNameEn : String?
-    public let flagIconUrl : String?
-    public let iddCode : String?
-    public let countryNameAR : String?
+    public var countryId : Int?
+    public var countryNameEn : String?
+    public var flagIconUrl : String?
+    public var iddCode : String?
+    public var countryNameAR : String?
     public var countryName : String!
     
-   public enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case countryId = "countryId"
         case countryName = "countryName"
         case flagIconUrl = "flagIconUrl"
@@ -43,6 +43,19 @@ public class CountryList : Codable {
         }
     }
     
+    public init(countryId: Int?,
+                countryNameEn: String?,
+                flagIconUrl: String?,
+                iddCode: String?,
+                countryNameAR: String?,
+                countryName: String) {
+        self.countryId = countryId
+        self.countryNameEn = countryNameEn
+        self.flagIconUrl = flagIconUrl
+        self.iddCode = iddCode
+        self.countryNameAR = countryNameAR
+        self.countryName = countryName
+    }
     
     public func getCountryName() -> String?{
         

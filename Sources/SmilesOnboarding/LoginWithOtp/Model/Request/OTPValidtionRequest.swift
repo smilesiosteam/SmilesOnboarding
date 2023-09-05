@@ -9,12 +9,12 @@ import Foundation
 import SmilesUtilities
 import SmilesBaseMainRequestManager
 
-class OTPValidtionRequest: SmilesBaseMainRequest {
+public class OTPValidtionRequest: SmilesBaseMainRequest {
 
-    var captcha: String?
-    var deviceCheckToken: String?
-    var appAttestation: String?
-    var challenge: String?
+    public var captcha: String?
+    public var deviceCheckToken: String?
+    public var appAttestation: String?
+    public var challenge: String?
 
     
     init(captcha: String?, deviceCheckToken: String?, appAttestation: String?, challenge: String?) {
@@ -38,7 +38,7 @@ class OTPValidtionRequest: SmilesBaseMainRequest {
         case challenge
     }
     
-    override func encode(to encoder: Encoder) throws {
+    public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.captcha, forKey: .captcha)

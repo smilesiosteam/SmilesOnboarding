@@ -21,4 +21,12 @@ public enum LoginType : String {
         })
         return viewController
     }
+    
+    @objc public static func instantiateCountryCodeViewController() -> CountriesListViewController? {
+        let storyboard = UIStoryboard(name: "CountriesListStoryBoard", bundle: .module)
+        let viewController = storyboard.instantiateViewController(identifier: "CountriesListViewController", creator: { coder in
+            CountriesListViewController(coder: coder)
+        })
+        return viewController
+    }
 }
