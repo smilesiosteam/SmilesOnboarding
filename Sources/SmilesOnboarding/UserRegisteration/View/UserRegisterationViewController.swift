@@ -82,6 +82,7 @@ public class UserRegisterationViewController: UIViewController {
     private var viewModel: UserRegisterationViewModel!
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String = ""
+    private var genderForRequest: String?
     public var nationality:CountryList?=nil{
         didSet{
             self.nationalityTxtFld.text = nationality?.countryName
@@ -319,8 +320,10 @@ public class UserRegisterationViewController: UIViewController {
     
     @IBAction func genderPressed(_ sender: Any) {
         let options = ["MaleTitle".localizedString.capitalizingFirstLetter(),"FemaleTitle".localizedString.capitalizingFirstLetter(),"Prefer not to say".capitalizingFirstLetter().localizedString]
+        let requestGenderOptions = ["M", "F", "P"]
         self.present(options:options){index in
             self.genderTxtFld.text = options[index]
+            self.genderForRequest = requestGenderOptions[index]
             self.updateContinueButtonUI()
             if !self.promoCodeWrapper.isHidden {
                 self.promoTxtFld.becomeFirstResponder()
@@ -343,7 +346,7 @@ public class UserRegisterationViewController: UIViewController {
             request.lastName = lastNameTxtFld.text?.removingWhitespaces()
             if !isExistingUser {
                 request.email = emailFld.text
-                request.gender = "\(genderTxtFld.text!.first!)"
+                request.gender = self.genderForRequest
                 request.referralCode = promoTxtFld.text
             }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
