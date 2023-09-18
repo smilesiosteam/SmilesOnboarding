@@ -161,11 +161,14 @@ extension CountriesListViewController: UITextFieldDelegate {
     }
     
     func filterCountries(with searchText: String?) {
+        let sourceCountries = countriesList?.countryList ?? countryList
+        
         if let text = searchText, !text.isEmpty {
-            filteredCountries = (countriesList?.countryList?.filter { $0.countryName.lowercased().contains(text.lowercased()) })!
+            filteredCountries = sourceCountries.filter { $0.countryName.lowercased().contains(text.lowercased()) }
         } else {
-            filteredCountries = (countriesList?.countryList)!
+            filteredCountries = sourceCountries
         }
+        
         generateSections()
     }
 }
