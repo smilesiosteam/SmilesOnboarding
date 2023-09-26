@@ -85,6 +85,7 @@ public class EnableTouchIdViewController: UIViewController {
             else {
                 // Success
                 self.saveMobileNumberInKeychain(self.mobileNumber)
+                self.saveMobileNumberForTouchId(self.mobileNumber)
                 guard let token = self.generateTouchIdToken(MobileNum: self.mobileNumber) else {return}
                 self.input.send(.authenticateTouchId(token: token, isEnabled: true))
             }
