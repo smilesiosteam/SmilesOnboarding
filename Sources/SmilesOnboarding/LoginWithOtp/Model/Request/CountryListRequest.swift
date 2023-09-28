@@ -28,7 +28,7 @@ public class CountryListRequest : Codable   {
         }
     }
     
-    init() {
+    public init() {
         self.firstCallFlag = true
         self.lastModifiedDate = ""
     }
