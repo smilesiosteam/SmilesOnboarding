@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/NetworkingLayer.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "48c34bc08fa85f5d76d031bbd3078236577506b9"
+        "branch" : "shared_Models",
+        "revision" : "9d176c72f3bdb59add7a9d628bfdd9e2c3563551"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesBaseMainRequest.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "306ab0bb0ba9433427dc91cf35ac24bf31d23ed7"
+        "branch" : "shared_models",
+        "revision" : "d31311d1eba794101907d5bd93475b3e17699daf"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesEasyTipView.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "8466cfafde2e79ceb957a4bd49cee4278fe20986"
+        "branch" : "shared_Models",
+        "revision" : "5985e6e7bf27d2b76b390b7af50e2b9c2e7e9fa3"
       }
     },
     {
@@ -149,8 +149,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesLocationHandler.git",
       "state" : {
+        "branch" : "shared_Models",
+        "revision" : "f2c8396268e25997481ab4a78fd36e165f87b637"
+      }
+    },
+    {
+      "identity" : "smilessharedmodels",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/smilesiosteam/SmilesSharedModels.git",
+      "state" : {
         "branch" : "main",
-        "revision" : "878b8c812467d8d6954fb06dbc68adf33fe42f20"
+        "revision" : "dbdb39fa160f3047d4c9b06b603e9936efc1b363"
       }
     },
     {
@@ -167,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesUtilities.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "888e78f8dc67d1addfeddb076aec8efede4357d6"
+        "branch" : "shared_Models",
+        "revision" : "476eebf3f636d33d70b62afac4fab6ff8746c134"
       }
     }
   ],
