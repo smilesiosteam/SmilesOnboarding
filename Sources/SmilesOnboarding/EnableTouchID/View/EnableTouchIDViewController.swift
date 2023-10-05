@@ -85,7 +85,7 @@ public class EnableTouchIdViewController: UIViewController {
             else {
                 // Success
                 self.saveMobileNumberInKeychain(self.mobileNumber)
-                self.saveMobileNumberForTouchId(self.mobileNumber)
+                self.saveMobileNumberForTouchId(self.mobileNumber) //Saving in defaults to Remove issue produce in old build
                 guard let token = self.generateTouchIdToken(MobileNum: self.mobileNumber) else {return}
                 self.input.send(.authenticateTouchId(token: token, isEnabled: true))
             }

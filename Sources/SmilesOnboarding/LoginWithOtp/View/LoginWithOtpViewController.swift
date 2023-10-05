@@ -150,10 +150,12 @@ import SmilesBaseMainRequestManager
         enableSendCodeButton(isEnable: false)
         setupGuestButton()
         setupTermsButton()
-        setupTouchId()
         setupStrings()
         mobileNumberTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        setupTouchId()
     }
     
     //MARK: Binding
