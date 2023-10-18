@@ -222,6 +222,7 @@ import SmilesBaseMainRequestManager
     @IBAction func sendCodeTapped(_ sender: Any) {
         let mobileNum = String(mobileNumber.dropFirst())
         self.input.send(.generateCaptcha(mobileNumber: mobileNum))
+        enableSendCodeButton(isEnable: false)
     }
     
     @IBAction func countrySelectionTapped(_ sender: Any) {
@@ -307,6 +308,7 @@ import SmilesBaseMainRequestManager
                 navigateToVerifyOtp(response: result)
             }
         }
+        enableSendCodeButton(isEnable: true)
     }
 }
 

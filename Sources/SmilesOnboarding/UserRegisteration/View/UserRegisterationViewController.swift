@@ -578,8 +578,7 @@ extension UserRegisterationViewController: CountrySelectionDelegate {
 }
 
 extension UserRegisterationViewController: EnableTouchIdDelegate {
-    public func didDismissEnableTouchVC(_ viewController: UIViewController) {
-        viewController.dismiss(animated: true)
+    public func didDismissEnableTouchVC() {
         self.registrationCompleted()
     }
 }
