@@ -17,9 +17,9 @@ extension VerifyOtpViewModel {
     
     enum Output {
         case verifyOtpDidSucceed(response: VerifyOtpResponseModel)
-        case verifyOtpDidFail(error: Error)
+        case verifyOtpDidFail(error: NetworkError)
         case getProfileStatusDidSucceed(response: GetProfileStatusResponse, msisdn: String, authToken: String)
-        case getProfileStatusDidFail(error: Error)
+        case getProfileStatusDidFail(error: NetworkError)
         case showLoader(shouldShow: Bool)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
         case getOTPforMobileNumberDidFail(error:  NetworkError)

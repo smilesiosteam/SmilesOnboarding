@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import NetworkingLayer
 
 extension EnableTouchIdViewModel {
     enum Input {
@@ -15,6 +16,6 @@ extension EnableTouchIdViewModel {
     
     enum Output {
         case authenticateTouchIdDidSucceed(response: EnableTouchIdResponseModel)
-        case authenticateTouchIdDidfail(error: Error)
+        case authenticateTouchIdDidfail(error: NetworkError)
     }
 }
