@@ -9,34 +9,32 @@ import Foundation
 import Combine
 
 protocol ConfigOTPResponseType {
-    func handleSuccessResponse(result: CreateOtpResponse) -> AnyPublisher<ConfigOTPResponse.State, Never>
+    func handleSuccessResponse(result: CreateOtpResponse) -> ConfigOTPResponse.State
 }
 
 final class ConfigOTPResponse: ConfigOTPResponseType {
-    func handleSuccessResponse(result: CreateOtpResponse) -> AnyPublisher<State, Never> {
+    func handleSuccessResponse(result: CreateOtpResponse) -> State {
         if let limitExceededMsg = result.limitExceededMsg,
            !limitExceededMsg.isEmpty,
            let limitExceededTitle = result.limitExceededTitle,
            !limitExceededTitle.isEmpty {
-            return Just(.showLimitExceedPopup(title: limitExceededTitle, subTitle: limitExceededMsg)).eraseToAnyPublisher()
+            return .showLimitExceedPopup(title: limitExceededTitle, subTitle: limitExceededMsg)
             
         } else if result.responseCode == "2023" { //app integrity failed
-            return Just(.showAlertWithOkayOnly(message: result.errorMsg.asStringOrEmpty(),
-                                               title: result.errorTitle.asStringOrEmpty())).eraseToAnyPublisher()
+            return .showAlertWithOkayOnly(message: result.errorMsg.asStringOrEmpty(), title: result.errorTitle.asStringOrEmpty())
         } else if result.responseCode == "1" {
-            return Just(.showAlertWithOkayOnly(message: result.responseMsg.asStringOrEmpty(),
-                                               title: result.errorTitle.asStringOrEmpty())).eraseToAnyPublisher()
+            return .showAlertWithOkayOnly(message: result.responseMsg.asStringOrEmpty(), title: result.errorTitle.asStringOrEmpty())
         } else {
             if result.responseMsg != nil,
                let limitExceededMsg = result.limitExceededMsg,
                !limitExceededMsg.isEmpty,
                let limitExceededTitle = result.limitExceededTitle,
                !limitExceededTitle.isEmpty {
-                return Just(.showLimitExceedPopup(title: limitExceededTitle,
-                                                  subTitle: limitExceededMsg)).eraseToAnyPublisher()
+                return .showLimitExceedPopup(title: limitExceededTitle,
+                                                  subTitle: limitExceededMsg)
             } else {
-                return Just(.navigateToVerifyOTP(timeOut: result.timeout ?? 0,
-                                                 header: result.otpHeaderText)).eraseToAnyPublisher()
+                return .navigateToVerifyOTP(timeOut: result.timeout ?? 0,
+                                                 header: result.otpHeaderText)
             }
         }
     }

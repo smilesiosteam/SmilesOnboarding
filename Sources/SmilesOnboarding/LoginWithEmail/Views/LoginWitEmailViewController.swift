@@ -194,7 +194,7 @@ final class LoginWitEmailViewController: UIViewController {
                                            mobileNumber: mobileNumber,
                                            navigateToRegisterViewCallBack: navigateToRegisterViewCallBack,
                                            navigateToHomeViewControllerCallBack: navigateToHomeViewControllerCallBack)
-        dependance.loginFlow = LoginFlow.email(email: viewModel.emailTextSubject.value, mobile: mobileNumber)
+        dependance.loginFlow = LoginFlow.verifyEmail(email: viewModel.emailTextSubject.value, mobile: mobileNumber)
         let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
         navigationController?.pushViewController(viewController: viewController)
     }

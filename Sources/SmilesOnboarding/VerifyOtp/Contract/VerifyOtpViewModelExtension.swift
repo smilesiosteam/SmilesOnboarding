@@ -12,6 +12,7 @@ extension VerifyOtpViewModel {
         case verifyOtp(otp: String, type: LoginFlow)
         case getProfileStatus(msisdn: String, authToken: String)
         case getOTPforMobileNumber(mobileNumber: String)
+        case getOTPForEmail(email: String, mobileNumber: String)
     }
     
     enum Output {

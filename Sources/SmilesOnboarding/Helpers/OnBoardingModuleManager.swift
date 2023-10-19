@@ -14,23 +14,23 @@ public enum LoginType : String {
 
 enum LoginFlow {
     case internationalNumber // The normal flow
-    case email(email: String, mobile: String) // Users outside UAE
-    case verifyEmail(email: String, mobile: String) // The last Stage for verification
+    case verifyEmail(email: String, mobile: String) // Users outside UAE
+    case verifyMobile(email: String, mobile: String) // The last Stage for verification
     
     var otpTitleText: String {
         switch self {
-        case .internationalNumber, .verifyEmail:
+        case .internationalNumber, .verifyMobile:
             return "verifyOtpTitle".localizedString
-        case .email:
+        case .verifyEmail:
            return OnboardingLocalizationKeys.verifyEmail.text
         }
     }
     
     var otpDescriptionText: String {
         switch self {
-        case .internationalNumber, .verifyEmail:
+        case .internationalNumber, .verifyMobile:
             return "verifyOtpdesc".localizedString
-        case .email:
+        case .verifyEmail:
            return OnboardingLocalizationKeys.verificationCodeSentOverMail.text
         }
     }
@@ -39,7 +39,7 @@ enum LoginFlow {
         switch self {
         case .internationalNumber:
             return "SMS"
-        case .email, .verifyEmail:
+        case .verifyEmail, .verifyMobile:
             return "EMAIL"
         }
     }

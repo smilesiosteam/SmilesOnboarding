@@ -39,6 +39,8 @@ extension VerifyOtpViewModel {
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             case .getOTPforMobileNumber(mobileNumber: let mobileNumber):
                 self?.getOtpForMobileNumber(mobileNumber: mobileNumber, captchaText: "", deviceCheckToken: "", appAttestation: "", challenge: "")
+            case .getOTPForEmail(email: let email, mobileNumber: let mobileNumber):
+                self?.getOTPForEmail(email: email, mobileNumber: mobileNumber)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -51,10 +53,10 @@ extension VerifyOtpViewModel {
             let request = VerifyOtpRequest(otp: otp)
             request.otpType = loginFlow.otpType
             loginWithMobileNumber(request: request)
-        case .email(email: let email, mobile: let mobile):
+        case .verifyEmail(email: let email, mobile: let mobile):
             userEmail = email
             loginWithEmail(otp: otp, email: email, mobileNumber: mobile)
-        case .verifyEmail(email: let email, mobile: let mobile):
+        case .verifyMobile(email: let email, mobile: let mobile):
             let request = VerifyOtpRequest(otp: otp)
             request.otpType = loginFlow.otpType
             request.email = AES256Encryption.encrypt(with: email)
@@ -85,11 +87,9 @@ extension VerifyOtpViewModel {
                 guard let self else {
                     return
                 }
-                self.configOTPResponse.handleSuccessResponse(result: response)
-                    .subscribe(self.emailStateSubject)
-                    .store(in: &cancellables)                
+                let otpState = self.configOTPResponse.handleSuccessResponse(result: response)
+                self.emailStateSubject.send(otpState)
             }.store(in: &cancellables)
-
     }
     
     private func loginWithMobileNumber(request: VerifyOtpRequest) {
@@ -165,10 +165,56 @@ extension VerifyOtpViewModel {
                 case .finished:
                     debugPrint("nothing much to do here")
                 }
-            } receiveValue: {   [weak self] response in
+            } receiveValue: { [weak self] response in
                 self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
             }
             .store(in: &cancellables)
     }
+    
+    private func getOTPForEmail(email: String, mobileNumber: String) {
+        let emailEncrypted = AES256Encryption.encrypt(with: email)
+        let request = OTPEmailValidationRequest(email: emailEncrypted)
+        let msisdn = String(mobileNumber.dropFirst())
+        request.msisdn = msisdn
+        SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
+        
+        let service = LoginWithOtpRepository(
+            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
+            endPoint: .getOtpForEmail
+        )
+        
+        output.send(.showLoader(shouldShow: true))
+        service.getOTPForEmail(request: request)
+            .sink { [weak self] completion  in
+                switch completion {
+                case .failure(let error):
+                    self?.output.send(.showLoader(shouldShow: false))
+                    self?.output.send(.getOTPforMobileNumberDidFail(error: error))
+                case .finished:
+                    debugPrint("nothing much to do here")
+                }
+            } receiveValue: { [weak self] response in
+                self?.output.send(.showLoader(shouldShow: false))
+                self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
+            }
+            .store(in: &cancellables)
+    }
+}
+
+
+enum MyCustomError: LocalizedError, Error {
+    case dataNotFound
+    case invalidData
+    
+    
+
+//    var errorDescription: String? {
+//        switch self {
+//        case .dataNotFound:
+//            return NSLocalizedString("Data not found.", comment: "MyCustomError: dataNotFound")
+//        case .invalidData:
+//            return NSLocalizedString("Invalid data.", comment: "MyCustomError: invalidData")
+//        }
+//    }
 }

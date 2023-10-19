@@ -98,9 +98,8 @@ extension LoginWitEmailViewModel {
                 guard let self  else {
                     return
                 }
-                self.configOTPResponse.handleSuccessResponse(result: response)
-                    .subscribe(self.successState)
-                    .store(in: &cancallbles)
+               let otpState = self.configOTPResponse.handleSuccessResponse(result: response)
+                self.successState.send(otpState)
             }
             .store(in: &cancallbles)
         

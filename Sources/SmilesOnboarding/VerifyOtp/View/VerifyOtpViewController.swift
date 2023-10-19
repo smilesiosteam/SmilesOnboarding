@@ -135,7 +135,7 @@ public class VerifyOtpViewController: UIViewController {
                         }
                     }
                 case .verifyOtpDidFail(error: let error):
-                    debugPrint(error.localizedDescription)
+                    self?.showAlertWith(message: error.localizedDescription)
                 case .getProfileStatusDidSucceed(response: let response, msisdn: let msisdn, authToken: let authToken):
                     self?.configureProfileStatus(response: response, msisdn: msisdn, token: authToken)
                 case .getProfileStatusDidFail(error: let error):
@@ -166,7 +166,14 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func resendBtnTapped(_ sender: Any) {
-        self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
+        switch userLoginType {
+        case .internationalNumber, .verifyMobile:
+            self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
+        case .verifyEmail(let email, let mobile):
+            self.input.send(.getOTPForEmail(email: email, mobileNumber: mobile))
+       
+        }
+       
     }
     
     func setupString() {
@@ -365,7 +372,7 @@ public class VerifyOtpViewController: UIViewController {
         setupResendButton()
         setupCallBtn()
         startTimer()
-        if case .email(email: let email, mobile: _)  = userLoginType {
+        if case .verifyEmail(email: let email, mobile: _)  = userLoginType {
             phoneNumberText.text = email
             loginBtn.setTitle(OnboardingLocalizationKeys.continueText.text, for: .normal)
         } else {
@@ -476,7 +483,7 @@ extension VerifyOtpViewController {
             case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
                 self?.showLimitExceedPopup(title: title, subTitle: subTitle)
             case .showAlertWithOkayOnly(message: let message, title: let title):
-                self?.showAlertWith(message: message, title: title)
+                self?.showAlertWithOkayOnly(message: message, title: title)
             case .navigateToVerifyOTP(timeOut: let timeOut, header: let header):
                 self?.navigateToOTP(timeOut: timeOut, otpHeader: header)
             }
@@ -490,7 +497,7 @@ extension VerifyOtpViewController {
                                            mobileNumber: mobileNumber ?? "",
                                            navigateToRegisterViewCallBack: navigateToRegisterViewCallBack,
                                            navigateToHomeViewControllerCallBack: navigateToHomeViewControllerCallBack)
-        dependance.loginFlow = .verifyEmail(email: viewModel.userEmail, mobile: mobileNumber ?? "")
+        dependance.loginFlow = .verifyMobile(email: viewModel.userEmail, mobile: mobileNumber ?? "")
         let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
         navigationController?.pushViewController(viewController: viewController)
     }
