@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="CircularXXTT-Book.ttf">
+            <string>CircularXXTT-Book</string>
+        </array>
+        <array key="CircularXXTT-Medium.ttf">
+            <string>CircularXXTT-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginWitEmailViewController" customModuleProvider="target">
+            <connections>
+                <outlet property="backView" destination="Dwc-Ke-JCE" id="mPL-fp-VkT"/>
+                <outlet property="detailsLabel" destination="vOx-ZD-TXz" id="p2b-w6-ksa"/>
+                <outlet property="emailTextFiled" destination="hge-7v-oFx" id="Zdu-xp-ZqY"/>
+                <outlet property="emailView" destination="ze9-qb-jCo" id="6bp-th-Zhf"/>
+                <outlet property="mainView" destination="jes-wL-EId" id="QKD-oh-ApU"/>
+                <outlet property="sendCodeButton" destination="qip-0H-TuL" id="c70-rN-jRF"/>
+                <outlet property="subTitleLabel" destination="zEr-ml-kMP" id="Q4X-n9-LZG"/>
+                <outlet property="titleLabel" destination="V2E-gE-YQE" id="9Uv-g2-q8d"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oWb-iW-bbH" userLabel="BackgroundView" customClass="HeaderGradientView" customModule="SmilesUtilities">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify e-mail ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V2E-gE-YQE" customClass="BaseLabel" customModule="Smiles">
+                            <rect key="frame" x="16" y="122" width="188.33333333333334" height="28"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="28" id="HMG-Px-VTb"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="CircularXXTT-Medium" family="CircularXX TT" pointSize="28"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your e-mail ID" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEr-ml-kMP" customClass="BaseLabel" customModule="Smiles">
+                            <rect key="frame" x="16" y="158" width="361" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20" id="EPE-hp-Oso"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="CircularXXTT-Book" family="CircularXX TT" pointSize="16"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jes-wL-EId">
+                            <rect key="frame" x="0.0" y="210" width="393" height="642"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="j5K-cH-1q5">
+                                    <rect key="frame" x="16" y="32" width="361" height="237"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vOx-ZD-TXz">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="61"/>
+                                            <string key="text">Please enter your e-mail ID and then tap
+'Continue' to receive verification code to signup</string>
+                                            <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                            <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.40392156862745099" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="LoginTitle"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ze9-qb-jCo">
+                                            <rect key="frame" x="0.0" y="105" width="361" height="40"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter e-mail ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hge-7v-oFx">
+                                                    <rect key="frame" x="16" y="10" width="329" height="20"/>
+                                                    <color key="textColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.89411764705882346" green="0.89411771299999998" blue="0.89411771299999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <constraints>
+                                                <constraint firstItem="hge-7v-oFx" firstAttribute="leading" secondItem="ze9-qb-jCo" secondAttribute="leading" constant="16" id="3RQ-kr-gUz"/>
+                                                <constraint firstAttribute="height" constant="40" id="PX7-DY-jeB"/>
+                                                <constraint firstItem="hge-7v-oFx" firstAttribute="top" secondItem="ze9-qb-jCo" secondAttribute="top" constant="10" id="Pxm-SJ-LNd"/>
+                                                <constraint firstAttribute="bottom" secondItem="hge-7v-oFx" secondAttribute="bottom" constant="10" id="b5r-SX-Xfq"/>
+                                                <constraint firstAttribute="trailing" secondItem="hge-7v-oFx" secondAttribute="trailing" constant="16" id="nXi-Iu-6JF"/>
+                                            </constraints>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qip-0H-TuL">
+                                            <rect key="frame" x="0.0" y="189" width="361" height="48"/>
+                                            <color key="backgroundColor" red="0.85490196939999996" green="0.85490196939999996" blue="0.85490196939999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="48" id="Qcn-5C-3eF"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="CircularXXTT-Medium" family="CircularXX TT" pointSize="16"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="Send Code">
+                                                <color key="titleColor" red="0.65098039220000004" green="0.6588235294" blue="0.70196078429999997" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="sendCodeTapped:" destination="-1" eventType="touchUpInside" id="EPS-Ta-dmB"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="j5K-cH-1q5" firstAttribute="leading" secondItem="jes-wL-EId" secondAttribute="leading" constant="16" id="89f-Ql-Oxi"/>
+                                <constraint firstItem="j5K-cH-1q5" firstAttribute="top" secondItem="jes-wL-EId" secondAttribute="top" constant="32" id="M4m-IU-Pri"/>
+                                <constraint firstAttribute="trailing" secondItem="j5K-cH-1q5" secondAttribute="trailing" constant="16" id="f5W-lI-T1k"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dwc-Ke-JCE">
+                            <rect key="frame" x="16" y="58" width="32" height="32"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backBtn" translatesAutoresizingMaskIntoConstraints="NO" id="2Tx-iT-H2o">
+                                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wWk-3V-cAh">
+                                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <connections>
+                                        <action selector="popButtonTapped:" destination="-1" eventType="touchUpInside" id="Ipl-jA-4Ci"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="wWk-3V-cAh" secondAttribute="trailing" id="1Pc-e2-FYx"/>
+                                <constraint firstAttribute="bottom" secondItem="wWk-3V-cAh" secondAttribute="bottom" id="59f-x9-Lfo"/>
+                                <constraint firstAttribute="height" constant="32" id="Bao-FS-PYd"/>
+                                <constraint firstAttribute="bottom" secondItem="2Tx-iT-H2o" secondAttribute="bottom" id="Xvw-H8-kXS"/>
+                                <constraint firstItem="wWk-3V-cAh" firstAttribute="top" secondItem="Dwc-Ke-JCE" secondAttribute="top" id="ehy-kL-JUQ"/>
+                                <constraint firstItem="wWk-3V-cAh" firstAttribute="leading" secondItem="Dwc-Ke-JCE" secondAttribute="leading" id="guB-9k-OWN"/>
+                                <constraint firstAttribute="width" constant="32" id="hel-Rf-uep"/>
+                                <constraint firstItem="2Tx-iT-H2o" firstAttribute="leading" secondItem="Dwc-Ke-JCE" secondAttribute="leading" id="mT4-mn-PtL"/>
+                                <constraint firstAttribute="trailing" secondItem="2Tx-iT-H2o" secondAttribute="trailing" id="spt-5B-b8v"/>
+                                <constraint firstItem="2Tx-iT-H2o" firstAttribute="top" secondItem="Dwc-Ke-JCE" secondAttribute="top" id="zZO-1o-kLA"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="tertiaryLabelColor"/>
+                    <constraints>
+                        <constraint firstItem="zEr-ml-kMP" firstAttribute="leading" secondItem="oWb-iW-bbH" secondAttribute="leading" constant="16" id="0JV-Ng-HZy"/>
+                        <constraint firstItem="Dwc-Ke-JCE" firstAttribute="top" secondItem="oWb-iW-bbH" secondAttribute="top" constant="58" id="EEm-mB-Vjr"/>
+                        <constraint firstAttribute="trailing" secondItem="jes-wL-EId" secondAttribute="trailing" id="EIv-qO-QOX"/>
+                        <constraint firstItem="V2E-gE-YQE" firstAttribute="leading" secondItem="oWb-iW-bbH" secondAttribute="leading" constant="16" id="SLw-2t-FP9"/>
+                        <constraint firstItem="Dwc-Ke-JCE" firstAttribute="leading" secondItem="oWb-iW-bbH" secondAttribute="leading" constant="16" id="SSp-R0-RiT"/>
+                        <constraint firstItem="V2E-gE-YQE" firstAttribute="top" secondItem="Dwc-Ke-JCE" secondAttribute="bottom" constant="32" id="Zm1-ID-4Lv"/>
+                        <constraint firstAttribute="trailing" secondItem="zEr-ml-kMP" secondAttribute="trailing" constant="16" id="b8m-RF-a9b"/>
+                        <constraint firstItem="jes-wL-EId" firstAttribute="top" secondItem="zEr-ml-kMP" secondAttribute="bottom" constant="32" id="dIV-TY-JKG"/>
+                        <constraint firstAttribute="bottom" secondItem="jes-wL-EId" secondAttribute="bottom" id="tl5-jg-sMB"/>
+                        <constraint firstItem="zEr-ml-kMP" firstAttribute="top" secondItem="V2E-gE-YQE" secondAttribute="bottom" constant="8" id="uOA-8f-Jn6"/>
+                        <constraint firstItem="jes-wL-EId" firstAttribute="leading" secondItem="oWb-iW-bbH" secondAttribute="leading" id="yoq-R2-iFi"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="oWb-iW-bbH" secondAttribute="trailing" id="FXI-wB-mZZ"/>
+                <constraint firstAttribute="bottom" secondItem="oWb-iW-bbH" secondAttribute="bottom" id="LbR-BR-4tB"/>
+                <constraint firstItem="oWb-iW-bbH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="PE4-Ui-sLC"/>
+                <constraint firstItem="oWb-iW-bbH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ehI-xI-Ivf"/>
+            </constraints>
+            <point key="canvasLocation" x="2" y="-1"/>
+        </view>
+    </objects>
+    <designables>
+        <designable name="V2E-gE-YQE">
+            <size key="intrinsicContentSize" width="188.33333333333334" height="32.666666666666664"/>
+        </designable>
+        <designable name="zEr-ml-kMP">
+            <size key="intrinsicContentSize" width="142" height="18.666666666666668"/>
+        </designable>
+    </designables>
+    <resources>
+        <image name="backBtn" width="24" height="24"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

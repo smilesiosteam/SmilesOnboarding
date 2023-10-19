@@ -9,7 +9,7 @@ import Foundation
 
 extension VerifyOtpViewModel {
     enum Input {
-        case verifyOtp(otp: String)
+        case verifyOtp(otp: String, type: LoginFlow)
         case getProfileStatus(msisdn: String, authToken: String)
         case getOTPforMobileNumber(mobileNumber: String)
     }

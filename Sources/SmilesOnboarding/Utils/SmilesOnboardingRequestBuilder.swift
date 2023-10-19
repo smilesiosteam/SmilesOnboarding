@@ -20,7 +20,8 @@ enum SmilesOnboardingRequestBuilder {
     case getProfileStatus(request: GetProfileStatusRequestModel)
     case loginAsGuest(request: GuestUserRequestModel)
     case authenticateTouchId(request: EnableTouchIdRequestModel)
-    
+    case getOTPForEmail(request: OTPEmailValidationRequest)
+    case verifyOTPForEmail(request: VerifyEmailOTPRequest)
     // gave a default timeout but can be different for each.
     var requestTimeOut: Int {
         return 20
@@ -42,6 +43,10 @@ enum SmilesOnboardingRequestBuilder {
         case .loginAsGuest:
             return .POST
         case .authenticateTouchId:
+            return .POST
+        case .getOTPForEmail:
+            return .POST
+        case .verifyOTPForEmail:
             return .POST
         }
     }
@@ -74,6 +79,10 @@ enum SmilesOnboardingRequestBuilder {
             return request
         case .authenticateTouchId(let request):
             return request
+        case .getOTPForEmail(request: let request):
+            return request
+        case .verifyOTPForEmail(request: let request):
+            return request
         }
     }
     
@@ -95,6 +104,8 @@ enum SmilesOnboardingRequestBuilder {
         case .loginAsGuest:
             return "\(baseURL)\(endPoint)"
         case .authenticateTouchId:
+            return "\(baseURL)\(endPoint)"
+        case .getOTPForEmail, .verifyOTPForEmail:
             return "\(baseURL)\(endPoint)"
         }
         

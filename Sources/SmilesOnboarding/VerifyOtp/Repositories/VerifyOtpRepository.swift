@@ -38,6 +38,16 @@ class VerifyOtpRepository: VerifyOtpServiceable {
         return self.networkRequest.request(request)
     }
     
+    
+    func verifyOTPForEmail(request: VerifyEmailOTPRequest) -> AnyPublisher<CreateOtpResponse, NetworkingLayer.NetworkError> {
+        let endPoint = SmilesOnboardingRequestBuilder.verifyOTPForEmail(request: request)
+        let request = endPoint.createRequest(
+            baseURL: self.baseURL,
+            endPoint: self.endPoint
+        )
+        
+        return self.networkRequest.request(request)
+    }
     func getProfileStatus(request: GetProfileStatusRequestModel) -> AnyPublisher<GetProfileStatusResponse, NetworkingLayer.NetworkError> {
         let endPoint = SmilesOnboardingRequestBuilder.getProfileStatus(request: request)
         let request = endPoint.createRequest(

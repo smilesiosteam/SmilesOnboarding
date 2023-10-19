@@ -123,6 +123,7 @@ import SmilesBaseMainRequestManager
     private var mobileNumber = ""
     public var isComingFromGuestPopup = false
     public var shouldShowTouchId = false
+    @Published private var isUaeCitizen = true
     
     //MARK: CallBacks
     public var termsAndConditionTappCallback: (() -> Void)?
@@ -151,6 +152,7 @@ import SmilesBaseMainRequestManager
         setupGuestButton()
         setupTermsButton()
         setupStrings()
+        checkIfUserUAECitizen()
         mobileNumberTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
@@ -210,6 +212,13 @@ import SmilesBaseMainRequestManager
         }
         self.input.send(.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall))
     }
+    
+    private func checkIfUserUAECitizen() {
+        $isUaeCitizen.sink { [weak self] isCitizen in
+            let text = isCitizen ? OnboardingLocalizationKeys.sendCode.text : OnboardingLocalizationKeys.continueText.text
+            self?.sendCodeBtn.setTitle(text, for: .normal)
+        }.store(in: &cancellables)
+    }
     @IBAction func termsBtnTapped(_ sender: Any) {
         self.termsAndConditionTappCallback?()
     }
@@ -220,6 +229,10 @@ import SmilesBaseMainRequestManager
     }
     
     @IBAction func sendCodeTapped(_ sender: Any) {
+        guard isUaeCitizen else {
+            navigateToEmailVerification()
+            return
+        }
         let mobileNum = String(mobileNumber.dropFirst())
         self.input.send(.generateCaptcha(mobileNumber: mobileNum))
     }
@@ -260,7 +273,8 @@ import SmilesBaseMainRequestManager
         descLbl.text = "WelcomeText".localizedString
         titleLbl.text = "LoginTitle".localizedString
         descLbl2.text = "LoginInstructions".localizedString
-        sendCodeBtn.setTitle("sendCodeTitle".localizedString, for: .normal)
+        let text = isUaeCitizen ? OnboardingLocalizationKeys.sendCode.text : OnboardingLocalizationKeys.continueText.text
+        sendCodeBtn.setTitle(text, for: .normal)
         termsAndCondLbl.text = "LoginTermsNew".localizedString
         mobileNumberTxtField.semanticContentAttribute = .forceLeftToRight
         mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
@@ -399,6 +413,7 @@ extension LoginWithOtpViewController {
     }
     
     func navigateToVerifyOtp(response: CreateOtpResponse) {
+
         var otpTimeOut = 0
         var otpHeaderText: String?
         if let headerText = response.otpHeaderText, !headerText.isEmpty {
@@ -408,20 +423,40 @@ extension LoginWithOtpViewController {
             otpTimeOut = timeout
         }
         
-        let moduleStoryboard = UIStoryboard(name: "VerifyOtpStoryboard", bundle: .module)
-        let vc = moduleStoryboard.instantiateViewController(identifier: "VerifyOtpViewController", creator: { coder in
-            VerifyOtpViewController(coder: coder, baseURL: self.baseURL)
-        })
-        vc.navigateToRegisterViewCallBack = { msisdn, token, loginType, isExistingUser in
+        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser in
+            guard let self else { return }
             self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
         }
-        vc.navigateToHomeViewControllerCallBack = { msisdn, token in
+        let navigateToHomeViewControllerCallBack: OldUserCallBack? = { [weak self] msisdn, token in
+            guard let self else { return }
             self.navigateToHomeViewControllerCallBack?(msisdn, token)
         }
-        vc.otpHeaderText = otpHeaderText
-        vc.otpTimeOut = otpTimeOut
-        vc.mobileNumber = self.mobileNumber
-        self.navigationController?.pushViewController(vc, animated: true)
+        
+        var dependance = VerifyOtpViewController.Dependance(otpTimeOut: otpTimeOut,otpHeader: otpHeaderText,
+                                                            baseURL: baseURL,
+                                                            mobileNumber: mobileNumber,
+                                                            navigateToRegisterViewCallBack: navigateToRegisterViewCallBack,
+                                                            navigateToHomeViewControllerCallBack: navigateToHomeViewControllerCallBack)
+        dependance.loginFlow = .internationalNumber
+        let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
+        navigationController?.pushViewController(viewController: viewController)
+    }
+    
+    private func navigateToEmailVerification() {
+        let languageChangeCallback: (() -> Void)? = { [weak self] in
+            self?.changeLang()
+        }
+        
+        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser in
+            guard let self else { return }
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
+        }
+        let navigateToHomeViewControllerCallBack: OldUserCallBack? = { [weak self] msisdn, token in
+            guard let self else { return }
+            self.navigateToHomeViewControllerCallBack?(msisdn, token)
+        }
+        let viewController = OnBoardingConfigurator.getViewController(type: .loginWitEmail(mobileNumber: mobileNumber, baseUrl: baseURL, languageChangeCallback: languageChangeCallback, newUserCallBack: navigateToRegisterViewCallBack, oldUserCallBack: navigateToHomeViewControllerCallBack))
+        navigationController?.pushViewController(viewController: viewController)
     }
     
     @objc func changeLang() {
@@ -453,6 +488,7 @@ extension LoginWithOtpViewController {
         setupTouchId()
         setupStrings()
         reloadViewControllerAfterChangeLanguage()
+        isUaeCitizen = true
     }
     
     func reloadViewControllerAfterChangeLanguage() {
@@ -501,7 +537,10 @@ extension LoginWithOtpViewController: UITextFieldDelegate {
 
 extension LoginWithOtpViewController: CountrySelectionDelegate {
     public func didSelectCountry(_ country: CountryList) {
-        self.populateUIViewWithCountry(country: country)
-        self.enableSendCodeButton(isEnable: false)
+        let uaeCountryCode = 186
+        let selectedCountryCode = country.countryId ?? 0
+        isUaeCitizen = uaeCountryCode == selectedCountryCode
+        populateUIViewWithCountry(country: country)
+        enableSendCodeButton(isEnable: false)
     }
 }

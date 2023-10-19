@@ -15,6 +15,8 @@ public enum SmilesOnboardingEndPoints: String, CaseIterable {
     case getProfileStatus
     case loginAsGuest
     case authenticateTouchId
+    case getOtpForEmail
+    case verifyOtpForEmail
 }
 
 extension SmilesOnboardingEndPoints {
@@ -34,6 +36,10 @@ extension SmilesOnboardingEndPoints {
             return "login/login-guest-user"
         case .authenticateTouchId:
             return "profile/enable-touch-id"
+        case .getOtpForEmail:
+            return "login/send-email-otp"
+        case .verifyOtpForEmail:
+            return "login/verify-email-otp"
         }
     }
 }

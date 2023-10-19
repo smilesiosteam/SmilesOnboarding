@@ -91,6 +91,9 @@ public class VerifyOtpViewController: UIViewController {
     let phoneNumberKit = PhoneNumberKit()
     
     //MARK: CallBacks
+    var titleText = ""
+    var descriptionText = ""
+    var userLoginType: LoginFlow = .internationalNumber
     public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
     public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
     
@@ -109,6 +112,7 @@ public class VerifyOtpViewController: UIViewController {
         bind(to: viewModel)
         setupUI()
         setupString()
+        bindStateForEmail()
     }
     
     
@@ -158,7 +162,7 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
-        self.input.send(.verifyOtp(otp: self.otpNumber))
+        self.input.send(.verifyOtp(otp: self.otpNumber, type: userLoginType))
     }
     
     @IBAction func resendBtnTapped(_ sender: Any) {
@@ -166,11 +170,10 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     func setupString() {
-        descLbl.text = "verifyOtpdesc".localizedString
+        descLbl.text = descriptionText
         descLbl2.text = "verifyOtpDesc2".localizedString
-        titleLbl.text = "verifyOtpTitle".localizedString
+        titleLbl.text = titleText
         resendBtn.setTitle("resendOtp".localizedString, for: .normal)
-        loginBtn.setTitle("LoginTitle".localizedString, for: .normal)
         if SmilesLanguageManager.shared.currentLanguage == .ar {
             descLbl2.textAlignment = .right
             descLbl.textAlignment = .right
@@ -362,7 +365,13 @@ public class VerifyOtpViewController: UIViewController {
         setupResendButton()
         setupCallBtn()
         startTimer()
-        setupPhoneNumberView()
+        if case .email(email: let email, mobile: _)  = userLoginType {
+            phoneNumberText.text = email
+            loginBtn.setTitle(OnboardingLocalizationKeys.continueText.text, for: .normal)
+        } else {
+            setupPhoneNumberView()
+            loginBtn.setTitle("LoginTitle".localizedString, for: .normal)
+        }
     }
 }
 
@@ -457,4 +466,51 @@ extension VerifyOtpViewController: AROTPTextFieldDelegate {
         self.otpNumber = code
     }
     
+}
+// MARK: - Handel OTP form email verification
+extension VerifyOtpViewController {
+    private func bindStateForEmail() {
+        viewModel.emailStatePublisher.sink { [weak self] state in
+            switch state {
+                
+            case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
+                self?.showLimitExceedPopup(title: title, subTitle: subTitle)
+            case .showAlertWithOkayOnly(message: let message, title: let title):
+                self?.showAlertWith(message: message, title: title)
+            case .navigateToVerifyOTP(timeOut: let timeOut, header: let header):
+                self?.navigateToOTP(timeOut: timeOut, otpHeader: header)
+            }
+        }.store(in: &cancellables)
+    }
+    
+    private func navigateToOTP(timeOut: Int, otpHeader: String?) {
+        var dependance = VerifyOtpViewController.Dependance(otpTimeOut: timeOut,
+                                           otpHeader: otpHeader,
+                                           baseURL: baseURL,
+                                           mobileNumber: mobileNumber ?? "",
+                                           navigateToRegisterViewCallBack: navigateToRegisterViewCallBack,
+                                           navigateToHomeViewControllerCallBack: navigateToHomeViewControllerCallBack)
+        dependance.loginFlow = .verifyEmail(email: viewModel.userEmail, mobile: mobileNumber ?? "")
+        let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
+        navigationController?.pushViewController(viewController: viewController)
+    }
+}
+
+extension VerifyOtpViewController {
+    public struct Dependance {
+        var otpTimeOut: Int
+        var otpHeader: String?
+        var baseURL: String
+        var mobileNumber: String
+        var navigateToRegisterViewCallBack: NewUserCallBack?
+        var navigateToHomeViewControllerCallBack: OldUserCallBack?
+        var loginFlow = LoginFlow.internationalNumber
+        var email: String?
+        var titleText: String {
+            return loginFlow.otpTitleText
+        }
+        var descriptionText: String {
+            return loginFlow.otpDescriptionText
+        }
+    }
 }

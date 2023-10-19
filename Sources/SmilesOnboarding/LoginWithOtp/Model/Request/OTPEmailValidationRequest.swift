@@ -2,40 +2,31 @@
 //  File.swift
 //  
 //
-//  Created by Shahroze Zaheer on 05/07/2023.
+//  Created by Ahmed Naguib on 17/10/2023.
 //
 
 import Foundation
-import SmilesUtilities
 import SmilesBaseMainRequestManager
 
-public class VerifyOtpRequest: SmilesBaseMainRequest {
+final class OTPEmailValidationRequest: SmilesBaseMainRequest {
     
-    var otp: String?
-    var otpType: String?
     var email: String?
-    init(otp: String?) {
+    
+    init(email: String?) {
         super.init()
-        self.otp = otp
+        self.email = email
     }
     
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
     
-    // MARK: - Model Keys
-    
     enum CodingKeys: String, CodingKey {
-        case otp
-        case otpType
         case email
     }
-    
     public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.otp, forKey: .otp)
-        try container.encodeIfPresent(self.otpType, forKey: .otpType)
         try container.encodeIfPresent(self.email, forKey: .email)
     }
 }

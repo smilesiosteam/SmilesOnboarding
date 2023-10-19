@@ -14,12 +14,17 @@ class VerifyOtpViewModel: NSObject {
     // MARK: -- Variables
     private var output: PassthroughSubject<Output, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
-    
-    
+    private let configOTPResponse: ConfigOTPResponseType
+    private var emailStateSubject = PassthroughSubject<ConfigOTPResponse.State, Never>()
+    var userEmail = ""
+    var emailStatePublisher: AnyPublisher<ConfigOTPResponse.State, Never> {
+        emailStateSubject.eraseToAnyPublisher()
+    }
     private var baseURL: String
     
-    public init(baseURL: String) {
+    public init(baseURL: String, configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse()) {
         self.baseURL = baseURL
+        self.configOTPResponse = configOTPResponse
     }
 }
 
@@ -28,8 +33,8 @@ extension VerifyOtpViewModel {
         output = PassthroughSubject<Output, Never>()
         input.sink { [weak self] event in
             switch event {
-            case .verifyOtp(otp: let otp):
-                self?.verifyOtp(otp: otp)
+            case .verifyOtp(otp: let otp, type: let type):
+                self?.verifyOtp(otp: otp, loginFlow: type)
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             case .getOTPforMobileNumber(mobileNumber: let mobileNumber):
@@ -39,9 +44,56 @@ extension VerifyOtpViewModel {
         return output.eraseToAnyPublisher()
     }
     
-    func verifyOtp(otp: String) {
-        let request = VerifyOtpRequest(otp: otp)
-        self.output.send(.showLoader(shouldShow: true))
+    func verifyOtp(otp: String, loginFlow: LoginFlow) {
+        switch loginFlow {
+            
+        case .internationalNumber:
+            let request = VerifyOtpRequest(otp: otp)
+            request.otpType = loginFlow.otpType
+            loginWithMobileNumber(request: request)
+        case .email(email: let email, mobile: let mobile):
+            userEmail = email
+            loginWithEmail(otp: otp, email: email, mobileNumber: mobile)
+        case .verifyEmail(email: let email, mobile: let mobile):
+            let request = VerifyOtpRequest(otp: otp)
+            request.otpType = loginFlow.otpType
+            request.email = AES256Encryption.encrypt(with: email)
+            request.msisdn = mobile
+            loginWithMobileNumber(request: request)
+        }
+    }
+    
+    private func loginWithEmail(otp: String, email: String, mobileNumber: String) {
+        let emailEncrypted = AES256Encryption.encrypt(with: email)
+        let otpEncrypted = AES256Encryption.encrypt(with: otp)
+        let request = VerifyEmailOTPRequest(otp: otpEncrypted, email: emailEncrypted)
+        output.send(.showLoader(shouldShow: true))
+        let service = VerifyOtpRepository(
+            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
+            endPoint: .verifyOtpForEmail
+        )
+        
+        request.msisdn = String(mobileNumber.dropFirst())
+        service.verifyOTPForEmail(request: request)
+            .sink { [weak self] completion in
+                self?.output.send(.showLoader(shouldShow: false))
+                if case .failure(let error)  = completion {
+                    self?.output.send(.verifyOtpDidFail(error: error))
+                }
+                    
+            } receiveValue: { [weak self] response in
+                guard let self else {
+                    return
+                }
+                self.configOTPResponse.handleSuccessResponse(result: response)
+                    .subscribe(self.emailStateSubject)
+                    .store(in: &cancellables)                
+            }.store(in: &cancellables)
+
+    }
+    
+    private func loginWithMobileNumber(request: VerifyOtpRequest) {
+        output.send(.showLoader(shouldShow: true))
         let service = VerifyOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
             endPoint: .verifyOtp
