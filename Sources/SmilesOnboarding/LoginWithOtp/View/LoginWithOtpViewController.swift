@@ -175,12 +175,6 @@ import SmilesBaseMainRequestManager
                 case .fetchCountriesDidFail(error: let error):
                     self?.errorLabel.isHidden = false
                     self?.errorLabel.text = error.localizedDescription
-                case .generateCaptchaDidSucced(response: let response):
-                    guard let data = response else {return}
-                    self?.configureGetCaptchaData(response: data)
-                case .generateCaptchaDidFail(error: let error):
-                    self?.errorLabel.isHidden = false
-                    self?.errorLabel.text = error.localizedDescription
                 case .getOTPforMobileNumberDidSucceed(response: let response):
                     self?.configureGetOtpForNumber(result: response)
                 case .getOTPforMobileNumberDidFail(error: let error):
@@ -233,8 +227,8 @@ import SmilesBaseMainRequestManager
             navigateToEmailVerification()
             return
         }
-        let mobileNum = String(mobileNumber.dropFirst())
-        self.input.send(.generateCaptcha(mobileNumber: mobileNum))
+        let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
+        self.input.send(.getOTPforMobileNumber(mobileNumber: mobileNumber, enableDeviceSecurityCheck: enableDeviceSecurityCheck))
     }
     
     @IBAction func countrySelectionTapped(_ sender: Any) {
@@ -279,25 +273,6 @@ import SmilesBaseMainRequestManager
         mobileNumberTxtField.semanticContentAttribute = .forceLeftToRight
         mobileNumberFieldView.semanticContentAttribute = .forceLeftToRight
         countryCodeLbl.semanticContentAttribute = .forceLeftToRight
-    }
-    
-    func configureGetCaptchaData(response: CaptchaResponseModel) {
-        if let captchaString = response.captchaDetails?.captcha, !captchaString.isEmpty, let timer = response.captchaDetails?.captchaExpiry, timer > 0 {
-            print("Captcha exists, navigate to captcha screen with captcha")
-            //TODO: Captcha Redirection
-        } else {
-            if let limitExceededMsg = response.limitExceededMsg, !limitExceededMsg.isEmpty, let limitExceededTitle = response.limitExceededTitle, !limitExceededTitle.isEmpty {
-                self.showLimitExceedPopup(title: limitExceededTitle, subTitle: limitExceededMsg)
-                
-            } else if response.responseCode == "2012" || response.responseCode == "2013" || response.responseCode == "2011" || response.responseCode == "2010" { //Maximum
-                self.showLimitExceedPopup(title: response.errorTitle.asStringOrEmpty(), subTitle: response.errorMsg.asStringOrEmpty())
-                
-            } else {
-                // proceed to OTP
-                let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
-                self.input.send(.getOTPforMobileNumber(mobileNumber: mobileNumber, enableDeviceSecurityCheck: enableDeviceSecurityCheck))
-            }
-        }
     }
     
     func configureGetOtpForNumber(result: CreateOtpResponse) {

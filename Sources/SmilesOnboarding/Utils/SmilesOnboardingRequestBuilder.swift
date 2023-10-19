@@ -14,7 +14,6 @@ enum SmilesOnboardingRequestBuilder {
     
     // organise all the end points here for clarity
     case getCountries(request: CountryListRequest)
-    case getCaptcha(request: CaptchValidtionRequest)
     case getOTPforMobileNumber(request: OTPValidtionRequest)
     case verifyOtp(request: VerifyOtpRequest)
     case getProfileStatus(request: GetProfileStatusRequestModel)
@@ -31,8 +30,6 @@ enum SmilesOnboardingRequestBuilder {
     var httpMethod: SmilesHTTPMethod {
         switch self {
         case .getCountries:
-            return .POST
-        case .getCaptcha:
             return .POST
         case .getOTPforMobileNumber:
             return .POST
@@ -67,8 +64,6 @@ enum SmilesOnboardingRequestBuilder {
         switch self {
         case .getCountries(let request):
             return request
-        case .getCaptcha(let request):
-            return request
         case .getOTPforMobileNumber(let request):
             return request
         case .verifyOtp(let request):
@@ -92,8 +87,6 @@ enum SmilesOnboardingRequestBuilder {
         let endPoint = endPoint.serviceEndPoints
         switch self {
         case .getCountries:
-            return "\(baseURL)\(endPoint)"
-        case .getCaptcha:
             return "\(baseURL)\(endPoint)"
         case .getOTPforMobileNumber:
             return "\(baseURL)\(endPoint)"

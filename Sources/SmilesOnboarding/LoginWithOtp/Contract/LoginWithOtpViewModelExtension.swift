@@ -10,7 +10,6 @@ import Foundation
 extension LoginWithOtpViewModel {
     enum Input {
         case getCountriesList(lastModifiedDate: String ,firstCall: Bool)
-        case generateCaptcha(mobileNumber: String)
         case getOTPforMobileNumber(mobileNumber: String, enableDeviceSecurityCheck:Bool)
         case loginAsGuestUser
     }
@@ -18,8 +17,6 @@ extension LoginWithOtpViewModel {
     enum Output {
         case fetchCountriesDidSucceed(response: CountryListResponse)
         case fetchCountriesDidFail(error: Error)
-        case generateCaptchaDidSucced(response: CaptchaResponseModel?)
-        case generateCaptchaDidFail(error: Error)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
         case getOTPforMobileNumberDidFail(error: Error)
         case showLoader(shouldShow: Bool)

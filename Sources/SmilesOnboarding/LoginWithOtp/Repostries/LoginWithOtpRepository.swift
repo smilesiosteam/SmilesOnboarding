@@ -11,8 +11,6 @@ import NetworkingLayer
 
 protocol LoginWithOtpServiceable {
     func getAllCountriesService(request: CountryListRequest) -> AnyPublisher<CountryListResponse, NetworkError>
-    func getCaptcha(request: CaptchValidtionRequest) ->
-    AnyPublisher<CaptchaResponseModel, NetworkError>
     func getOTPforMobileNumber(request: OTPValidtionRequest) ->
     AnyPublisher<CreateOtpResponse, NetworkError>
     func loginAsGuest(request: GuestUserRequestModel) ->
@@ -36,16 +34,6 @@ class LoginWithOtpRepository: LoginWithOtpServiceable {
   
     func getAllCountriesService(request: CountryListRequest) -> AnyPublisher<CountryListResponse, NetworkError> {
         let endPoint = SmilesOnboardingRequestBuilder.getCountries(request: request)
-        let request = endPoint.createRequest(
-            baseURL: self.baseURL,
-            endPoint: self.endPoint
-        )
-        
-        return self.networkRequest.request(request)
-    }
-    
-    func getCaptcha(request: CaptchValidtionRequest) -> AnyPublisher<CaptchaResponseModel, NetworkingLayer.NetworkError> {
-        let endPoint = SmilesOnboardingRequestBuilder.getCaptcha(request: request)
         let request = endPoint.createRequest(
             baseURL: self.baseURL,
             endPoint: self.endPoint

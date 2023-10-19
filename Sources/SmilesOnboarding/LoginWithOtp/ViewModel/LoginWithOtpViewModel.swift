@@ -33,8 +33,6 @@ extension LoginWithOtpViewModel {
             switch event {
             case .getCountriesList(let lastModifiedDate, let firstCall):
                 self?.getCountries(lastModifiedDate: lastModifiedDate, firstCall: firstCall, baseURL: self?.baseURL ?? "")
-            case .generateCaptcha(mobileNumber: let mobileNumber):
-                self?.getCaptcha(num: mobileNumber)
             case .getOTPforMobileNumber(mobileNumber: let mobileNumber, enableDeviceSecurityCheck: let enableDeviceSecurityCheck):
                 self?.getOtpForMobileNumber(number: mobileNumber, isSecurityCheck: enableDeviceSecurityCheck)
             case .loginAsGuestUser:
@@ -83,36 +81,6 @@ extension LoginWithOtpViewModel {
                 }
             }
         .store(in: &cancellables)
-    }
-    
-    func getCaptcha(num: String) {
-        self.output.send(.showLoader(shouldShow: true))
-        let request = CaptchValidtionRequest(reGenerate: false)
-        request.msisdn = num
-        request.channel = ""
-        request.deviceId = SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.deviceId
-        
-        let service = LoginWithOtpRepository(
-            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
-            endPoint: .getCaptcha
-        )
-        
-        service.getCaptcha(request: request)
-            .sink { [weak self] completion in
-                debugPrint(completion)
-                switch completion {
-                case .failure(let error):
-                    self?.output.send(.showLoader(shouldShow: false))
-                    self?.output.send(.generateCaptchaDidFail(error: error))
-                case .finished:
-                    debugPrint("nothing much to do here")
-                }
-            } receiveValue: {  [weak self] response in
-                debugPrint("got my response here \(response)")
-                self?.output.send(.showLoader(shouldShow: false))
-                self?.output.send(.generateCaptchaDidSucced(response: response))
-            }
-            .store(in: &cancellables)
     }
     
     func getOtpForMobileNumber(number: String, isSecurityCheck: Bool) {
