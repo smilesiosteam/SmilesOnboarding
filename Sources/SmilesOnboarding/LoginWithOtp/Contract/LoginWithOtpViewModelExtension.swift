@@ -21,7 +21,7 @@ extension LoginWithOtpViewModel {
         case generateCaptchaDidSucced(response: CaptchaResponseModel?)
         case generateCaptchaDidFail(error: Error)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
-        case getOTPforMobileNumberDidFail(error: Error)
+        case getOTPforMobileNumberDidFail(error: NetworkError)
         case showLoader(shouldShow: Bool)
         case loginAsGuestDidSucceed(response: GuestUserResponseModel)
         case loginAsGuestDidFail(error: Error)

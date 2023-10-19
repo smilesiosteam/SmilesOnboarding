@@ -21,6 +21,6 @@ extension VerifyOtpViewModel {
         case getProfileStatusDidFail(error: Error)
         case showLoader(shouldShow: Bool)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
-        case getOTPforMobileNumberDidFail(error: Error)
+        case getOTPforMobileNumberDidFail(error:  NetworkError)
     }
 }
