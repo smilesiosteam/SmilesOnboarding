@@ -412,7 +412,7 @@ extension LoginWithOtpViewController {
                                                             mobileNumber: mobileNumber,
                                                             navigateToRegisterViewCallBack: navigateToRegisterViewCallBack,
                                                             navigateToHomeViewControllerCallBack: navigateToHomeViewControllerCallBack)
-        dependance.loginFlow = .internationalNumber
+        dependance.loginFlow = .localNumber
         let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
         navigationController?.pushViewController(viewController: viewController)
     }

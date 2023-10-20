@@ -12,7 +12,6 @@ import SmilesBaseMainRequestManager
 public class VerifyOtpRequest: SmilesBaseMainRequest {
     
     var otp: String?
-    var otpType: String?
     var email: String?
     init(otp: String?) {
         super.init()
@@ -27,7 +26,6 @@ public class VerifyOtpRequest: SmilesBaseMainRequest {
     
     enum CodingKeys: String, CodingKey {
         case otp
-        case otpType
         case email
     }
     
@@ -35,7 +33,6 @@ public class VerifyOtpRequest: SmilesBaseMainRequest {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.otp, forKey: .otp)
-        try container.encodeIfPresent(self.otpType, forKey: .otpType)
         try container.encodeIfPresent(self.email, forKey: .email)
     }
 }

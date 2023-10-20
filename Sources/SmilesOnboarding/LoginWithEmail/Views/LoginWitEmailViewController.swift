@@ -142,7 +142,7 @@ final class LoginWitEmailViewController: UIViewController {
         titleLabel.textAlignment = isEnglish ? .left : .right
         subTitleLabel.textAlignment = isEnglish ? .left : .right
         detailsLabel.textAlignment = isEnglish ? .left : .right
-        emailTextFiled.textAlignment = .left
+        emailTextFiled.textAlignment = isEnglish ? .left : .right
         if !isEnglish {
             backView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
         }

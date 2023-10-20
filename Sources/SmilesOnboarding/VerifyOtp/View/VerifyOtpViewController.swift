@@ -93,7 +93,7 @@ public class VerifyOtpViewController: UIViewController {
     //MARK: CallBacks
     var titleText = ""
     var descriptionText = ""
-    var userLoginType: LoginFlow = .internationalNumber
+    var userLoginType: LoginFlow = .localNumber
     public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
     public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
     
@@ -135,7 +135,7 @@ public class VerifyOtpViewController: UIViewController {
                         }
                     }
                 case .verifyOtpDidFail(error: let error):
-                    self?.showAlertWith(message: error.localizedDescription)
+                    self?.showAlertWithOkayOnly(message: error.localizedDescription)
                 case .getProfileStatusDidSucceed(response: let response, msisdn: let msisdn, authToken: let authToken):
                     self?.configureProfileStatus(response: response, msisdn: msisdn, token: authToken)
                 case .getProfileStatusDidFail(error: let error):
@@ -158,7 +158,12 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func backBtnTapped(_ sender: Any) {
-        self.navigationController?.popViewController()
+        let viewControllers = navigationController?.viewControllers ?? []
+        if let loginWitEmailViewController = viewControllers.first(where: { $0 is LoginWitEmailViewController }) {
+            navigationController?.popToViewController(loginWitEmailViewController, animated: true)
+        } else {
+            navigationController?.popViewController()
+        }
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
@@ -167,7 +172,7 @@ public class VerifyOtpViewController: UIViewController {
     
     @IBAction func resendBtnTapped(_ sender: Any) {
         switch userLoginType {
-        case .internationalNumber, .verifyMobile:
+        case .localNumber, .verifyMobile:
             self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
         case .verifyEmail(let email, let mobile):
             self.input.send(.getOTPForEmail(email: email, mobileNumber: mobile))
@@ -511,7 +516,7 @@ extension VerifyOtpViewController {
         var mobileNumber: String
         var navigateToRegisterViewCallBack: NewUserCallBack?
         var navigateToHomeViewControllerCallBack: OldUserCallBack?
-        var loginFlow = LoginFlow.internationalNumber
+        var loginFlow = LoginFlow.localNumber
         var email: String?
         var titleText: String {
             return loginFlow.otpTitleText

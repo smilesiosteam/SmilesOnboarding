@@ -49,16 +49,14 @@ extension VerifyOtpViewModel {
     func verifyOtp(otp: String, loginFlow: LoginFlow) {
         switch loginFlow {
             
-        case .internationalNumber:
+        case .localNumber:
             let request = VerifyOtpRequest(otp: otp)
-            request.otpType = loginFlow.otpType
             loginWithMobileNumber(request: request)
         case .verifyEmail(email: let email, mobile: let mobile):
             userEmail = email
             loginWithEmail(otp: otp, email: email, mobileNumber: mobile)
         case .verifyMobile(email: let email, mobile: let mobile):
             let request = VerifyOtpRequest(otp: otp)
-            request.otpType = loginFlow.otpType
             request.email = AES256Encryption.encrypt(with: email)
             request.msisdn = mobile
             loginWithMobileNumber(request: request)
