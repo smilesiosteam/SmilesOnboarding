@@ -159,10 +159,17 @@ public class VerifyOtpViewController: UIViewController {
     
     @IBAction func backBtnTapped(_ sender: Any) {
         let viewControllers = navigationController?.viewControllers ?? []
-        if let loginWitEmailViewController = viewControllers.first(where: { $0 is LoginWitEmailViewController }) {
-            navigationController?.popToViewController(loginWitEmailViewController, animated: true)
-        } else {
+        switch userLoginType {
+        case .localNumber:
             navigationController?.popViewController()
+        case .verifyEmail:
+            if let loginWitEmailViewController = viewControllers.first(where: { $0 is LoginWitEmailViewController }) {
+                navigationController?.popToViewController(loginWitEmailViewController, animated: true)
+            }
+        case .verifyMobile:
+            if let loginWitEmailViewController = viewControllers.first(where: { $0 is LoginWithOtpViewController }) {
+                navigationController?.popToViewController(loginWitEmailViewController, animated: true)
+            }
         }
     }
     

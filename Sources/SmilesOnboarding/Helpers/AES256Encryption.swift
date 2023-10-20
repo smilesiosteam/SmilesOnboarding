@@ -12,10 +12,10 @@ struct AES256Encryption {
     
     static func encrypt(with key: String) -> String {
         let aes256 = AESEncryption(key: EncryptionData.encryptionkey.rawValue, iv: EncryptionData.initVector.rawValue)
-        guard let encryptedKey = aes256?.encrypt(string: key) else {
+        guard let encryptedKey = aes256?.encryptDataWithNewHash(stringToHash: key) else {
             return ""
         }
-        return Data(encryptedKey).base64EncodedString()
+        return encryptedKey
     }
 }
 
