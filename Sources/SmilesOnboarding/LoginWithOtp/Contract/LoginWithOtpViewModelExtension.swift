@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkingLayer
 
 extension LoginWithOtpViewModel {
     enum Input {
@@ -16,12 +17,12 @@ extension LoginWithOtpViewModel {
     
     enum Output {
         case fetchCountriesDidSucceed(response: CountryListResponse)
-        case fetchCountriesDidFail(error: Error)
+        case fetchCountriesDidFail(error: NetworkError)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)
-        case getOTPforMobileNumberDidFail(error: Error)
+        case getOTPforMobileNumberDidFail(error: NetworkError)
         case showLoader(shouldShow: Bool)
         case loginAsGuestDidSucceed(response: GuestUserResponseModel)
-        case loginAsGuestDidFail(error: Error)
+        case loginAsGuestDidFail(error: NetworkError)
         case errorOutPut(error: String)
     }
 }

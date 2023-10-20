@@ -85,7 +85,7 @@ extension LoginWithOtpViewModel {
     
     func getOtpForMobileNumber(number: String, isSecurityCheck: Bool) {
         let captchaText = ""
-        if isSecurityCheck {
+        if isSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
             DeviceAppCheck.shared.getSecurityData { dcCheck, attestation, challenge, error  in
                 if error != nil {
                     let errorModel = ErrorCodeConfiguration()

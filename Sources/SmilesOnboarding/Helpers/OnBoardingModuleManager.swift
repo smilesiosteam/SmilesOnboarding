@@ -37,6 +37,8 @@ enum LoginFlow {
 }
 
 @objc public class OnBoardingModuleManager: NSObject {
+    
+    public static var isAppAttestEnabled = true
         
     @objc public static func instantiateLoginWithOtpViewController(storyBoardName: String, controller: String, baseUrl: String) -> LoginWithOtpViewController? {
         let storyboard = UIStoryboard(name: storyBoardName, bundle: .module)

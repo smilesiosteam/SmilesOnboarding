@@ -175,6 +175,7 @@ public class VerifyOtpViewController: UIViewController {
     
     @IBAction func loginBtnTapped(_ sender: Any) {
         self.input.send(.verifyOtp(otp: self.otpNumber, type: userLoginType))
+         self.enableLoginButton(isEnable: false)
     }
     
     @IBAction func resendBtnTapped(_ sender: Any) {
@@ -469,8 +470,7 @@ extension VerifyOtpViewController {
 }
 
 extension VerifyOtpViewController: EnableTouchIdDelegate {
-    public func didDismissEnableTouchVC(_ viewController: UIViewController) {
-        viewController.dismiss(animated: true)
+    public func didDismissEnableTouchVC() {
         navigateToHomeViewControllerCallBack?(self.mobileNumber.asStringOrEmpty(), self.authToken)
     }
 }

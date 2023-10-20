@@ -229,6 +229,7 @@ import SmilesBaseMainRequestManager
         }
         let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
         self.input.send(.getOTPforMobileNumber(mobileNumber: mobileNumber, enableDeviceSecurityCheck: enableDeviceSecurityCheck))
+        enableSendCodeButton(isEnable: false)
     }
     
     @IBAction func countrySelectionTapped(_ sender: Any) {
@@ -296,6 +297,7 @@ import SmilesBaseMainRequestManager
                 navigateToVerifyOtp(response: result)
             }
         }
+        enableSendCodeButton(isEnable: true)
     }
 }
 

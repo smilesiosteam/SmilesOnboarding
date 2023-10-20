@@ -10,7 +10,7 @@ import UIKit
 import Combine
 
 public protocol EnableTouchIdDelegate: AnyObject {
-    func didDismissEnableTouchVC(_ viewController: UIViewController)
+    func didDismissEnableTouchVC()
 }
 
 public class EnableTouchIdViewController: UIViewController {
@@ -67,7 +67,9 @@ public class EnableTouchIdViewController: UIViewController {
                 case .authenticateTouchIdDidSucceed(let response):
                     if let status = response.status, status == 204 {
                         self.saveTouchIdFlagWithMobile(self.mobileNumber)
-                        self.delegate?.didDismissEnableTouchVC(self)
+                        self.dismiss {
+                            self.delegate?.didDismissEnableTouchVC()
+                        }
                     }
                 case .authenticateTouchIdDidfail(let error):
                     debugPrint(error.localizedDescription)
@@ -93,7 +95,7 @@ public class EnableTouchIdViewController: UIViewController {
     }
     
     @IBAction func maybeBtntapped(_ sender: Any) {
-        delegate?.didDismissEnableTouchVC(self)
+        delegate?.didDismissEnableTouchVC()
     }
     
     func setupUI() {
