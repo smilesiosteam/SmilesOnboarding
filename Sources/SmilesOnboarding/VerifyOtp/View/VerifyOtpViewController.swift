@@ -93,8 +93,8 @@ public class VerifyOtpViewController: UIViewController {
     //MARK: CallBacks
     var titleText = ""
     var descriptionText = ""
-    var userLoginType: LoginFlow = .localNumber
-    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool) -> Void)?
+    var loginFlow: LoginFlow = .localNumber
+    public var navigateToRegisterViewCallBack: NewUserCallBack?
     public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
@@ -159,7 +159,7 @@ public class VerifyOtpViewController: UIViewController {
     
     @IBAction func backBtnTapped(_ sender: Any) {
         let viewControllers = navigationController?.viewControllers ?? []
-        switch userLoginType {
+        switch loginFlow {
         case .localNumber:
             navigationController?.popViewController()
         case .verifyEmail:
@@ -174,12 +174,12 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
-        self.input.send(.verifyOtp(otp: self.otpNumber, type: userLoginType))
+        self.input.send(.verifyOtp(otp: self.otpNumber, type: loginFlow))
          self.enableLoginButton(isEnable: false)
     }
     
     @IBAction func resendBtnTapped(_ sender: Any) {
-        switch userLoginType {
+        switch loginFlow {
         case .localNumber, .verifyMobile:
             self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
         case .verifyEmail(let email, let mobile):
@@ -217,10 +217,11 @@ public class VerifyOtpViewController: UIViewController {
                 enableTouchIDIfExist(number: msisdn)
             case 2 :
                 // Navigate to Register User
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false)
+                
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false, loginFlow)
             case 3 :
                 // Navigate to Existing User Flow
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, true)
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, true, loginFlow)
             default:
                 return
             }
@@ -385,7 +386,7 @@ public class VerifyOtpViewController: UIViewController {
         setupResendButton()
         setupCallBtn()
         startTimer()
-        if case .verifyEmail(email: let email, mobile: _)  = userLoginType {
+        if case .verifyEmail(email: let email, mobile: _)  = loginFlow {
             phoneNumberText.text = email
             loginBtn.setTitle(OnboardingLocalizationKeys.continueText.text, for: .normal)
         } else {

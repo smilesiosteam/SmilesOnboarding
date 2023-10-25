@@ -9,7 +9,7 @@
 import UIKit
 import SmilesUtilities
 
-typealias NewUserCallBack = ((String, String, LoginType, Bool) -> Void)
+public typealias NewUserCallBack = ((String, String, LoginType, Bool, LoginFlow) -> Void)
 typealias OldUserCallBack = ((String, String) -> Void)
 
 enum OnBoardingConfiguratorType {
@@ -67,7 +67,7 @@ enum OnBoardingConfigurator {
         viewController.mobileNumber = dependance.mobileNumber
         viewController.titleText = dependance.titleText
         viewController.descriptionText = dependance.descriptionText
-        viewController.userLoginType = dependance.loginFlow
+        viewController.loginFlow = dependance.loginFlow
         return viewController
     }
 }

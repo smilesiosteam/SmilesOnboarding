@@ -12,7 +12,7 @@ public enum LoginType : String {
     case otp, touchId ,none
 }
 
-enum LoginFlow {
+public enum LoginFlow {
     case localNumber // The normal flow, mean UAE number
     case verifyEmail(email: String, mobile: String) // Users outside UAE
     case verifyMobile(email: String, mobile: String) // The last Stage for verification
