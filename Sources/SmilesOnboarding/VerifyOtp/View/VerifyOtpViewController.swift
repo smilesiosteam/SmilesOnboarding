@@ -124,6 +124,7 @@ public class VerifyOtpViewController: UIViewController {
                     if let msisdn = response.msisdn, let token = response.authToken {
                         self?.input.send(.getProfileStatus(msisdn: msisdn, authToken: token))
                     } else {
+                        SmilesLoader.dismiss()
                         if let limitTitle = response.limitExceededTitle, !limitTitle.isEmpty, let limitMsg = response.limitExceededMsg, !limitMsg.isEmpty {
                             self?.showLimitExceedPopup(title: limitTitle, subTitle: limitMsg)
                         } else {

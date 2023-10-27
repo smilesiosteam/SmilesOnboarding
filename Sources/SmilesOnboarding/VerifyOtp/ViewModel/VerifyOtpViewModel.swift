@@ -57,14 +57,14 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {[weak self] response in
-                self?.output.send(.showLoader(shouldShow: false))
+//                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.verifyOtpDidSucceed(response: response))
             }
             .store(in: &cancellables)
     }
     
     func getProfileStatus(msisdn: String, authToken: String) {
-        self.output.send(.showLoader(shouldShow: true))
+//        self.output.send(.showLoader(shouldShow: true))
         let request = GetProfileStatusRequestModel()
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.authToken = authToken
@@ -84,7 +84,7 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response  in
-                self?.output.send(.showLoader(shouldShow: false))
+//                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getProfileStatusDidSucceed(response: response, msisdn: msisdn, authToken: authToken))
             }
             .store(in: &cancellables)

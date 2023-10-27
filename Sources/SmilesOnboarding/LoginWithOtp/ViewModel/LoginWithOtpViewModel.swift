@@ -109,7 +109,7 @@ extension LoginWithOtpViewModel {
                 }
             } receiveValue: {  [weak self] response in
                 debugPrint("got my response here \(response)")
-                self?.output.send(.showLoader(shouldShow: false))
+//                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.generateCaptchaDidSucced(response: response))
             }
             .store(in: &cancellables)
@@ -119,6 +119,7 @@ extension LoginWithOtpViewModel {
         let captchaText = ""
         if isSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
             DeviceAppCheck.shared.getSecurityData { dcCheck, attestation, challenge, error  in
+                self.output.send(.showLoader(shouldShow: false))
                 if error != nil {
                     let errorModel = ErrorCodeConfiguration()
                     errorModel.errorCode = -1
@@ -139,7 +140,7 @@ extension LoginWithOtpViewModel {
     }
     
     func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
-        self.output.send(.showLoader(shouldShow: true))
+//        self.output.send(.showLoader(shouldShow: true))
         let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
 
         let num = String(mobileNumber.dropFirst())

@@ -174,7 +174,9 @@ import SmilesBaseMainRequestManager
                     self?.errorLabel.isHidden = false
                     self?.errorLabel.text = error.localizedDescription
                 case .generateCaptchaDidSucced(response: let response):
-                    guard let data = response else {return}
+                    guard let data = response else {
+                        SmilesLoader.dismiss()
+                        return}
                     self?.configureGetCaptchaData(response: data)
                 case .generateCaptchaDidFail(error: let error):
                     self?.errorLabel.isHidden = false
@@ -274,9 +276,11 @@ import SmilesBaseMainRequestManager
             //TODO: Captcha Redirection
         } else {
             if let limitExceededMsg = response.limitExceededMsg, !limitExceededMsg.isEmpty, let limitExceededTitle = response.limitExceededTitle, !limitExceededTitle.isEmpty {
+                SmilesLoader.dismiss()
                 self.showLimitExceedPopup(title: limitExceededTitle, subTitle: limitExceededMsg)
                 
             } else if response.responseCode == "2012" || response.responseCode == "2013" || response.responseCode == "2011" || response.responseCode == "2010" { //Maximum
+                SmilesLoader.dismiss()
                 self.showLimitExceedPopup(title: response.errorTitle.asStringOrEmpty(), subTitle: response.errorMsg.asStringOrEmpty())
                 
             } else {
