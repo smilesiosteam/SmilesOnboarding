@@ -33,7 +33,7 @@ final class ConfigOTPResponse: ConfigOTPResponseType {
                 return .showLimitExceedPopup(title: limitExceededTitle,
                                                   subTitle: limitExceededMsg)
             } else {
-                return .navigateToVerifyOTP(timeOut: result.timeout ?? 0,
+                return .success(timeOut: result.timeout ?? 0,
                                                  header: result.otpHeaderText)
             }
         }
@@ -44,6 +44,6 @@ extension ConfigOTPResponse {
     enum State {
         case showLimitExceedPopup(title: String, subTitle: String)
         case showAlertWithOkayOnly(message: String, title: String)
-        case navigateToVerifyOTP(timeOut: Int, header: String?)
+        case success(timeOut: Int, header: String?)
     }
 }

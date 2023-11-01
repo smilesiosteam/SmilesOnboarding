@@ -178,7 +178,7 @@ final class LoginWitEmailViewController: UIViewController {
                 self.present(viewController)
             case .showAlertWithOkayOnly(message: let message, title: let title):
                 self.showAlertWithOkayOnly(message: message, title: title)
-            case .navigateToVerifyOTP(timeOut: let timeOut, header: let header):
+            case .success(timeOut: let timeOut, header: let header):
                 self.navigateToOTP(timeOut: timeOut, otpHeader: header,
                                    baseURL: self.viewModel.baseURL,
                                    mobileNumber: self.viewModel.mobileNumber)

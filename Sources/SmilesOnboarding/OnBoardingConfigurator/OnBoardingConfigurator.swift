@@ -20,9 +20,6 @@ enum OnBoardingConfiguratorType {
 
 enum OnBoardingConfigurator {
     
-   
-    
-    
     static func getViewController(type: OnBoardingConfiguratorType) -> UIViewController {
         switch type {
             

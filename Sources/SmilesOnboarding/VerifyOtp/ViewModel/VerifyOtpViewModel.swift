@@ -16,9 +16,13 @@ class VerifyOtpViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     private let configOTPResponse: ConfigOTPResponseType
     private var emailStateSubject = PassthroughSubject<ConfigOTPResponse.State, Never>()
+    private var resendCodeStateSubject = PassthroughSubject<ConfigOTPResponse.State, Never>()
     var userEmail = ""
     var emailStatePublisher: AnyPublisher<ConfigOTPResponse.State, Never> {
         emailStateSubject.eraseToAnyPublisher()
+    }
+    var resendCodeStatePublisher: AnyPublisher<ConfigOTPResponse.State, Never> {
+        resendCodeStateSubject.eraseToAnyPublisher()
     }
     private var baseURL: String
     
@@ -37,10 +41,13 @@ extension VerifyOtpViewModel {
                 self?.verifyOtp(otp: otp, loginFlow: type)
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
-            case .getOTPforMobileNumber(mobileNumber: let mobileNumber):
-                self?.getOtpForMobileNumber(mobileNumber: mobileNumber, captchaText: "", deviceCheckToken: "", appAttestation: "", challenge: "")
+            case .getOTPForLocalNumber(mobileNumber: let mobileNumber):
+                self?.getOtpForLocalNumber(mobileNumber: mobileNumber)
+            
             case .getOTPForEmail(email: let email, mobileNumber: let mobileNumber):
                 self?.getOTPForEmail(email: email, mobileNumber: mobileNumber)
+            case .getOTPForInternationalNumber(mobileNumber: let mobileNumber, email: let email):
+                self?.getOtpForInternationalNumber(mobileNumber: mobileNumber, email: email)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -56,6 +63,7 @@ extension VerifyOtpViewModel {
             userEmail = email
             loginWithEmail(otp: otp, email: email, mobileNumber: mobile)
         case .verifyMobile(email: let email, mobile: let mobile):
+            userEmail = email
             let request = VerifyOtpRequest(otp: otp)
             request.email = AES256Encryption.encrypt(with: email)
             request.msisdn = mobile
@@ -140,19 +148,36 @@ extension VerifyOtpViewModel {
             .store(in: &cancellables)
     }
     
-    func getOtpForMobileNumber(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
-        self.output.send(.showLoader(shouldShow: true))
-        let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
-
+   private func getOtpForLocalNumber(mobileNumber: String) {
+       
+        let request = OTPValidtionRequest()
+        let num = String(mobileNumber.dropFirst())
+        request.msisdn = num
+        SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
+      
+        getOTPForMobileNumber(with: request)
+    }
+    
+   private func getOtpForInternationalNumber(mobileNumber: String, email: String) {
+        
+        let request = OTPValidtionRequest()
+        request.isNewAPICall = "emailNewFlow"
+        request.email = AES256Encryption.encrypt(with: email)
+        
         let num = String(mobileNumber.dropFirst())
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
         
+        getOTPForMobileNumber(with: request)
+    }
+    
+    private func getOTPForMobileNumber(with request: OTPValidtionRequest) {
         let service = LoginWithOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
             endPoint: .getOtpForMobileNumber
         )
         
+        self.output.send(.showLoader(shouldShow: true))
         service.getOTPforMobileNumber(request: request)
             .sink { [weak self] completion  in
                 debugPrint(completion)
@@ -164,8 +189,12 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response in
-                self?.output.send(.showLoader(shouldShow: false))
-                self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
+                guard let self else {
+                    return
+                }
+                self.output.send(.showLoader(shouldShow: false))
+                let otpState = self.configOTPResponse.handleSuccessResponse(result: response)
+                self.resendCodeStateSubject.send(otpState)
             }
             .store(in: &cancellables)
     }
@@ -193,8 +222,12 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response in
-                self?.output.send(.showLoader(shouldShow: false))
-                self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
+                guard let self else {
+                    return
+                }
+                self.output.send(.showLoader(shouldShow: false))
+                let otpState = self.configOTPResponse.handleSuccessResponse(result: response)
+                self.resendCodeStateSubject.send(otpState)
             }
             .store(in: &cancellables)
     }
@@ -204,15 +237,4 @@ extension VerifyOtpViewModel {
 enum MyCustomError: LocalizedError, Error {
     case dataNotFound
     case invalidData
-    
-    
-
-//    var errorDescription: String? {
-//        switch self {
-//        case .dataNotFound:
-//            return NSLocalizedString("Data not found.", comment: "MyCustomError: dataNotFound")
-//        case .invalidData:
-//            return NSLocalizedString("Invalid data.", comment: "MyCustomError: invalidData")
-//        }
-//    }
 }

@@ -113,6 +113,7 @@ public class VerifyOtpViewController: UIViewController {
         setupUI()
         setupString()
         bindStateForEmail()
+        bindResendCode()
     }
     
     
@@ -179,14 +180,15 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func resendBtnTapped(_ sender: Any) {
+        
         switch loginFlow {
-        case .localNumber, .verifyMobile:
-            self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
+        case .localNumber:
+            input.send(.getOTPForLocalNumber(mobileNumber: mobileNumber.asStringOrEmpty()))
         case .verifyEmail(let email, let mobile):
             self.input.send(.getOTPForEmail(email: email, mobileNumber: mobile))
-       
+        case .verifyMobile(let email, _):
+            input.send(.getOTPForInternationalNumber(mobileNumber: mobileNumber.asStringOrEmpty(), email: email))
         }
-       
     }
     
     func setupString() {
@@ -497,8 +499,27 @@ extension VerifyOtpViewController {
                 self?.showLimitExceedPopup(title: title, subTitle: subTitle)
             case .showAlertWithOkayOnly(message: let message, title: let title):
                 self?.showAlertWithOkayOnly(message: message, title: title)
-            case .navigateToVerifyOTP(timeOut: let timeOut, header: let header):
+            case .success(timeOut: let timeOut, header: let header):
                 self?.navigateToOTP(timeOut: timeOut, otpHeader: header)
+            }
+        }.store(in: &cancellables)
+    }
+    
+    private func bindResendCode() {
+        viewModel.resendCodeStatePublisher.sink { [weak self] state in
+            switch state {
+                
+            case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
+                self?.showLimitExceedPopup(title: title, subTitle: subTitle)
+            case .showAlertWithOkayOnly(message: let message, title: let title):
+                self?.showAlertWithOkayOnly(message: message, title: title)
+            case .success(timeOut: let timeOut, _):
+                self?.otpTimeOut = timeOut
+                self?.resendBtn.isHidden = true
+                self?.timerLabel.isHidden = false
+                self?.enableLoginButton(isEnable: false)
+                self?.startTimer()
+                
             }
         }.store(in: &cancellables)
     }
