@@ -119,14 +119,14 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: {[weak self] response in
-//                self?.output.send(.showLoader(shouldShow: false))
+                //                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.verifyOtpDidSucceed(response: response))
             }
             .store(in: &cancellables)
     }
     
     func getProfileStatus(msisdn: String, authToken: String) {
-//        self.output.send(.showLoader(shouldShow: true))
+        //        self.output.send(.showLoader(shouldShow: true))
         let request = GetProfileStatusRequestModel()
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.authToken = authToken
@@ -146,7 +146,7 @@ extension VerifyOtpViewModel {
                     debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response  in
-//                self?.output.send(.showLoader(shouldShow: false))
+                //                self?.output.send(.showLoader(shouldShow: false))
                 self?.output.send(.getProfileStatusDidSucceed(response: response, msisdn: msisdn, authToken: authToken))
             }
             .store(in: &cancellables)
@@ -158,7 +158,7 @@ extension VerifyOtpViewModel {
         let num = String(mobileNumber.dropFirst())
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
-
+        
         securityChecker(mobileNumber: mobileNumber, request: request)
     }
     
@@ -174,7 +174,7 @@ extension VerifyOtpViewModel {
         
         securityChecker(mobileNumber: mobileNumber, request: request)
     }
-
+    
     private func securityChecker(mobileNumber: String, request: OTPValidtionRequest) {
         let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
         
@@ -234,19 +234,7 @@ extension VerifyOtpViewModel {
                 self.resendCodeStateSubject.send(otpState)
             }
             .store(in: &cancellables)
-       }
-    
-    
-    
-    
-    
-    func isValidEmiratiNumber(phoneNumber: String) -> Bool {
-        let phoneRegex = "^(?:\\+971|971)(?:2|3|4|6|7|9|50|51|52|54|55|56|58)[0-9]{7}$"
-        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
-        return phonePredicate.evaluate(with: phoneNumber)
     }
-    
-    
     
     private func getOTPForEmail(email: String, mobileNumber: String) {
         let emailEncrypted = AES256Encryption.encrypt(with: email)
