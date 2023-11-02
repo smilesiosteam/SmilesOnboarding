@@ -9,7 +9,7 @@
 import UIKit
 import SmilesUtilities
 
-public typealias NewUserCallBack = ((String, String, LoginType, Bool, LoginFlow) -> Void)
+public typealias NewUserCallBack = ((String, String, LoginType, Bool) -> Void)
 typealias OldUserCallBack = ((String, String) -> Void)
 
 enum OnBoardingConfiguratorType {

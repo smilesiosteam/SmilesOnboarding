@@ -220,10 +220,10 @@ public class VerifyOtpViewController: UIViewController {
             case 2 :
                 // Navigate to Register User
                 
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false, loginFlow)
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, false)
             case 3 :
                 // Navigate to Existing User Flow
-                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, true, loginFlow)
+                self.navigateToRegisterViewCallBack?(msisdn, token, .otp, true)
             default:
                 return
             }

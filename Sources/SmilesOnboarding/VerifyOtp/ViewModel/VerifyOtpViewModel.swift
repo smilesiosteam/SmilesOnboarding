@@ -57,14 +57,16 @@ extension VerifyOtpViewModel {
         switch loginFlow {
             
         case .localNumber:
-            let request = VerifyOtpRequest(otp: otp)
+            let encryptOTP = AES256Encryption.encrypt(with: otp)
+            let request = VerifyOtpRequest(otp: encryptOTP)
             loginWithMobileNumber(request: request)
         case .verifyEmail(email: let email, mobile: let mobile):
             userEmail = email
             loginWithEmail(otp: otp, email: email, mobileNumber: mobile)
         case .verifyMobile(email: let email, mobile: let mobile):
             userEmail = email
-            let request = VerifyOtpRequest(otp: otp)
+            let encryptOTP = AES256Encryption.encrypt(with: otp)
+            let request = VerifyOtpRequest(otp: encryptOTP)
             request.email = AES256Encryption.encrypt(with: email)
             request.msisdn = mobile
             loginWithMobileNumber(request: request)
@@ -231,10 +233,4 @@ extension VerifyOtpViewModel {
             }
             .store(in: &cancellables)
     }
-}
-
-
-enum MyCustomError: LocalizedError, Error {
-    case dataNotFound
-    case invalidData
 }

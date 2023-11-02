@@ -113,7 +113,6 @@ public class UserRegisterationViewController: UIViewController {
     }
     
     public var isExistingUser = false
-    public var loginFLow: LoginFlow = .localNumber
     //MARK: - LifeCycle
     
     
@@ -186,20 +185,11 @@ public class UserRegisterationViewController: UIViewController {
             fld?.addTarget(self, action: #selector(self.textFieldDidChange(sender:)), for: .editingChanged)
         }
         updateContinueButtonUI()
-        setEmailForLoginWithEmailFlow()
         if SmilesLanguageManager.shared.currentLanguage == .ar {
             backBtnView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
         }
     }
     
-    private func setEmailForLoginWithEmailFlow() {
-        if case .verifyMobile(email: let email, mobile: _) = loginFLow { // The last case for login with email
-            emailFld.text = email
-            emailFld.isUserInteractionEnabled = false
-            emailFld.backgroundColor = UIColor.disabledColor
-            emailFld.textColor = UIColor.black.withAlphaComponent(0.5)
-        }
-    }
     // MARK: -- Actions
     func moveToWelcome(){
         let vc = RegisterationSuccessViewController.get()
