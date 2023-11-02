@@ -108,7 +108,7 @@ extension LoginWithOtpViewModel {
     }
     
     func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
-        self.output.send(.showLoader(shouldShow: true))
+//        self.output.send(.showLoader(shouldShow: true))
         let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
 
         let num = String(mobileNumber.dropFirst())
