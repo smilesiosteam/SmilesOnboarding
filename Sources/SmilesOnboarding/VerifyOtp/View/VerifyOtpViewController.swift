@@ -165,6 +165,8 @@ public class VerifyOtpViewController: UIViewController {
     
     @IBAction func resendBtnTapped(_ sender: Any) {
         self.input.send(.getOTPforMobileNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
+        self.resendBtn.isHidden = true
+        
     }
     
     func setupString() {

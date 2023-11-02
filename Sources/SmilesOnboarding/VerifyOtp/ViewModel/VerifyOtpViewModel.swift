@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import NetworkingLayer
 import SmilesBaseMainRequestManager
+import DeviceAppCheck
+import SmilesLanguageManager
 
 class VerifyOtpViewModel: NSObject {
     // MARK: -- Variables
@@ -91,6 +93,30 @@ extension VerifyOtpViewModel {
     }
     
     func getOtpForMobileNumber(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
+        let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
+        
+        let captchaText = ""
+                if enableDeviceSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
+                    DeviceAppCheck.shared.getSecurityData { dcCheck, attestation, challenge, error  in
+                        self.output.send(.showLoader(shouldShow: false))
+                        if error != nil {
+                            let errorModel = ErrorCodeConfiguration()
+                            errorModel.errorCode = -1
+                            errorModel.errorDescriptionEn = "DeviceJailBreakMsgText".localizedString
+                            errorModel.errorDescriptionAr = "DeviceJailBreakMsgText".localizedString
+                            
+                            print(SmilesLanguageManager.shared.currentLanguage == .en ? errorModel.errorDescriptionEn : errorModel.errorDescriptionAr)
+                        } else {
+                            self.didGetDeviceAppValidationData(mobileNumber: mobileNumber, captchaText: captchaText, deviceCheckToken: dcCheck, appAttestation: attestation, challenge: challenge)
+                        }
+                    }
+                } else {
+                    self.didGetDeviceAppValidationData(mobileNumber: mobileNumber, captchaText: captchaText, deviceCheckToken: nil, appAttestation: nil, challenge: nil)
+                }
+
+    }
+    
+    func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {
         self.output.send(.showLoader(shouldShow: true))
         let request = OTPValidtionRequest(captcha: captchaText, deviceCheckToken: deviceCheckToken, appAttestation: appAttestation, challenge: challenge)
 
@@ -118,5 +144,15 @@ extension VerifyOtpViewModel {
                 self?.output.send(.getOTPforMobileNumberDidSucceed(response: response))
             }
             .store(in: &cancellables)
+       }
+    
+    
+    
+    
+    
+    func isValidEmiratiNumber(phoneNumber: String) -> Bool {
+        let phoneRegex = "^(?:\\+971|971)(?:2|3|4|6|7|9|50|51|52|54|55|56|58)[0-9]{7}$"
+        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
+        return phonePredicate.evaluate(with: phoneNumber)
     }
 }
