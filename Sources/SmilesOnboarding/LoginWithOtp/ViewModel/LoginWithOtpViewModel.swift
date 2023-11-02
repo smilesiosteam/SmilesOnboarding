@@ -87,6 +87,7 @@ extension LoginWithOtpViewModel {
         let captchaText = ""
         if isSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
             DeviceAppCheck.shared.getSecurityData { dcCheck, attestation, challenge, error  in
+                self.output.send(.showLoader(shouldShow: true))
                 if error != nil {
                     let errorModel = ErrorCodeConfiguration()
                     errorModel.errorCode = -1

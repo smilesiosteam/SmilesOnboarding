@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Shahroze Zaheer on 04/07/2023.
 //
@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import NetworkingLayer
 import SmilesBaseMainRequestManager
+import DeviceAppCheck
+import SmilesLanguageManager
 
 class VerifyOtpViewModel: NSObject {
     // MARK: -- Variables
@@ -43,7 +45,7 @@ extension VerifyOtpViewModel {
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             case .getOTPForLocalNumber(mobileNumber: let mobileNumber):
                 self?.getOtpForLocalNumber(mobileNumber: mobileNumber)
-            
+                
             case .getOTPForEmail(email: let email, mobileNumber: let mobileNumber):
                 self?.getOTPForEmail(email: email, mobileNumber: mobileNumber)
             case .getOTPForInternationalNumber(mobileNumber: let mobileNumber, email: let email):
@@ -90,7 +92,7 @@ extension VerifyOtpViewModel {
                 if case .failure(let error)  = completion {
                     self?.output.send(.verifyOtpDidFail(error: error))
                 }
-                    
+                
             } receiveValue: { [weak self] response in
                 guard let self else {
                     return
@@ -150,17 +152,17 @@ extension VerifyOtpViewModel {
             .store(in: &cancellables)
     }
     
-   private func getOtpForLocalNumber(mobileNumber: String) {
-       
+    private func getOtpForLocalNumber(mobileNumber: String) {
+        
         let request = OTPValidtionRequest()
         let num = String(mobileNumber.dropFirst())
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
-      
-        getOTPForMobileNumber(with: request)
+
+        securityChecker(mobileNumber: mobileNumber, request: request)
     }
     
-   private func getOtpForInternationalNumber(mobileNumber: String, email: String) {
+    private func getOtpForInternationalNumber(mobileNumber: String, email: String) {
         
         let request = OTPValidtionRequest()
         request.isNewAPICall = "emailNewFlow"
@@ -170,7 +172,40 @@ extension VerifyOtpViewModel {
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
         
-        getOTPForMobileNumber(with: request)
+        securityChecker(mobileNumber: mobileNumber, request: request)
+    }
+
+    private func securityChecker(mobileNumber: String, request: OTPValidtionRequest) {
+        let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
+        
+        let captchaText = ""
+        if enableDeviceSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
+            DeviceAppCheck.shared.getSecurityData { [weak self] dcCheck, attestation, challenge, error  in
+                guard let self else {
+                    return
+                }
+                if error != nil {
+                    self.output.send(.showLoader(shouldShow: true))
+                    let errorModel = ErrorCodeConfiguration()
+                    errorModel.errorCode = -1
+                    errorModel.errorDescriptionEn = "DeviceJailBreakMsgText".localizedString
+                    errorModel.errorDescriptionAr = "DeviceJailBreakMsgText".localizedString
+                    if SmilesLanguageManager.shared.currentLanguage == .en {
+                        self.emailStateSubject.send(.showAlertWithOkayOnly(message: errorModel.errorDescriptionEn ?? "", title: ""))
+                    } else {
+                        self.emailStateSubject.send(.showAlertWithOkayOnly(message: errorModel.errorDescriptionAr ?? "", title: ""))
+                    }
+                } else {
+                    request.captcha = captchaText
+                    request.deviceCheckToken = dcCheck
+                    request.appAttestation = attestation
+                    request.challenge = challenge
+                    self.getOTPForMobileNumber(with: request)
+                }
+            }
+        } else {
+            getOTPForMobileNumber(with: request)
+        }
     }
     
     private func getOTPForMobileNumber(with request: OTPValidtionRequest) {
@@ -200,6 +235,8 @@ extension VerifyOtpViewModel {
             }
             .store(in: &cancellables)
     }
+    
+    
     
     private func getOTPForEmail(email: String, mobileNumber: String) {
         let emailEncrypted = AES256Encryption.encrypt(with: email)
@@ -232,5 +269,11 @@ extension VerifyOtpViewModel {
                 self.resendCodeStateSubject.send(otpState)
             }
             .store(in: &cancellables)
+    }
+    
+    private func isValidEmiratiNumber(phoneNumber: String) -> Bool {
+        let phoneRegex = "^(?:\\+971|971)(?:2|3|4|6|7|9|50|51|52|54|55|56|58)[0-9]{7}$"
+        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
+        return phonePredicate.evaluate(with: phoneNumber)
     }
 }

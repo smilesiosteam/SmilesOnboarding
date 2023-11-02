@@ -189,6 +189,7 @@ public class VerifyOtpViewController: UIViewController {
         case .verifyMobile(let email, _):
             input.send(.getOTPForInternationalNumber(mobileNumber: mobileNumber.asStringOrEmpty(), email: email))
         }
+        resendBtn.isHidden = true
     }
     
     func setupString() {
