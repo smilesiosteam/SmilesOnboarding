@@ -383,7 +383,7 @@ public class UserRegisterationViewController: UIViewController {
     }
     
     @IBAction func backPressed(_ sender: Any) {
-        self.navigationController?.popViewController()
+        self.navigationController?.popToRootViewController()
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
     }
