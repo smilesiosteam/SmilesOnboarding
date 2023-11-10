@@ -27,16 +27,22 @@ final class LoginWitEmailViewModel {
     // MARK: - OutPut
     @Published private(set) var state: State = .isValuedEmail(false)
     var successState = PassthroughSubject<ConfigOTPResponse.State, Never>()
+    
     // MARK: - Properties
     private var cancallbles = Set<AnyCancellable>()
     let mobileNumber: String
     let baseURL: String
     private let configOTPResponse: ConfigOTPResponseType
+    private let securityChecker: SecurityCheckerType
+    
     // MARK: - Init
-    init(mobileNumber: String, baseURL: String, configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse()) {
+    init(mobileNumber: String, baseURL: String, 
+         configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse(),
+         securityChecker: SecurityCheckerType = SecurityChecker()) {
         self.mobileNumber = mobileNumber
         self.baseURL = baseURL
         self.configOTPResponse = configOTPResponse
+        self.securityChecker = securityChecker
         checkForValidEmail()
         checkIsEmailTextFiledIsNotEmpty()
     }
@@ -75,6 +81,21 @@ final class LoginWitEmailViewModel {
 }
 
 extension LoginWitEmailViewModel {
+    private func setSecurityChecker(mobileNumber: String, completion: @escaping (SecurityChecker.SecurityModel) -> Void) {
+        state = .showLoader(true)
+        securityChecker.check(mobileNumber: mobileNumber, isInternationalNumber: true) { [weak self] state in
+            guard let self else { return }
+            switch state {
+                
+            case .showError(error: let error):
+                self.state = .showLoader(false)
+                self.state = .showAlertWithOkayOnly(message: error, title: OnboardingLocalizationKeys.noTitleError.text)
+            case .success(model: let model):
+                completion(model)
+            }
+        }
+    }
+    
     func sendCode() {
         let emailEncrypted = AES256Encryption.encrypt(with: emailTextSubject.value)
         let request = OTPEmailValidationRequest(email: emailEncrypted)
@@ -82,11 +103,21 @@ extension LoginWitEmailViewModel {
         request.msisdn = msisdn
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
         
+       
+        setSecurityChecker(mobileNumber: mobileNumber) { [weak self] model in
+            request.captcha = ""
+            request.deviceCheckToken = model.deviceCheckToken
+            request.appAttestation = model.appAttestation
+            request.challenge = model.challenge
+            self?.callSendCodeAPI(request: request)
+        }
+    }
+    
+    private func callSendCodeAPI(request: OTPEmailValidationRequest) {
         let service = LoginWithOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
             endPoint: .getOtpForEmail
         )
-        state = .showLoader(true)
         
         service.getOTPForEmail(request: request)
             .sink { [weak self] completion in
@@ -102,7 +133,6 @@ extension LoginWitEmailViewModel {
                 self.successState.send(otpState)
             }
             .store(in: &cancallbles)
-        
     }
 }
 

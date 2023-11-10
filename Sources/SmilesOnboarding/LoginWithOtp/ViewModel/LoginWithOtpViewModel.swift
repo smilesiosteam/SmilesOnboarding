@@ -16,8 +16,6 @@ class LoginWithOtpViewModel: NSObject {
     // MARK: -- Variables
     private var output: PassthroughSubject<Output, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
-    
-    
     private var baseURL: String
     
     public init(baseURL: String) {
@@ -33,8 +31,8 @@ extension LoginWithOtpViewModel {
             switch event {
             case .getCountriesList(let lastModifiedDate, let firstCall):
                 self?.getCountries(lastModifiedDate: lastModifiedDate, firstCall: firstCall, baseURL: self?.baseURL ?? "")
-            case .getOTPforMobileNumber(mobileNumber: let mobileNumber, enableDeviceSecurityCheck: let enableDeviceSecurityCheck):
-                self?.getOtpForMobileNumber(number: mobileNumber, isSecurityCheck: enableDeviceSecurityCheck)
+            case .getOTPforMobileNumber(mobileNumber: let mobileNumber, enableDeviceSecurityCheck: _):
+                self?.didGetDeviceAppValidationData(mobileNumber: mobileNumber, captchaText: "", deviceCheckToken: "", appAttestation: "", challenge: "")
             case .loginAsGuestUser:
                 self?.loginAsGuestUser()
             }
@@ -81,29 +79,6 @@ extension LoginWithOtpViewModel {
                 }
             }
         .store(in: &cancellables)
-    }
-    
-    func getOtpForMobileNumber(number: String, isSecurityCheck: Bool) {
-        let captchaText = ""
-        if isSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
-            DeviceAppCheck.shared.getSecurityData { dcCheck, attestation, challenge, error  in
-                if error != nil {
-                    let errorModel = ErrorCodeConfiguration()
-                    errorModel.errorCode = -1
-                    errorModel.errorDescriptionEn = "DeviceJailBreakMsgText".localizedString
-                    errorModel.errorDescriptionAr = "DeviceJailBreakMsgText".localizedString
-                    if SmilesLanguageManager.shared.currentLanguage == .en {
-                        self.output.send(.errorOutPut(error: errorModel.errorDescriptionEn!))
-                    } else {
-                        self.output.send(.errorOutPut(error: errorModel.errorDescriptionAr!))
-                    }
-                } else {
-                    self.didGetDeviceAppValidationData(mobileNumber: number, captchaText: captchaText, deviceCheckToken: dcCheck, appAttestation: attestation, challenge: challenge)
-                }
-            }
-        } else {
-            self.didGetDeviceAppValidationData(mobileNumber: number, captchaText: captchaText, deviceCheckToken: nil, appAttestation: nil, challenge: nil)
-        }
     }
     
     func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {

@@ -17,6 +17,7 @@ enum OnboardingLocalizationKeys: String {
     case continueText
     case noTitleError
     case enterEmailID
+    case deviceJailBreakMsgText
     var text: String {
         switch self {
             
@@ -36,6 +37,8 @@ enum OnboardingLocalizationKeys: String {
             return "NoNet_Title".localizedString
         case .enterEmailID:
             return "onboardingEnterEmailID".localizedString
+        case .deviceJailBreakMsgText:
+            return "DeviceJailBreakMsgText".localizedString
         }
     }
 }

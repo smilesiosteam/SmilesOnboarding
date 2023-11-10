@@ -19,6 +19,7 @@ class VerifyOtpViewModel: NSObject {
     private let configOTPResponse: ConfigOTPResponseType
     private var emailStateSubject = PassthroughSubject<ConfigOTPResponse.State, Never>()
     private var resendCodeStateSubject = PassthroughSubject<ConfigOTPResponse.State, Never>()
+    private let securityChecker: SecurityCheckerType
     var userEmail = ""
     var emailStatePublisher: AnyPublisher<ConfigOTPResponse.State, Never> {
         emailStateSubject.eraseToAnyPublisher()
@@ -28,9 +29,12 @@ class VerifyOtpViewModel: NSObject {
     }
     private var baseURL: String
     
-    public init(baseURL: String, configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse()) {
+    public init(baseURL: String, 
+                configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse(),
+                securityChecker: SecurityCheckerType = SecurityChecker()) {
         self.baseURL = baseURL
         self.configOTPResponse = configOTPResponse
+        self.securityChecker = securityChecker
     }
 }
 
@@ -159,7 +163,13 @@ extension VerifyOtpViewModel {
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
         
-        securityChecker(mobileNumber: mobileNumber, request: request)
+        setSecurityChecker(mobileNumber: mobileNumber, isInternationalNumber: false) { [weak self] model in
+            request.captcha = ""
+            request.deviceCheckToken = model.deviceCheckToken
+            request.appAttestation = model.appAttestation
+            request.challenge = model.challenge
+            self?.getOTPForMobileNumber(with: request)
+        }
     }
     
     private func getOtpForInternationalNumber(mobileNumber: String, email: String) {
@@ -172,41 +182,31 @@ extension VerifyOtpViewModel {
         request.msisdn = num
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = num
         
-        securityChecker(mobileNumber: mobileNumber, request: request)
-    }
-    
-    private func securityChecker(mobileNumber: String, request: OTPValidtionRequest) {
-        let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
-        
-        let captchaText = ""
-        if enableDeviceSecurityCheck && OnBoardingModuleManager.isAppAttestEnabled {
-            DeviceAppCheck.shared.getSecurityData { [weak self] dcCheck, attestation, challenge, error  in
-                guard let self else {
-                    return
-                }
-                if error != nil {
-                    self.output.send(.showLoader(shouldShow: true))
-                    let errorModel = ErrorCodeConfiguration()
-                    errorModel.errorCode = -1
-                    errorModel.errorDescriptionEn = "DeviceJailBreakMsgText".localizedString
-                    errorModel.errorDescriptionAr = "DeviceJailBreakMsgText".localizedString
-                    if SmilesLanguageManager.shared.currentLanguage == .en {
-                        self.emailStateSubject.send(.showAlertWithOkayOnly(message: errorModel.errorDescriptionEn ?? "", title: ""))
-                    } else {
-                        self.emailStateSubject.send(.showAlertWithOkayOnly(message: errorModel.errorDescriptionAr ?? "", title: ""))
-                    }
-                } else {
-                    request.captcha = captchaText
-                    request.deviceCheckToken = dcCheck
-                    request.appAttestation = attestation
-                    request.challenge = challenge
-                    self.getOTPForMobileNumber(with: request)
-                }
-            }
-        } else {
-            getOTPForMobileNumber(with: request)
+        setSecurityChecker(mobileNumber: mobileNumber, isInternationalNumber: true) { [weak self] model in
+            request.captcha = ""
+            request.deviceCheckToken = model.deviceCheckToken
+            request.appAttestation = model.appAttestation
+            request.challenge = model.challenge
+            self?.getOTPForMobileNumber(with: request)
         }
     }
+    
+    private func setSecurityChecker(mobileNumber: String, isInternationalNumber: Bool , completion: @escaping (SecurityChecker.SecurityModel) -> Void) {
+        output.send(.showLoader(shouldShow: true))
+        securityChecker.check(mobileNumber: mobileNumber, isInternationalNumber: isInternationalNumber) { [weak self] state in
+            guard let self else { return }
+            switch state {
+                
+            case .showError(error: let error):
+                self.output.send(.showLoader(shouldShow: false))
+                self.emailStateSubject.send(.showAlertWithOkayOnly(message: error, title: ""))
+            case .success(model: let model):
+                completion(model)
+            }
+        }
+    }
+    
+    
     
     private func getOTPForMobileNumber(with request: OTPValidtionRequest) {
         let service = LoginWithOtpRepository(
@@ -214,7 +214,6 @@ extension VerifyOtpViewModel {
             endPoint: .getOtpForMobileNumber
         )
         
-        self.output.send(.showLoader(shouldShow: true))
         service.getOTPforMobileNumber(request: request)
             .sink { [weak self] completion  in
                 debugPrint(completion)
@@ -243,12 +242,21 @@ extension VerifyOtpViewModel {
         request.msisdn = msisdn
         SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
         
+        setSecurityChecker(mobileNumber: mobileNumber, isInternationalNumber: true) { [weak self] model in
+            request.captcha = ""
+            request.deviceCheckToken = model.deviceCheckToken
+            request.appAttestation = model.appAttestation
+            request.challenge = model.challenge
+            self?.callOTPForEmail(request: request)
+        }
+    }
+    
+    private func callOTPForEmail(request: OTPEmailValidationRequest) {
         let service = LoginWithOtpRepository(
             networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
             endPoint: .getOtpForEmail
         )
         
-        output.send(.showLoader(shouldShow: true))
         service.getOTPForEmail(request: request)
             .sink { [weak self] completion  in
                 switch completion {
@@ -267,11 +275,5 @@ extension VerifyOtpViewModel {
                 self.resendCodeStateSubject.send(otpState)
             }
             .store(in: &cancellables)
-    }
-    
-    private func isValidEmiratiNumber(phoneNumber: String) -> Bool {
-        let phoneRegex = "^(?:\\+971|971)(?:2|3|4|6|7|9|50|51|52|54|55|56|58)[0-9]{7}$"
-        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
-        return phonePredicate.evaluate(with: phoneNumber)
     }
 }
