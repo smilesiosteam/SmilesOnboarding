@@ -174,7 +174,7 @@ public class UserRegisterationViewController: UIViewController {
         monthLbl.text = "Month".localizedString
         yearLbl.text = "YearsTitle".localizedString
         enterbirthLbl.text = "enterBirthday".localizedString
-        enterbirthLbl.textColor = .appRevampPurpleMainColor
+        enterbirthLbl.textColor = UIColor(hexString: "#5E366A")
         
         nationalityLbl.text = "Nationality*".localizedString
         nationalityTxtFld.validationType = [.requiredField(errorMessage: "Select nationality".localizedString)]
