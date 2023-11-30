@@ -45,6 +45,8 @@ public class UserRegisterationViewController: UIViewController {
     
     @IBOutlet weak var yearLbl: UILabel!
     
+    @IBOutlet weak var enterbirthLbl: UILabel!
+    
     @IBOutlet weak var dobPickerBtn: UIButton!
     
     @IBOutlet weak var nationalityLbl: UILabel!
@@ -171,7 +173,8 @@ public class UserRegisterationViewController: UIViewController {
         dayLbl.text = "DayTitle".localizedString
         monthLbl.text = "Month".localizedString
         yearLbl.text = "YearsTitle".localizedString
-        
+        enterbirthLbl.text = "enterBirthday".localizedString
+        enterbirthLbl.textColor = .appRevampPurpleMainColor
         
         nationalityLbl.text = "Nationality*".localizedString
         nationalityTxtFld.validationType = [.requiredField(errorMessage: "Select nationality".localizedString)]
