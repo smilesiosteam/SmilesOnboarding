@@ -45,6 +45,8 @@ public class UserRegisterationViewController: UIViewController {
     
     @IBOutlet weak var yearLbl: UILabel!
     
+    @IBOutlet weak var enterbirthLbl: UILabel!
+    
     @IBOutlet weak var dobPickerBtn: UIButton!
     
     @IBOutlet weak var nationalityLbl: UILabel!
