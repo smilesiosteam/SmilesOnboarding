@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -293,6 +293,15 @@
                                                                                     <action selector="dobPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="rCZ-p1-qzf"/>
                                                                                 </connections>
                                                                             </button>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter birthday &amp; earn amazing benefits." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duv-TK-ddd">
+                                                                                <rect key="frame" x="16" y="93.666666666666629" width="353" height="17"/>
+                                                                                <fontDescription key="fontDescription" name="CircularXXTT-Book" family="CircularXX TT" pointSize="14"/>
+                                                                                <color key="textColor" red="0.42745098040000001" green="0.40000000000000002" blue="0.43921568630000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                                <color key="highlightedColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <userDefinedRuntimeAttributes>
+                                                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontTextStyle" value="smilesLabel2"/>
+                                                                                </userDefinedRuntimeAttributes>
+                                                                            </label>
                                                                         </subviews>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                         <constraints>
@@ -312,16 +321,19 @@
                                                                             <constraint firstItem="jFI-Je-tlE" firstAttribute="leading" secondItem="kbu-zD-ZEE" secondAttribute="trailing" constant="12" id="SKZ-ZJ-wcm"/>
                                                                             <constraint firstItem="kbu-zD-ZEE" firstAttribute="leading" secondItem="GDn-ju-KTe" secondAttribute="trailing" constant="12" id="W2X-DT-BzI"/>
                                                                             <constraint firstItem="kbu-zD-ZEE" firstAttribute="width" secondItem="GDn-ju-KTe" secondAttribute="width" id="WtS-Vs-1cg"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="duv-TK-ddd" secondAttribute="trailing" constant="16" id="am9-ch-g3o"/>
                                                                             <constraint firstItem="m5L-HY-zTL" firstAttribute="leading" secondItem="LDj-Yp-4MJ" secondAttribute="leading" constant="16" id="blC-oP-qEj"/>
                                                                             <constraint firstItem="jFI-Je-tlE" firstAttribute="width" secondItem="LDj-Yp-4MJ" secondAttribute="width" multiplier="0.4" id="eRt-7a-zBj"/>
                                                                             <constraint firstItem="Lu4-AP-DEI" firstAttribute="leading" secondItem="LDj-Yp-4MJ" secondAttribute="leading" id="gKQ-37-u2t"/>
                                                                             <constraint firstAttribute="trailing" secondItem="Lu4-AP-DEI" secondAttribute="trailing" id="gaA-h3-Oqk"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="duv-TK-ddd" secondAttribute="bottom" constant="-8" id="gcr-pq-FX3"/>
                                                                             <constraint firstItem="D68-FZ-5KS" firstAttribute="trailing" secondItem="jFI-Je-tlE" secondAttribute="trailing" id="gid-FY-Fv8"/>
                                                                             <constraint firstItem="vPs-uh-mkv" firstAttribute="trailing" secondItem="kbu-zD-ZEE" secondAttribute="trailing" id="iRg-eN-U5j"/>
                                                                             <constraint firstItem="GDn-ju-KTe" firstAttribute="top" secondItem="m5L-HY-zTL" secondAttribute="bottom" constant="4" id="jMs-dO-XJh"/>
                                                                             <constraint firstItem="vPs-uh-mkv" firstAttribute="top" secondItem="kbu-zD-ZEE" secondAttribute="bottom" constant="2" id="muz-i1-yqA"/>
                                                                             <constraint firstItem="D68-FZ-5KS" firstAttribute="top" secondItem="jFI-Je-tlE" secondAttribute="bottom" constant="2" id="oQI-nL-pMD"/>
                                                                             <constraint firstItem="DTx-jO-ceP" firstAttribute="trailing" secondItem="GDn-ju-KTe" secondAttribute="trailing" id="uEU-7d-hDj"/>
+                                                                            <constraint firstItem="duv-TK-ddd" firstAttribute="leading" secondItem="LDj-Yp-4MJ" secondAttribute="leading" constant="16" id="wNb-lN-DeR"/>
                                                                             <constraint firstAttribute="bottom" secondItem="DTx-jO-ceP" secondAttribute="bottom" constant="12" id="xeW-AV-dag"/>
                                                                         </constraints>
                                                                     </view>
@@ -686,6 +698,7 @@
                         <outlet property="emailFld" destination="QWu-US-uJZ" id="Fga-IK-HXb"/>
                         <outlet property="emailLbl" destination="EkO-MA-lAC" id="Lgg-ok-LRQ"/>
                         <outlet property="emailWrapperVu" destination="uqJ-j1-uXH" id="UTH-mM-Tve"/>
+                        <outlet property="enterbirthLbl" destination="duv-TK-ddd" id="0PT-aq-VMN"/>
                         <outlet property="firstNameLbl" destination="Gr6-9c-RcP" id="Ffa-Ir-nKG"/>
                         <outlet property="firstNameTxtFld" destination="Ups-3I-pvi" id="oEH-H7-u2f"/>
                         <outlet property="genderLbl" destination="DQf-ZO-QCy" id="fra-2J-6Dn"/>
@@ -745,9 +758,6 @@
         <designable name="vPs-uh-mkv">
             <size key="intrinsicContentSize" width="24.333333333333332" height="18.666666666666668"/>
         </designable>
-        <designable name="xHr-IT-1g7">
-            <size key="intrinsicContentSize" width="46" height="36"/>
-        </designable>
     </designables>
     <resources>
         <image name="black_arrow_down" width="22" height="12"/>
@@ -757,7 +767,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
