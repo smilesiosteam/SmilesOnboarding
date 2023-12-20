@@ -9,11 +9,11 @@
 import UIKit
 import SmilesUtilities
 
-public typealias NewUserCallBack = ((String, String, LoginType, Bool) -> Void)
+public typealias NewUserCallBack = ((String, String, LoginType, Bool, LoginFlow) -> Void)
 typealias OldUserCallBack = ((String, String) -> Void)
 
 enum OnBoardingConfiguratorType {
-    case loginWitEmail(mobileNumber: String, baseUrl: String, languageChangeCallback: (() -> Void)?, newUserCallBack: NewUserCallBack?, oldUserCallBack: OldUserCallBack?)
+    case loginWitEmail(mobileNumber: String, baseUrl: String, message: String? ,languageChangeCallback: (() -> Void)?, newUserCallBack: NewUserCallBack?, oldUserCallBack: OldUserCallBack?)
     case showLimitExceedPopup(title: String, subTitle: String)
     case navigateToVerifyOTP(dependance: VerifyOtpViewController.Dependance)
 }
@@ -23,8 +23,8 @@ enum OnBoardingConfigurator {
     static func getViewController(type: OnBoardingConfiguratorType) -> UIViewController {
         switch type {
             
-        case .loginWitEmail(mobileNumber: let mobileNumber, baseUrl: let baseUrl, languageChangeCallback: let languageChangeCallback, newUserCallBack: let newUser, oldUserCallBack: let oldUser):
-            return getLoginWitEmailView(mobileNumber: mobileNumber, baseUrl: baseUrl, languageChangeCallback: languageChangeCallback, newUserCallBack: newUser, oldUserCallBack: oldUser)
+        case .loginWitEmail(mobileNumber: let mobileNumber, baseUrl: let baseUrl, let message, languageChangeCallback: let languageChangeCallback, newUserCallBack: let newUser, oldUserCallBack: let oldUser):
+            return getLoginWitEmailView(mobileNumber: mobileNumber, baseUrl: baseUrl, message: message, languageChangeCallback: languageChangeCallback, newUserCallBack: newUser, oldUserCallBack: oldUser)
         case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
             return showLimitExceedPopup(title: title, subTitle: subTitle)
         case .navigateToVerifyOTP(dependance: let dependance):
@@ -32,13 +32,19 @@ enum OnBoardingConfigurator {
         }
     }
     
-    static private func getLoginWitEmailView(mobileNumber: String, baseUrl: String, languageChangeCallback: (() -> Void)?, newUserCallBack: NewUserCallBack?, oldUserCallBack: OldUserCallBack?) -> UIViewController  {
+    static private func getLoginWitEmailView(mobileNumber: String, 
+                                             baseUrl: String,
+                                             message: String?,
+                                             languageChangeCallback: (() -> Void)?,
+                                             newUserCallBack: NewUserCallBack?,
+                                             oldUserCallBack: OldUserCallBack?) -> UIViewController  {
         let viewModel = LoginWitEmailViewModel(mobileNumber: mobileNumber, baseURL: baseUrl)
         let viewController = LoginWitEmailViewController(nibName: String(describing: LoginWitEmailViewController.self), bundle: Bundle.module)
         viewController.navigateToHomeViewControllerCallBack = oldUserCallBack
         viewController.navigateToRegisterViewCallBack = newUserCallBack
         viewController.viewModel = viewModel
         viewController.languageChangeCallback = languageChangeCallback
+        viewController.message = message
         return viewController
     }
     

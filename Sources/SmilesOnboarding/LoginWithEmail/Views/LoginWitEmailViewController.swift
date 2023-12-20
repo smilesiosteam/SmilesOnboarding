@@ -72,6 +72,7 @@ final class LoginWitEmailViewController: UIViewController {
     public var languageChangeCallback: (() -> Void)?
     public var navigateToRegisterViewCallBack: NewUserCallBack?
     public var navigateToHomeViewControllerCallBack: OldUserCallBack?
+    public var message: String?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -132,7 +133,7 @@ final class LoginWitEmailViewController: UIViewController {
         titleLabel.text = localization.verifyEmail.text
         subTitleLabel.text = localization.enterEmail.text
         emailTextFiled.placeholder = localization.enterEmailID.text
-        detailsLabel.text = localization.verifyEmailDescription.text
+        detailsLabel.text = message
         sendCodeButton.setTitle(localization.sendCode.text, for: .normal)
         configAlignment()
     }

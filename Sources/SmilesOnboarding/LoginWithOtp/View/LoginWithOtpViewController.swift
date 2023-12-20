@@ -128,7 +128,7 @@ import SmilesBaseMainRequestManager
     //MARK: CallBacks
     public var termsAndConditionTappCallback: (() -> Void)?
     public var loginAsGuestUserCallback:((String) -> Void)?
-    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool, [CountryList]) -> Void)?
+    public var navigateToRegisterViewCallBack: ((String, String, LoginType, Bool, [CountryList], LoginFlow) -> Void)?
     public var loginWithTouchIdCallback: (() -> Void)?
     public var sendCountryListToVcCallback: (([CountryList]) -> Void)?
     public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
@@ -193,6 +193,8 @@ import SmilesBaseMainRequestManager
                     DispatchQueue.main.async {
                         self?.showAlertWithOkayOnly(message: error, title: "NoNet_Title".localizedString)
                     }
+                case .navigateToEmailVerification(message: let message):
+                    self?.navigateToEmailVerification(message: message)
                 }
             }.store(in: &cancellables)
     }
@@ -224,7 +226,7 @@ import SmilesBaseMainRequestManager
     
     @IBAction func sendCodeTapped(_ sender: Any) {
         guard isUaeCitizen else {
-            navigateToEmailVerification()
+            viewModel.checkEmailStatus(mobileNumber: mobileNumber)
             return
         }
         let enableDeviceSecurityCheck = !isValidEmiratiNumber(phoneNumber: mobileNumber)
@@ -400,9 +402,9 @@ extension LoginWithOtpViewController {
             otpTimeOut = timeout
         }
         
-        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser in
+        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser, loginFlow in
             guard let self else { return }
-            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [], loginFlow)
         }
         let navigateToHomeViewControllerCallBack: OldUserCallBack? = { [weak self] msisdn, token in
             guard let self else { return }
@@ -419,20 +421,20 @@ extension LoginWithOtpViewController {
         navigationController?.pushViewController(viewController: viewController)
     }
     
-    private func navigateToEmailVerification() {
+    private func navigateToEmailVerification(message: String?) {
         let languageChangeCallback: (() -> Void)? = { [weak self] in
             self?.changeLang()
         }
         
-        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser in
+        let navigateToRegisterViewCallBack: NewUserCallBack? = { [weak self] msisdn, token, loginType, isExistingUser, loginFlow in
             guard let self else { return }
-            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [])
+            self.navigateToRegisterViewCallBack?(msisdn, token, loginType, isExistingUser, self.countriesList?.countryList ?? [], loginFlow)
         }
         let navigateToHomeViewControllerCallBack: OldUserCallBack? = { [weak self] msisdn, token in
             guard let self else { return }
             self.navigateToHomeViewControllerCallBack?(msisdn, token)
         }
-        let viewController = OnBoardingConfigurator.getViewController(type: .loginWitEmail(mobileNumber: mobileNumber, baseUrl: baseURL, languageChangeCallback: languageChangeCallback, newUserCallBack: navigateToRegisterViewCallBack, oldUserCallBack: navigateToHomeViewControllerCallBack))
+        let viewController = OnBoardingConfigurator.getViewController(type: .loginWitEmail(mobileNumber: mobileNumber, baseUrl: baseURL, message: message, languageChangeCallback: languageChangeCallback, newUserCallBack: navigateToRegisterViewCallBack, oldUserCallBack: navigateToHomeViewControllerCallBack))
         navigationController?.pushViewController(viewController: viewController)
     }
     

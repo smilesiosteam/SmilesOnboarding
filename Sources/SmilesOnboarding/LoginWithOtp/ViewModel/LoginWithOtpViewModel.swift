@@ -17,9 +17,12 @@ class LoginWithOtpViewModel: NSObject {
     private var output: PassthroughSubject<Output, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String
+    private let emailStatusUseCase: EmailStatusUseCaseProtocol
     
-    public init(baseURL: String) {
+    // MARK: - Init
+    public init(baseURL: String, emailStatusUseCase: EmailStatusUseCaseProtocol = EmailStatusUseCase()) {
         self.baseURL = baseURL
+        self.emailStatusUseCase = emailStatusUseCase
     }
 }
 
@@ -135,5 +138,20 @@ extension LoginWithOtpViewModel {
                 self?.output.send(.loginAsGuestDidSucceed(response: response))
             }
             .store(in: &cancellables)
+    }
+    
+    func checkEmailStatus(mobileNumber: String) {
+        output.send(.showLoader(shouldShow: true))
+        emailStatusUseCase.checkEmailStatus(mobileNumber: mobileNumber)
+            .sink { [weak self] states in
+                self?.output.send(.showLoader(shouldShow: false))
+                switch states {
+                    
+                case .showError(error: let error):
+                    self?.output.send(.errorOutPut(error: error.localizedDescription))
+                case .navigateToEmailVerification(message: let message):
+                    self?.output.send(.navigateToEmailVerification(message: message))
+                }
+            }.store(in: &cancellables)
     }
 }
