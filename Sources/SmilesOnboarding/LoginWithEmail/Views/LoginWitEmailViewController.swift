@@ -177,8 +177,8 @@ final class LoginWitEmailViewController: UIViewController {
             case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
                 let viewController = OnBoardingConfigurator.getViewController(type: .showLimitExceedPopup(title: title, subTitle: subTitle))
                 self.present(viewController)
-            case .showAlertWithOkayOnly(message: let message, title: let title):
-                self.showAlertWithOkayOnly(message: message, title: title)
+            case .showAlertWithOkayOnly(message: let message, title: _):
+                SmilesErrorHandler.shared.showError(on: self, error: SmilesError(description: message))
             case .success(timeOut: let timeOut, header: let header):
                 self.navigateToOTP(timeOut: timeOut, otpHeader: header,
                                    baseURL: self.viewModel.baseURL,
