@@ -23,6 +23,11 @@ final class LoginWitEmailViewController: UIViewController {
         didSet { emailTextFiled.font = .circularXXTTMediumFont(size: 16) }
     }
     
+    @IBOutlet private weak var errorLable: UILabel! {
+        didSet {
+            errorLable.fontTextStyle = .smilesBody3
+        }
+    }
     @IBOutlet private weak var sendCodeButton: UIButton! {
         didSet {
             sendCodeButton.titleLabel?.font = .circularXXTTMediumFont(size: 16)
@@ -81,6 +86,7 @@ final class LoginWitEmailViewController: UIViewController {
         bindViewModelStates()
         configChangeLanguage()
         bindSuccessResponse()
+        bindHideCancelButton()
     }
     
     // MARK: - Button Actions
@@ -135,6 +141,7 @@ final class LoginWitEmailViewController: UIViewController {
         emailTextFiled.placeholder = localization.enterEmailID.text
         detailsLabel.text = message
         sendCodeButton.setTitle(localization.sendCode.text, for: .normal)
+        errorLable.isHidden = true
         configAlignment()
     }
     
@@ -143,6 +150,7 @@ final class LoginWitEmailViewController: UIViewController {
         titleLabel.textAlignment = isEnglish ? .left : .right
         subTitleLabel.textAlignment = isEnglish ? .left : .right
         detailsLabel.textAlignment = isEnglish ? .left : .right
+        errorLable.textAlignment = isEnglish ? .left : .right
         emailTextFiled.textAlignment = isEnglish ? .left : .right
         if !isEnglish {
             backView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
@@ -178,7 +186,8 @@ final class LoginWitEmailViewController: UIViewController {
                 let viewController = OnBoardingConfigurator.getViewController(type: .showLimitExceedPopup(title: title, subTitle: subTitle))
                 self.present(viewController)
             case .showAlertWithOkayOnly(message: let message, title: _):
-                SmilesErrorHandler.shared.showError(on: self, error: SmilesError(description: message))
+                self.errorLable.isHidden = false
+                self.errorLable.text = message
             case .success(timeOut: let timeOut, header: let header):
                 self.navigateToOTP(timeOut: timeOut, otpHeader: header,
                                    baseURL: self.viewModel.baseURL,
@@ -199,5 +208,11 @@ final class LoginWitEmailViewController: UIViewController {
         let viewController = OnBoardingConfigurator.getViewController(type: .navigateToVerifyOTP(dependance: dependance))
         navigationController?.pushViewController(viewController: viewController)
     }
+    
+    private func bindHideCancelButton() {
+        viewModel.hideErrorButtonSubject.sink { [weak self] _ in
+            self?.errorLable.isHidden = true
+        }
+        .store(in: &cancallbles)
+    }
 }
-

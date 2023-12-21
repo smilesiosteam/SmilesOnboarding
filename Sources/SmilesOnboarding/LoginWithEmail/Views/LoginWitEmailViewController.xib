@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,6 +23,7 @@
                 <outlet property="detailsLabel" destination="vOx-ZD-TXz" id="p2b-w6-ksa"/>
                 <outlet property="emailTextFiled" destination="hge-7v-oFx" id="Zdu-xp-ZqY"/>
                 <outlet property="emailView" destination="ze9-qb-jCo" id="6bp-th-Zhf"/>
+                <outlet property="errorLable" destination="JpL-Lx-rDN" id="XBG-gx-COJ"/>
                 <outlet property="mainView" destination="jes-wL-EId" id="QKD-oh-ApU"/>
                 <outlet property="sendCodeButton" destination="qip-0H-TuL" id="c70-rN-jRF"/>
                 <outlet property="subTitleLabel" destination="zEr-ml-kMP" id="Q4X-n9-LZG"/>
@@ -39,7 +40,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify e-mail ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V2E-gE-YQE" customClass="BaseLabel" customModule="Smiles">
-                            <rect key="frame" x="16" y="122" width="188.33333333333334" height="28"/>
+                            <rect key="frame" x="16" y="122" width="199" height="28"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="28" id="HMG-Px-VTb"/>
                             </constraints>
@@ -60,7 +61,7 @@
                             <rect key="frame" x="0.0" y="210" width="393" height="642"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="j5K-cH-1q5">
-                                    <rect key="frame" x="16" y="32" width="361" height="237"/>
+                                    <rect key="frame" x="16" y="32" width="361" height="267.33333333333331"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vOx-ZD-TXz">
                                             <rect key="frame" x="0.0" y="0.0" width="361" height="61"/>
@@ -73,27 +74,38 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="AccessibilityHint" value="LoginTitle"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ze9-qb-jCo">
-                                            <rect key="frame" x="0.0" y="105" width="361" height="40"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0XG-Fq-svs">
+                                            <rect key="frame" x="0.0" y="105" width="361" height="70.333333333333314"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter e-mail ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hge-7v-oFx">
-                                                    <rect key="frame" x="16" y="10" width="329" height="20"/>
-                                                    <color key="textColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                                    <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
-                                                </textField>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ze9-qb-jCo">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="40"/>
+                                                    <subviews>
+                                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter e-mail ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hge-7v-oFx">
+                                                            <rect key="frame" x="16" y="10" width="329" height="20"/>
+                                                            <color key="textColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                            <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                                        </textField>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="0.89411764705882346" green="0.89411771299999998" blue="0.89411771299999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <constraints>
+                                                        <constraint firstItem="hge-7v-oFx" firstAttribute="leading" secondItem="ze9-qb-jCo" secondAttribute="leading" constant="16" id="3RQ-kr-gUz"/>
+                                                        <constraint firstAttribute="height" constant="40" id="PX7-DY-jeB"/>
+                                                        <constraint firstItem="hge-7v-oFx" firstAttribute="top" secondItem="ze9-qb-jCo" secondAttribute="top" constant="10" id="Pxm-SJ-LNd"/>
+                                                        <constraint firstAttribute="bottom" secondItem="hge-7v-oFx" secondAttribute="bottom" constant="10" id="b5r-SX-Xfq"/>
+                                                        <constraint firstAttribute="trailing" secondItem="hge-7v-oFx" secondAttribute="trailing" constant="16" id="nXi-Iu-6JF"/>
+                                                    </constraints>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JpL-Lx-rDN">
+                                                    <rect key="frame" x="0.0" y="50" width="361" height="20.333333333333329"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" systemColor="systemRedColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.89411764705882346" green="0.89411771299999998" blue="0.89411771299999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                            <constraints>
-                                                <constraint firstItem="hge-7v-oFx" firstAttribute="leading" secondItem="ze9-qb-jCo" secondAttribute="leading" constant="16" id="3RQ-kr-gUz"/>
-                                                <constraint firstAttribute="height" constant="40" id="PX7-DY-jeB"/>
-                                                <constraint firstItem="hge-7v-oFx" firstAttribute="top" secondItem="ze9-qb-jCo" secondAttribute="top" constant="10" id="Pxm-SJ-LNd"/>
-                                                <constraint firstAttribute="bottom" secondItem="hge-7v-oFx" secondAttribute="bottom" constant="10" id="b5r-SX-Xfq"/>
-                                                <constraint firstAttribute="trailing" secondItem="hge-7v-oFx" secondAttribute="trailing" constant="16" id="nXi-Iu-6JF"/>
-                                            </constraints>
-                                        </view>
+                                        </stackView>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qip-0H-TuL">
-                                            <rect key="frame" x="0.0" y="189" width="361" height="48"/>
+                                            <rect key="frame" x="0.0" y="219.33333333333331" width="361" height="48"/>
                                             <color key="backgroundColor" red="0.85490196939999996" green="0.85490196939999996" blue="0.85490196939999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <bool key="isElement" value="NO"/>
@@ -178,16 +190,19 @@
     </objects>
     <designables>
         <designable name="V2E-gE-YQE">
-            <size key="intrinsicContentSize" width="188.33333333333334" height="32.666666666666664"/>
+            <size key="intrinsicContentSize" width="199" height="33.666666666666664"/>
         </designable>
         <designable name="zEr-ml-kMP">
-            <size key="intrinsicContentSize" width="142" height="18.666666666666668"/>
+            <size key="intrinsicContentSize" width="143" height="19.333333333333332"/>
         </designable>
     </designables>
     <resources>
         <image name="backBtn" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
