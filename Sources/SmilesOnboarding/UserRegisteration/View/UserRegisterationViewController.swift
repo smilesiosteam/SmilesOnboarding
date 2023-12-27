@@ -116,7 +116,7 @@ public class UserRegisterationViewController: UIViewController {
     
     public var isExistingUser = false
     public var loginFLow: LoginFlow = .localNumber
-
+    private var isInternationalNumber = false
     //MARK: - LifeCycle
     
     
@@ -201,6 +201,7 @@ public class UserRegisterationViewController: UIViewController {
                 emailFld.isUserInteractionEnabled = false
                 emailFld.backgroundColor = UIColor.disabledColor
                 emailFld.textColor = UIColor.black.withAlphaComponent(0.5)
+                isInternationalNumber = true
             }
         }
     
@@ -357,6 +358,7 @@ public class UserRegisterationViewController: UIViewController {
     @IBAction func continuePressed(_ sender: Any) {
         if isDataValid(){
             let request = RegisterUserRequest()
+            request.skipEmailVerification = isInternationalNumber
             request.firstName = firstNameTxtFld.text?.removingWhitespaces()
             request.lastName = lastNameTxtFld.text?.removingWhitespaces()
             if !isExistingUser {

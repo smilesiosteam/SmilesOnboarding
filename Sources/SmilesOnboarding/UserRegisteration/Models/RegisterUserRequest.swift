@@ -19,6 +19,7 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
     var nationality : String?
     var referralCode : String?
     var isExistingUser = false
+    var skipEmailVerification: Bool?
     
     enum CodingKeys: String, CodingKey {
         case birthDate = "birthDate"
@@ -29,6 +30,7 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
         case nationality = "nationality"
         case referralCode = "referralCode"
         case dateOfBirth = "dateOfBirth"
+        case skipEmailVerification = "skipEmailVerification"
     }
     
     
@@ -48,5 +50,6 @@ public class RegisterUserRequest: SmilesBaseMainRequest {
         try container.encodeIfPresent(self.lastName, forKey: .lastName)
         try container.encodeIfPresent(self.nationality, forKey: .nationality)
         try container.encodeIfPresent(self.referralCode, forKey: .referralCode)
+        try container.encodeIfPresent(self.skipEmailVerification, forKey: .skipEmailVerification)
     }
 }
