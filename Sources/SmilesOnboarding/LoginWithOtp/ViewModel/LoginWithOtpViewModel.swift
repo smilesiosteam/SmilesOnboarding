@@ -151,6 +151,10 @@ extension LoginWithOtpViewModel {
                     self?.output.send(.errorOutPut(error: error.localizedDescription))
                 case .navigateToEmailVerification(message: let message):
                     self?.output.send(.navigateToEmailVerification(message: message))
+                case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
+                    self?.output.send(.showLimitExceedPopup(title: title, subTitle: subTitle))
+                case .showAlertWithOkayOnly(message: let message, _):
+                    self?.output.send(.errorOutPut(error: message))
                 }
             }.store(in: &cancellables)
     }

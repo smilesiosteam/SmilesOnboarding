@@ -16,8 +16,14 @@ protocol EmailStatusUseCaseProtocol {
 }
 
 final class EmailStatusUseCase: EmailStatusUseCaseProtocol {
-    
+    // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
+    private let configOTPResponse: ConfigOTPResponseType
+    
+    // MARK: - Init
+    init(configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse()) {
+        self.configOTPResponse = configOTPResponse
+    }
     
     func checkEmailStatus(mobileNumber: String) -> AnyPublisher<State, Never> {
         let service = LoginWithOtpRepository(
@@ -38,10 +44,22 @@ final class EmailStatusUseCase: EmailStatusUseCaseProtocol {
                     if case .failure(let error) = completion {
                         promise(.success(.showError(error: error)))
                     }
-                } receiveValue: { response in
+                } receiveValue: { [weak self] response in
+                    guard let self else {
+                        return
+                    }
                     
-                    let message = response.hintMessage ?? OnboardingLocalizationKeys.verifyEmailDescription.text
-                    promise(.success(.navigateToEmailVerification(message: message)))
+                    let numberRequestState = self.configOTPResponse.handleSuccessResponse(result: response)
+                    switch numberRequestState {
+                    case .showLimitExceedPopup(let title, let subTitle):
+                        promise(.success(.showLimitExceedPopup(title: title, subTitle: subTitle)))
+                    case .showAlertWithOkayOnly(let message, let title):
+                        promise(.success(.showAlertWithOkayOnly(message: message, title: title)))
+                    case .success:
+                        let message = response.hintMessage ?? OnboardingLocalizationKeys.verifyEmailDescription.text
+                        promise(.success(.navigateToEmailVerification(message: message)))
+                    }
+                    
                 }
                 .store(in: &cancellables)
         }
@@ -54,5 +72,7 @@ extension EmailStatusUseCase {
     enum State {
         case showError(error: NetworkError)
         case navigateToEmailVerification(message: String)
+        case showLimitExceedPopup(title: String, subTitle: String)
+        case showAlertWithOkayOnly(message: String, title: String)
     }
 }
