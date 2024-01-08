@@ -135,10 +135,14 @@ public class UserRegisterationViewController: UIViewController {
         firstNameTxtFld.validationType = [.requiredField(errorMessage: "EnterFirstName".localizedString)]
         firstNameLbl.text = "First Name*".localizedString
         firstNameTxtFld.continousValidation = true
+        firstNameTxtFld.autocorrectionType = .no
+        firstNameTxtFld.spellCheckingType = .no
         
         lastNameTxtFld.validationType = [.requiredField(errorMessage: "EnterLastName".localizedString)]
         lastNameLbl.text = "Last Name*".localizedString
         lastNameTxtFld.continousValidation = true
+        lastNameTxtFld.autocorrectionType = .no
+        lastNameTxtFld.spellCheckingType = .no
         
         emailWrapperVu.isHidden = isExistingUser
         genderWrapper.isHidden = isExistingUser
@@ -442,6 +446,19 @@ extension UserRegisterationViewController : UITextFieldDelegate
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == firstNameTxtFld || textField == lastNameTxtFld {
+            if range.location == 0 && string == " " {
+                return false
+            }
+            if string == " " {
+                if let text = textField.text, let lastChar = text.last, lastChar == " " {
+                    return false
+                }
+            }
+            let allowedCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: " "))
+            let characterSet = CharacterSet(charactersIn: string)
+            return allowedCharacters.isSuperset(of: characterSet)
+        }
         if string.containsEmoji { return false }
          return true
     }
