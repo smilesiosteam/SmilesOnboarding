@@ -78,7 +78,6 @@ public class VerifyOtpViewController: UIViewController {
     public var otpHeaderText: String?
     public var otpTimeOut = 0
     public var mobileNumber: String?
-    public var mobileNumberWithCountryCode: String?
     private var otpNumber = ""
     private var baseURL: String = ""
     private var authToken = ""
@@ -110,7 +109,6 @@ public class VerifyOtpViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.mobileNumberWithCountryCode = self.mobileNumber
         bind(to: viewModel)
         setupUI()
         setupString()
@@ -186,11 +184,11 @@ public class VerifyOtpViewController: UIViewController {
         
         switch loginFlow {
         case .localNumber:
-            input.send(.getOTPForLocalNumber(mobileNumber: self.mobileNumberWithCountryCode.asStringOrEmpty()))
+            input.send(.getOTPForLocalNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
         case .verifyEmail(let email, let mobile):
             self.input.send(.getOTPForEmail(email: email, mobileNumber: mobile))
         case .verifyMobile(let email, _):
-            input.send(.getOTPForInternationalNumber(mobileNumber: self.mobileNumberWithCountryCode.asStringOrEmpty(), email: email))
+            input.send(.getOTPForInternationalNumber(mobileNumber: self.mobileNumber.asStringOrEmpty(), email: email))
         }
     }
     
