@@ -43,8 +43,8 @@ extension VerifyOtpViewModel {
         output = PassthroughSubject<Output, Never>()
         input.sink { [weak self] event in
             switch event {
-            case .verifyOtp(otp: let otp, type: let type):
-                self?.verifyOtp(otp: otp, loginFlow: type)
+            case .verifyOtp(otp: let otp, type: let type, let mobile):
+                self?.verifyOtp(otp: otp, loginFlow: type, mobile: mobile)
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             case .getOTPForLocalNumber(mobileNumber: let mobileNumber):
@@ -59,12 +59,12 @@ extension VerifyOtpViewModel {
         return output.eraseToAnyPublisher()
     }
     
-    func verifyOtp(otp: String, loginFlow: LoginFlow) {
+    func verifyOtp(otp: String, loginFlow: LoginFlow, mobile: String?) {
         switch loginFlow {
             
         case .localNumber:
             let encryptOTP = AES256Encryption.encrypt(with: otp)
-            let request = VerifyOtpRequest(otp: encryptOTP)
+            let request = VerifyOtpRequest(otp: encryptOTP, mobile: mobile)
             loginWithMobileNumber(request: request)
         case .verifyEmail(email: let email, mobile: let mobile):
             userEmail = email

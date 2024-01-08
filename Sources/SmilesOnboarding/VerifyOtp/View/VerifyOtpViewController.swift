@@ -176,7 +176,7 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
-        self.input.send(.verifyOtp(otp: self.otpNumber, type: loginFlow))
+        self.input.send(.verifyOtp(otp: self.otpNumber, type: loginFlow, mobile: mobileNumber))
          self.enableLoginButton(isEnable: false)
     }
     

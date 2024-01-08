@@ -13,9 +13,12 @@ public class VerifyOtpRequest: SmilesBaseMainRequest {
     
     var otp: String?
     var email: String?
-    init(otp: String?) {
+    var mobile: String?
+    
+    init(otp: String?, mobile: String? = nil) {
         super.init()
         self.otp = otp
+        self.mobile = mobile
     }
     
     required init(from decoder: Decoder) throws {
@@ -27,6 +30,7 @@ public class VerifyOtpRequest: SmilesBaseMainRequest {
     enum CodingKeys: String, CodingKey {
         case otp
         case email
+        case msisdn
     }
     
     public override func encode(to encoder: Encoder) throws {
@@ -34,5 +38,6 @@ public class VerifyOtpRequest: SmilesBaseMainRequest {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.otp, forKey: .otp)
         try container.encodeIfPresent(self.email, forKey: .email)
+        try container.encodeIfPresent(self.mobile, forKey: .msisdn)
     }
 }
