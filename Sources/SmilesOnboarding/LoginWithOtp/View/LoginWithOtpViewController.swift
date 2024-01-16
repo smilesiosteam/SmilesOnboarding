@@ -195,6 +195,8 @@ import SmilesBaseMainRequestManager
                     }
                 case .navigateToEmailVerification(message: let message):
                     self?.navigateToEmailVerification(message: message)
+                case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
+                    self?.showLimitExceedPopup(title: title, subTitle: subTitle)
                 }
             }.store(in: &cancellables)
     }

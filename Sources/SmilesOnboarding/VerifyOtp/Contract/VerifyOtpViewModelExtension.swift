@@ -10,7 +10,7 @@ import NetworkingLayer
 
 extension VerifyOtpViewModel {
     enum Input {
-        case verifyOtp(otp: String, type: LoginFlow)
+        case verifyOtp(otp: String, type: LoginFlow, mobile: String?)
         case getProfileStatus(msisdn: String, authToken: String)
         case getOTPForLocalNumber(mobileNumber: String)
         case getOTPForInternationalNumber(mobileNumber: String, email: String)

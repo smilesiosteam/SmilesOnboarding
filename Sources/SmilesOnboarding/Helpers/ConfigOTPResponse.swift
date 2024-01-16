@@ -7,13 +7,21 @@
 
 import Foundation
 import Combine
+import NetworkingLayer
+
+protocol LimitTimeChecker: BaseMainResponse {
+    var limitExceededTitle: String? { get set }
+    var limitExceededMsg: String? { get set }
+    var otpHeaderText: String? { get set }
+    var timeout: Int? { get set }
+}
 
 protocol ConfigOTPResponseType {
-    func handleSuccessResponse(result: CreateOtpResponse) -> ConfigOTPResponse.State
+    func handleSuccessResponse(result: LimitTimeChecker) -> ConfigOTPResponse.State
 }
 
 final class ConfigOTPResponse: ConfigOTPResponseType {
-    func handleSuccessResponse(result: CreateOtpResponse) -> State {
+    func handleSuccessResponse(result: LimitTimeChecker) -> State {
         if let limitExceededMsg = result.limitExceededMsg,
            !limitExceededMsg.isEmpty,
            let limitExceededTitle = result.limitExceededTitle,

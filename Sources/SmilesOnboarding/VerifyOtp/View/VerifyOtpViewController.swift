@@ -176,7 +176,7 @@ public class VerifyOtpViewController: UIViewController {
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
-        self.input.send(.verifyOtp(otp: self.otpNumber, type: loginFlow))
+        self.input.send(.verifyOtp(otp: self.otpNumber, type: loginFlow, mobile: mobileNumber))
          self.enableLoginButton(isEnable: false)
     }
     
@@ -184,11 +184,11 @@ public class VerifyOtpViewController: UIViewController {
         
         switch loginFlow {
         case .localNumber:
-            input.send(.getOTPForLocalNumber(mobileNumber: mobileNumber.asStringOrEmpty()))
+            input.send(.getOTPForLocalNumber(mobileNumber: self.mobileNumber.asStringOrEmpty()))
         case .verifyEmail(let email, let mobile):
             self.input.send(.getOTPForEmail(email: email, mobileNumber: mobile))
         case .verifyMobile(let email, _):
-            input.send(.getOTPForInternationalNumber(mobileNumber: mobileNumber.asStringOrEmpty(), email: email))
+            input.send(.getOTPForInternationalNumber(mobileNumber: self.mobileNumber.asStringOrEmpty(), email: email))
         }
     }
     
