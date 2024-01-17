@@ -13,6 +13,7 @@ import PhoneNumberKit
 import SmilesLanguageManager
 import SmilesLoader
 import SmilesBaseMainRequestManager
+import NetworkingLayer
 
 @objc public class LoginWithOtpViewController: UIViewController {
     
@@ -133,6 +134,8 @@ import SmilesBaseMainRequestManager
     public var sendCountryListToVcCallback: (([CountryList]) -> Void)?
     public var navigateToHomeViewControllerCallBack: ((String, String) -> Void)?
     public var languageChangeCallback: (() -> Void)?
+    public var getProfileStatusDidSuccess: ((_ response: GetProfileStatusResponse) -> Void)?
+    public var getProfileStatusDidFail: ((_ error: NetworkError) -> Void)?
     
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
@@ -197,10 +200,18 @@ import SmilesBaseMainRequestManager
                     self?.navigateToEmailVerification(message: message)
                 case .showLimitExceedPopup(title: let title, subTitle: let subTitle):
                     self?.showLimitExceedPopup(title: title, subTitle: subTitle)
+                case .getProfileStatusDidSucceed(response: let response):
+                    debugPrint(response)
+                    self?.getProfileStatusDidSuccess?(response)
+                case .getProfileStatusDidFail(error: let error):
+                    debugPrint(error)
+                    self?.getProfileStatusDidFail?(error)
                 }
             }.store(in: &cancellables)
     }
-    
+   public func getProfileStatusRequestFromOnBoarding(mobNum: String,token: String) {
+       self.input.send(.getProfileStatus(msisdn: mobNum, authToken: token))
+    }
     func getCountiresFromWebService() {
         var firstCall = true
         var lastModifiedDate = ""

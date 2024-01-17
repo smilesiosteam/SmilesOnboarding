@@ -10,12 +10,15 @@ import NetworkingLayer
 
 extension LoginWithOtpViewModel {
     enum Input {
+        case getProfileStatus(msisdn: String , authToken: String)
         case getCountriesList(lastModifiedDate: String ,firstCall: Bool)
         case getOTPforMobileNumber(mobileNumber: String, enableDeviceSecurityCheck:Bool)
         case loginAsGuestUser
     }
     
     enum Output {
+        case getProfileStatusDidSucceed(response: GetProfileStatusResponse)
+        case getProfileStatusDidFail(error: NetworkError)
         case fetchCountriesDidSucceed(response: CountryListResponse)
         case fetchCountriesDidFail(error: NetworkError)
         case getOTPforMobileNumberDidSucceed(response: CreateOtpResponse)

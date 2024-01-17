@@ -139,7 +139,7 @@ public class VerifyOtpViewController: UIViewController {
                 case .verifyOtpDidFail(error: let error):
                     self?.showAlertWithOkayOnly(message: error.localizedDescription)
                 case .getProfileStatusDidSucceed(response: let response, msisdn: let msisdn, authToken: let authToken):
-                    self?.configureProfileStatus(response: response, msisdn: msisdn, token: authToken)
+                        self?.configureProfileStatus(response: response, msisdn: msisdn, token: authToken)
                 case .getProfileStatusDidFail(error: let error):
                     debugPrint(error.localizedDescription)
                 case .showLoader(shouldShow: let shouldShow):
@@ -204,6 +204,7 @@ public class VerifyOtpViewController: UIViewController {
             backBtnView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
         }
     }
+    
     
     func configureProfileStatus(response: GetProfileStatusResponse, msisdn: String, token: String) {
         if let status = response.profileStatus

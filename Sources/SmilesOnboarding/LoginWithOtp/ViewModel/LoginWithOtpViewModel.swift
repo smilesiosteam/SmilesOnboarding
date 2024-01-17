@@ -11,6 +11,7 @@ import NetworkingLayer
 import SmilesBaseMainRequestManager
 import DeviceAppCheck
 import SmilesLanguageManager
+import SmilesUtilities
 
 class LoginWithOtpViewModel: NSObject {
     // MARK: -- Variables
@@ -18,6 +19,7 @@ class LoginWithOtpViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     private var baseURL: String
     private let emailStatusUseCase: EmailStatusUseCaseProtocol
+    private let profileStatusUseCase: GetProfilseStatusUseCaseProtocol = GetProfileStatusUseCase()
     
     // MARK: - Init
     public init(baseURL: String, emailStatusUseCase: EmailStatusUseCaseProtocol = EmailStatusUseCase()) {
@@ -38,6 +40,8 @@ extension LoginWithOtpViewModel {
                 self?.didGetDeviceAppValidationData(mobileNumber: mobileNumber, captchaText: "", deviceCheckToken: "", appAttestation: "", challenge: "")
             case .loginAsGuestUser:
                 self?.loginAsGuestUser()
+            case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
+                self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -157,5 +161,17 @@ extension LoginWithOtpViewModel {
                     self?.output.send(.errorOutPut(error: message))
                 }
             }.store(in: &cancellables)
+    }
+    func getProfileStatus(msisdn: String , authToken: String) {
+        
+        profileStatusUseCase.getProfileStatus(msisdn: msisdn, authToken: authToken)
+            .sink { [weak self] completion in
+                if case.failure(let error) = completion {
+                    self?.output.send(.getProfileStatusDidFail(error: error))
+                }
+            } receiveValue: { [weak self] response in
+                self?.output.send(.getProfileStatusDidSucceed(response: response))
+            }.store(in: &cancellables)
+
     }
 }

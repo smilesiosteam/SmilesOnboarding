@@ -28,8 +28,9 @@ class VerifyOtpViewModel: NSObject {
         resendCodeStateSubject.eraseToAnyPublisher()
     }
     private var baseURL: String
+    var profileStatusUseCase: GetProfilseStatusUseCaseProtocol = GetProfileStatusUseCase()
     
-    public init(baseURL: String, 
+    public init(baseURL: String,
                 configOTPResponse: ConfigOTPResponseType = ConfigOTPResponse(),
                 securityChecker: SecurityCheckerType = SecurityChecker()) {
         self.baseURL = baseURL
@@ -130,30 +131,16 @@ extension VerifyOtpViewModel {
     }
     
     func getProfileStatus(msisdn: String, authToken: String) {
-        //        self.output.send(.showLoader(shouldShow: true))
-        let request = GetProfileStatusRequestModel()
-        SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.msisdn = msisdn
-        SmilesBaseMainRequestManager.shared.baseMainRequestConfigs?.authToken = authToken
         
-        let service = VerifyOtpRepository(
-            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
-            endPoint: .getProfileStatus
-        )
-        
-        service.getProfileStatus(request: request)
-            .sink { [weak self] completion  in
-                switch completion {
-                case .failure(let error):
+        profileStatusUseCase.getProfileStatus(msisdn: msisdn, authToken: authToken)
+            .sink { [weak self] completion in
+                if case.failure(let error) = completion {
                     self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.getProfileStatusDidFail(error: error))
-                case .finished:
-                    debugPrint("nothing much to do here")
                 }
-            } receiveValue: { [weak self] response  in
-                //                self?.output.send(.showLoader(shouldShow: false))
+            } receiveValue: { [weak self] response in
                 self?.output.send(.getProfileStatusDidSucceed(response: response, msisdn: msisdn, authToken: authToken))
-            }
-            .store(in: &cancellables)
+            }.store(in: &cancellables)
     }
     
     private func getOtpForLocalNumber(mobileNumber: String) {
