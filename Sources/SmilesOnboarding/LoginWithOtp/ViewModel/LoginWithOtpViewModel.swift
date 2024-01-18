@@ -24,6 +24,8 @@ class LoginWithOtpViewModel: NSObject {
     
     var enableTouchIDInput: PassthroughSubject<EnableTouchIdViewModel.Input, Never> = .init()
     
+    private let loginTouchIDUseCase: LoginTouchIDUseCaseProtocol = LoginTouchIDUseCase()
+    
     // MARK: - Init
     public init(baseURL: String, emailStatusUseCase: EmailStatusUseCaseProtocol = EmailStatusUseCase()) {
         self.baseURL = baseURL
@@ -48,6 +50,8 @@ extension LoginWithOtpViewModel {
             case .authenticateTouchId(token: let token, isEnabled: let isEnabled):
                 self?.bind(to: self?.enableTouchIDUseCase ?? EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl))
                 self?.enableTouchIDInput.send(.authenticateTouchId(token: token, isEnabled: isEnabled))
+            case .loginTouchId(let token):
+                self?.loginTouchId(token)
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -181,6 +185,16 @@ extension LoginWithOtpViewModel {
 
     }
     
+    func loginTouchId(_ token: String?) {
+        loginTouchIDUseCase.loginTouchId(token)
+            .sink { [weak self] completion in
+                if case.failure(let error) = completion {
+                    self?.output.send(.loginTouchIdDidFail(error: error))
+                }
+            } receiveValue: { [weak self] response in
+                self?.output.send(.loginTouchIdDidSucceed(response: response))
+            }.store(in: &cancellables)
+    }
     func bind(to viewModel: EnableTouchIdViewModel) {
          enableTouchIDInput = PassthroughSubject<EnableTouchIdViewModel.Input, Never>()
         let output = viewModel.transform(input: enableTouchIDInput.eraseToAnyPublisher())

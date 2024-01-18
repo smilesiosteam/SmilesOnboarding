@@ -11,7 +11,7 @@ import NetworkingLayer
 extension LoginWithOtpViewModel {
     
     enum Input {
-        
+        case loginTouchId(_ token: String?)
         case authenticateTouchId(token: String, isEnabled: Bool)
         case getProfileStatus(msisdn: String , authToken: String)
         case getCountriesList(lastModifiedDate: String ,firstCall: Bool)
@@ -21,6 +21,8 @@ extension LoginWithOtpViewModel {
     
     enum Output {
         
+        case loginTouchIdDidSucceed(response: FullAccessLoginResponse)
+        case loginTouchIdDidFail(error: NetworkError)
         case authenticateTouchIdDidSucceed(response: EnableTouchIdResponseModel)
         case authenticateTouchIdDidfail(error: NetworkError)
         case getProfileStatusDidSucceed(response: GetProfileStatusResponse)

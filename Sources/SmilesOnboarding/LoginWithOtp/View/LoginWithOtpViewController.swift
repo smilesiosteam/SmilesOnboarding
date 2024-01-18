@@ -140,6 +140,9 @@ import NetworkingLayer
     public var authenticateTouchIdDidSucceed: ((_ response: EnableTouchIdResponseModel) -> Void)?
     public var authenticateTouchIdDidfail: ((_ error: NetworkError) -> Void)?
     
+    public var loginTouchIdDidSucceed: ((_ response: FullAccessLoginResponse) -> Void)?
+    public var loginTouchIdDidFail: ((_ error: NetworkError) -> Void)?
+    
     public init?(coder: NSCoder, baseURL: String) {
         super.init(coder: coder)
         self.baseURL = baseURL
@@ -215,6 +218,10 @@ import NetworkingLayer
                 case .authenticateTouchIdDidfail(error: let error):
                     debugPrint(error)
                     self?.authenticateTouchIdDidfail?(error)
+                case .loginTouchIdDidSucceed(response: let response):
+                    self?.loginTouchIdDidSucceed?(response)
+                case .loginTouchIdDidFail(error: let error):
+                    self?.loginTouchIdDidFail?(error)
                 }
             }.store(in: &cancellables)
     }
@@ -223,6 +230,9 @@ import NetworkingLayer
     }
    public func getProfileStatusRequestFromOnBoarding(mobNum: String,token: String) {
        self.input.send(.getProfileStatus(msisdn: mobNum, authToken: token))
+    }
+    public func loginTouchIdCalledFromOnboarding(_ token: String) {
+        self.input.send(.loginTouchId(token))
     }
     func getCountiresFromWebService() {
         var firstCall = true

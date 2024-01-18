@@ -11,10 +11,10 @@ import NetworkingLayer
 
 public class FullAccessLoginResponse : BaseMainResponse {
     
-    let authToken : String?
-    let msisdn : String?
-    let limitExceededTitle: String?
-    let limitExceededMsg: String?
+    public  let authToken : String?
+    public  let msisdn : String?
+    public  let limitExceededTitle: String?
+    public  let limitExceededMsg: String?
     
     enum FullAccessLoginCodingKeys: String, CodingKey {
         case authToken = "authToken"
@@ -29,7 +29,7 @@ public class FullAccessLoginResponse : BaseMainResponse {
         msisdn = try values.decodeIfPresent(String.self, forKey: .msisdn)
         limitExceededTitle = try values.decodeIfPresent(String.self, forKey: .limitExceededTitle)
         limitExceededMsg = try values.decodeIfPresent(String.self, forKey: .limitExceededMsg)
-
+        
         try super.init(from: decoder)
     }
     
