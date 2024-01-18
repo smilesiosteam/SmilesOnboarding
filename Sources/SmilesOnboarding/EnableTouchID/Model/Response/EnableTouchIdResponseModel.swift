@@ -11,7 +11,7 @@ import Foundation
 import NetworkingLayer
 import SmilesUtilities
 
-class EnableTouchIdResponseModel: BaseMainResponse {
+public class EnableTouchIdResponseModel: BaseMainResponse {
     
     let status : Int?
     

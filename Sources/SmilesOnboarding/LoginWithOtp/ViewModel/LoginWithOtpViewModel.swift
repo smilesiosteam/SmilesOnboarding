@@ -20,6 +20,9 @@ class LoginWithOtpViewModel: NSObject {
     private var baseURL: String
     private let emailStatusUseCase: EmailStatusUseCaseProtocol
     private let profileStatusUseCase: GetProfilseStatusUseCaseProtocol = GetProfileStatusUseCase()
+    private let enableTouchIDUseCase = EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl)
+    
+    var enableTouchIDInput: PassthroughSubject<EnableTouchIdViewModel.Input, Never> = .init()
     
     // MARK: - Init
     public init(baseURL: String, emailStatusUseCase: EmailStatusUseCaseProtocol = EmailStatusUseCase()) {
@@ -42,6 +45,9 @@ extension LoginWithOtpViewModel {
                 self?.loginAsGuestUser()
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
+            case .authenticateTouchId(token: let token, isEnabled: let isEnabled):
+                self?.bind(to: self?.enableTouchIDUseCase ?? EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl))
+                self?.enableTouchIDInput.send(.authenticateTouchId(token: token, isEnabled: isEnabled))
             }
         }.store(in: &cancellables)
         return output.eraseToAnyPublisher()
@@ -173,5 +179,20 @@ extension LoginWithOtpViewModel {
                 self?.output.send(.getProfileStatusDidSucceed(response: response))
             }.store(in: &cancellables)
 
+    }
+    
+    func bind(to viewModel: EnableTouchIdViewModel) {
+         enableTouchIDInput = PassthroughSubject<EnableTouchIdViewModel.Input, Never>()
+        let output = viewModel.transform(input: enableTouchIDInput.eraseToAnyPublisher())
+        output
+            .sink { [weak self] event in
+                switch event {
+                case .authenticateTouchIdDidSucceed(response: let response):
+                    self?.output.send(.authenticateTouchIdDidSucceed(response: response))
+                case .authenticateTouchIdDidfail(error: let error):
+                    self?.output.send(.authenticateTouchIdDidfail(error: error))
+                    
+                }
+            }.store(in: &cancellables)
     }
 }
