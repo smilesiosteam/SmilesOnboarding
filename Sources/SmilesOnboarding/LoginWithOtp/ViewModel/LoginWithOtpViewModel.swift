@@ -22,7 +22,7 @@ class LoginWithOtpViewModel: NSObject {
     private let profileStatusUseCase: GetProfilseStatusUseCaseProtocol = GetProfileStatusUseCase()
     private let enableTouchIDUseCase = EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl)
     
-    var enableTouchIDInput: PassthroughSubject<EnableTouchIdViewModel.Input, Never> = .init()
+    
     
     private let loginTouchIDUseCase: LoginTouchIDUseCaseProtocol = LoginTouchIDUseCase()
     
@@ -47,9 +47,6 @@ extension LoginWithOtpViewModel {
                 self?.loginAsGuestUser()
             case .getProfileStatus(msisdn: let msisdn, authToken: let authToken):
                 self?.getProfileStatus(msisdn: msisdn, authToken: authToken)
-            case .authenticateTouchId(token: let token, isEnabled: let isEnabled):
-                self?.bind(to: self?.enableTouchIDUseCase ?? EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl))
-                self?.enableTouchIDInput.send(.authenticateTouchId(token: token, isEnabled: isEnabled))
             case .loginTouchId(let token):
                 self?.loginTouchId(token)
             }
@@ -193,20 +190,6 @@ extension LoginWithOtpViewModel {
                 }
             } receiveValue: { [weak self] response in
                 self?.output.send(.loginTouchIdDidSucceed(response: response))
-            }.store(in: &cancellables)
-    }
-    func bind(to viewModel: EnableTouchIdViewModel) {
-         enableTouchIDInput = PassthroughSubject<EnableTouchIdViewModel.Input, Never>()
-        let output = viewModel.transform(input: enableTouchIDInput.eraseToAnyPublisher())
-        output
-            .sink { [weak self] event in
-                switch event {
-                case .authenticateTouchIdDidSucceed(response: let response):
-                    self?.output.send(.authenticateTouchIdDidSucceed(response: response))
-                case .authenticateTouchIdDidfail(error: let error):
-                    self?.output.send(.authenticateTouchIdDidfail(error: error))
-                    
-                }
             }.store(in: &cancellables)
     }
 }

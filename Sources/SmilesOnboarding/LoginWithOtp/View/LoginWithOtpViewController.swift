@@ -137,9 +137,6 @@ import NetworkingLayer
     public var getProfileStatusDidSuccess: ((_ response: GetProfileStatusResponse) -> Void)?
     public var getProfileStatusDidFail: ((_ error: NetworkError) -> Void)?
     
-    public var authenticateTouchIdDidSucceed: ((_ response: EnableTouchIdResponseModel) -> Void)?
-    public var authenticateTouchIdDidfail: ((_ error: NetworkError) -> Void)?
-    
     public var loginTouchIdDidSucceed: ((_ response: FullAccessLoginResponse) -> Void)?
     public var loginTouchIdDidFail: ((_ error: NetworkError) -> Void)?
     
@@ -212,12 +209,6 @@ import NetworkingLayer
                 case .getProfileStatusDidFail(error: let error):
                     debugPrint(error)
                     self?.getProfileStatusDidFail?(error)
-                case .authenticateTouchIdDidSucceed(response: let response):
-                    debugPrint(response)
-                    self?.authenticateTouchIdDidSucceed?(response)
-                case .authenticateTouchIdDidfail(error: let error):
-                    debugPrint(error)
-                    self?.authenticateTouchIdDidfail?(error)
                 case .loginTouchIdDidSucceed(response: let response):
                     self?.loginTouchIdDidSucceed?(response)
                 case .loginTouchIdDidFail(error: let error):
@@ -225,9 +216,7 @@ import NetworkingLayer
                 }
             }.store(in: &cancellables)
     }
-    public func authenticateTouchIdCalledFromOnBoarding(token: String, isEnabled: Bool) {
-        self.input.send(.authenticateTouchId(token: token, isEnabled: isEnabled))
-    }
+    
    public func getProfileStatusRequestFromOnBoarding(mobNum: String,token: String) {
        self.input.send(.getProfileStatus(msisdn: mobNum, authToken: token))
     }

@@ -12,7 +12,6 @@ extension LoginWithOtpViewModel {
     
     enum Input {
         case loginTouchId(_ token: String?)
-        case authenticateTouchId(token: String, isEnabled: Bool)
         case getProfileStatus(msisdn: String , authToken: String)
         case getCountriesList(lastModifiedDate: String ,firstCall: Bool)
         case getOTPforMobileNumber(mobileNumber: String, enableDeviceSecurityCheck:Bool)
@@ -23,8 +22,6 @@ extension LoginWithOtpViewModel {
         
         case loginTouchIdDidSucceed(response: FullAccessLoginResponse)
         case loginTouchIdDidFail(error: NetworkError)
-        case authenticateTouchIdDidSucceed(response: EnableTouchIdResponseModel)
-        case authenticateTouchIdDidfail(error: NetworkError)
         case getProfileStatusDidSucceed(response: GetProfileStatusResponse)
         case getProfileStatusDidFail(error: NetworkError)
         case fetchCountriesDidSucceed(response: CountryListResponse)
