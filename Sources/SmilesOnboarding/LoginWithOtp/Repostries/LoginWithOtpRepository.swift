@@ -12,7 +12,6 @@ import SmilesBaseMainRequestManager
 import SmilesSharedServices
 
 protocol LoginWithOtpServiceable {
-    func getAllCountriesService(request: CountryListRequest) -> AnyPublisher<CountryListResponse, NetworkError>
     func getOTPforMobileNumber(request: OTPValidtionRequest) ->
     AnyPublisher<CreateOtpResponse, NetworkError>
     func loginAsGuest(request: GuestUserRequestModel) ->
@@ -34,16 +33,6 @@ class LoginWithOtpRepository: LoginWithOtpServiceable {
         self.endPoint = endPoint
     }
   
-    func getAllCountriesService(request: CountryListRequest) -> AnyPublisher<CountryListResponse, NetworkError> {
-        let endPoint = SmilesOnboardingRequestBuilder.getCountries(request: request)
-        let request = endPoint.createRequest(
-            baseURL: self.baseURL,
-            endPoint: self.endPoint
-        )
-        
-        return self.networkRequest.request(request)
-    }
-    
     func getOTPforMobileNumber(request: OTPValidtionRequest) -> AnyPublisher<CreateOtpResponse, NetworkingLayer.NetworkError> {
         let endPoint = SmilesOnboardingRequestBuilder.getOTPforMobileNumber(request: request)
         let request = endPoint.createRequest(
