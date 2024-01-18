@@ -12,6 +12,7 @@ import SmilesBaseMainRequestManager
 import DeviceAppCheck
 import SmilesLanguageManager
 import SmilesUtilities
+import SmilesSharedServices
 
 class LoginWithOtpViewModel: NSObject {
     // MARK: -- Variables
@@ -22,7 +23,7 @@ class LoginWithOtpViewModel: NSObject {
     private let profileStatusUseCase: GetProfilseStatusUseCaseProtocol = GetProfileStatusUseCase()
     private let enableTouchIDUseCase = EnableTouchIdViewModel(baseURL: AppCommonMethods.serviceBaseUrl)
     
-    
+    private let getCountriesUseCase: GetCountriesUseCaseProtocol
     
     private let loginTouchIDUseCase: LoginTouchIDUseCaseProtocol = LoginTouchIDUseCase()
     
@@ -30,6 +31,7 @@ class LoginWithOtpViewModel: NSObject {
     public init(baseURL: String, emailStatusUseCase: EmailStatusUseCaseProtocol = EmailStatusUseCase()) {
         self.baseURL = baseURL
         self.emailStatusUseCase = emailStatusUseCase
+        self.getCountriesUseCase  = GetCountriesUseCase()
     }
 }
 
@@ -56,29 +58,16 @@ extension LoginWithOtpViewModel {
     
     
     func getCountries(lastModifiedDate: String ,firstCall: Bool, baseURL: String) {
+        
         self.output.send(.showLoader(shouldShow: true))
-        let request = CountryListRequest()
-        request.firstCallFlag = firstCall
-        request.lastModifiedDate = lastModifiedDate
-        
-        let service = LoginWithOtpRepository(
-            networkRequest: NetworkingLayerRequestable(requestTimeOut: 60), baseURL: baseURL,
-            endPoint: .getCountries
-        )
-        
-        service.getAllCountriesService(request: request)
+        getCountriesUseCase.getCountriesList(lastModifiedDate: lastModifiedDate, firstCall: firstCall)
             .sink { [weak self] completion in
-                debugPrint(completion)
-                switch completion {
-                case .failure(let error):
+                if case.failure(let error) = completion {
                     self?.output.send(.showLoader(shouldShow: false))
                     self?.output.send(.fetchCountriesDidFail(error: error))
-                case .finished:
-                    debugPrint("nothing much to do here")
                 }
             } receiveValue: { [weak self] response in
-                debugPrint("got my response here \(response)")
-                self?.output.send(.showLoader(shouldShow: false))
+                
                 if response.countryList?.count ?? 0 > 0 {
                     self?.output.send(.fetchCountriesDidSucceed(response: response))
                     CountryListResponse.saveCountryListResponse(countries: response)
@@ -91,8 +80,8 @@ extension LoginWithOtpViewModel {
                         self?.output.send(.errorOutPut(error: (response.responseMsg ?? response.errorMsg) ?? "Error"))
                     }
                 }
-            }
-        .store(in: &cancellables)
+                
+            }.store(in: &cancellables)
     }
     
     func didGetDeviceAppValidationData(mobileNumber: String,  captchaText: String, deviceCheckToken:String?, appAttestation:String?, challenge:String?) {

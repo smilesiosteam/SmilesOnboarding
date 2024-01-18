@@ -8,6 +8,7 @@
 import UIKit
 import SmilesUtilities
 import SmilesLanguageManager
+import SmilesSharedServices
 
 public protocol CountrySelectionDelegate: AnyObject {
     func didSelectCountry(_ country: CountryList)

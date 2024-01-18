@@ -11,6 +11,7 @@ import SmilesFontsManager
 import SmilesUtilities
 import Combine
 import SmilesLoader
+import SmilesSharedServices
 
 public class UserRegisterationViewController: UIViewController {
     

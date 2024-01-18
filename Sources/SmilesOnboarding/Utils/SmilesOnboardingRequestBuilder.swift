@@ -8,6 +8,7 @@
 import Foundation
 import NetworkingLayer
 import SmilesBaseMainRequestManager
+import SmilesSharedServices
 
 fileprivate typealias Headers = [String: String]
 // if you wish you can have multiple services like this in a project
