@@ -362,13 +362,13 @@ public class UserRegisterationViewController: UIViewController {
     @IBAction func continuePressed(_ sender: Any) {
         if isDataValid(){
             let request = RegisterUserRequest()
-            request.skipEmailVerification = isInternationalNumber
             request.firstName = firstNameTxtFld.text?.removingWhitespaces()
             request.lastName = lastNameTxtFld.text?.removingWhitespaces()
             if !isExistingUser {
                 request.email = emailFld.text
                 request.gender = self.genderForRequest
                 request.referralCode = promoTxtFld.text
+                request.skipEmailVerification = isInternationalNumber
             }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
             request.nationality = "\(self.nationality?.countryId ?? -1)"
