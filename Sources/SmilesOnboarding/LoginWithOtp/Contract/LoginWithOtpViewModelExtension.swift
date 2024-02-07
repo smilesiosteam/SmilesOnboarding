@@ -24,5 +24,7 @@ extension LoginWithOtpViewModel {
         case loginAsGuestDidSucceed(response: GuestUserResponseModel)
         case loginAsGuestDidFail(error: NetworkError)
         case errorOutPut(error: String)
+        case navigateToEmailVerification(message: String)
+        case showLimitExceedPopup(title: String, subTitle: String)
     }
 }

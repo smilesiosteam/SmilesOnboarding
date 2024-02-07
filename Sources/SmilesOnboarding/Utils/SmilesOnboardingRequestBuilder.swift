@@ -7,6 +7,7 @@
 
 import Foundation
 import NetworkingLayer
+import SmilesBaseMainRequestManager
 
 fileprivate typealias Headers = [String: String]
 // if you wish you can have multiple services like this in a project
@@ -21,6 +22,7 @@ enum SmilesOnboardingRequestBuilder {
     case authenticateTouchId(request: EnableTouchIdRequestModel)
     case getOTPForEmail(request: OTPEmailValidationRequest)
     case verifyOTPForEmail(request: VerifyEmailOTPRequest)
+    case emailVerificationStatus(request: SmilesBaseMainRequest)
     // gave a default timeout but can be different for each.
     var requestTimeOut: Int {
         return 20
@@ -44,6 +46,8 @@ enum SmilesOnboardingRequestBuilder {
         case .getOTPForEmail:
             return .POST
         case .verifyOTPForEmail:
+            return .POST
+        case .emailVerificationStatus:
             return .POST
         }
     }
@@ -78,6 +82,8 @@ enum SmilesOnboardingRequestBuilder {
             return request
         case .verifyOTPForEmail(request: let request):
             return request
+        case .emailVerificationStatus(request: let request):
+            return request
         }
     }
     
@@ -99,6 +105,8 @@ enum SmilesOnboardingRequestBuilder {
         case .authenticateTouchId:
             return "\(baseURL)\(endPoint)"
         case .getOTPForEmail, .verifyOTPForEmail:
+            return "\(baseURL)\(endPoint)"
+        case .emailVerificationStatus:
             return "\(baseURL)\(endPoint)"
         }
         

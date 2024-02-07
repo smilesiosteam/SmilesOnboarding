@@ -8,12 +8,11 @@
 import Foundation
 import NetworkingLayer
 
-class CreateOtpResponse: BaseMainResponse {
-    
-    let timeout : Int?
-    let limitExceededTitle : String?
-    let limitExceededMsg : String?
-    let otpHeaderText: String?
+final class CreateOtpResponse: BaseMainResponse, LimitTimeChecker {
+    var timeout: Int?
+    var limitExceededTitle : String?
+    var limitExceededMsg : String?
+    var otpHeaderText: String?
     
     enum CreateOtpCodingKeys: String, CodingKey {
         case timeout = "timeout"

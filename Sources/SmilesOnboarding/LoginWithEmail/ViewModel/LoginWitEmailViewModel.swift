@@ -27,7 +27,7 @@ final class LoginWitEmailViewModel {
     // MARK: - OutPut
     @Published private(set) var state: State = .isValuedEmail(false)
     var successState = PassthroughSubject<ConfigOTPResponse.State, Never>()
-    
+    var hideErrorButtonSubject = PassthroughSubject<Void, Never>()
     // MARK: - Properties
     private var cancallbles = Set<AnyCancellable>()
     let mobileNumber: String
@@ -52,6 +52,7 @@ final class LoginWitEmailViewModel {
             guard let self else {
                 return false
             }
+            self.hideErrorButtonSubject.send()
             return self.isValidEmail(value)
         }
         .sink { [weak self] value in

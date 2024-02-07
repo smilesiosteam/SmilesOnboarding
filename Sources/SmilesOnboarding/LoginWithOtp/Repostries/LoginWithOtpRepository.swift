@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import NetworkingLayer
+import SmilesBaseMainRequestManager
 
 protocol LoginWithOtpServiceable {
     func getAllCountriesService(request: CountryListRequest) -> AnyPublisher<CountryListResponse, NetworkError>
@@ -70,5 +71,14 @@ class LoginWithOtpRepository: LoginWithOtpServiceable {
         )
         return networkRequest.request(request)
     }    
+    
+    func getEmailVerificationStatus(request: SmilesBaseMainRequest) -> AnyPublisher<EmailVerificationStatusResponse, NetworkError> {
+        let endPoint = SmilesOnboardingRequestBuilder.emailVerificationStatus(request: request)
+        let request = endPoint.createRequest(
+            baseURL: self.baseURL,
+            endPoint: self.endPoint
+        )
+        return networkRequest.request(request)
+    }
 }
 

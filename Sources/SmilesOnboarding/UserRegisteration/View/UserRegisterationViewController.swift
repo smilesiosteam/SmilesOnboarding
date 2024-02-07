@@ -115,6 +115,8 @@ public class UserRegisterationViewController: UIViewController {
     }
     
     public var isExistingUser = false
+    public var loginFLow: LoginFlow = .localNumber
+    private var isInternationalNumber = false
     //MARK: - LifeCycle
     
     
@@ -133,10 +135,14 @@ public class UserRegisterationViewController: UIViewController {
         firstNameTxtFld.validationType = [.requiredField(errorMessage: "EnterFirstName".localizedString)]
         firstNameLbl.text = "First Name*".localizedString
         firstNameTxtFld.continousValidation = true
+        firstNameTxtFld.autocorrectionType = .no
+        firstNameTxtFld.spellCheckingType = .no
         
         lastNameTxtFld.validationType = [.requiredField(errorMessage: "EnterLastName".localizedString)]
         lastNameLbl.text = "Last Name*".localizedString
         lastNameTxtFld.continousValidation = true
+        lastNameTxtFld.autocorrectionType = .no
+        lastNameTxtFld.spellCheckingType = .no
         
         emailWrapperVu.isHidden = isExistingUser
         genderWrapper.isHidden = isExistingUser
@@ -188,10 +194,20 @@ public class UserRegisterationViewController: UIViewController {
             fld?.addTarget(self, action: #selector(self.textFieldDidChange(sender:)), for: .editingChanged)
         }
         updateContinueButtonUI()
+        setEmailForLoginWithEmailFlow()
         if SmilesLanguageManager.shared.currentLanguage == .ar {
             backBtnView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
         }
     }
+    private func setEmailForLoginWithEmailFlow() {
+            if case .verifyMobile(email: let email, mobile: _) = loginFLow { // The last case for login with email
+                emailFld.text = email
+                emailFld.isUserInteractionEnabled = false
+                emailFld.backgroundColor = UIColor.disabledColor
+                emailFld.textColor = UIColor.black.withAlphaComponent(0.5)
+                isInternationalNumber = true
+            }
+        }
     
     // MARK: -- Actions
     func moveToWelcome(){
@@ -352,6 +368,7 @@ public class UserRegisterationViewController: UIViewController {
                 request.email = emailFld.text
                 request.gender = self.genderForRequest
                 request.referralCode = promoTxtFld.text
+                request.skipEmailVerification = isInternationalNumber
             }
             request.birthDate = AppCommonMethods.convert(date: dob!, format: "dd-MM-yyyy")
             request.nationality = "\(self.nationality?.countryId ?? -1)"
@@ -429,6 +446,19 @@ extension UserRegisterationViewController : UITextFieldDelegate
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == firstNameTxtFld || textField == lastNameTxtFld {
+            if range.location == 0 && string == " " {
+                return false
+            }
+            if string == " " {
+                if let text = textField.text, let lastChar = text.last, lastChar == " " {
+                    return false
+                }
+            }
+            let allowedCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: " "))
+            let characterSet = CharacterSet(charactersIn: string)
+            return allowedCharacters.isSuperset(of: characterSet)
+        }
         if string.containsEmoji { return false }
          return true
     }
