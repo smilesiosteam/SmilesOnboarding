@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesLocationHandler.git",
       "state" : {
-        "branch" : "address_book",
-        "revision" : "8c8c8d087db153c47a240d4ff2c99aba6bc03191"
+        "branch" : "main",
+        "revision" : "ff864e53cda91db6878aa0aa8af745ea98f7eb91"
       }
     },
     {

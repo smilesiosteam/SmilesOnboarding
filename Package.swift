@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/smilesiosteam/LottieAnimationManager.git", branch: "main"),
         .package(url: "https://github.com/smilesiosteam/SmilesFontsManager.git", branch: "main"),
         .package(url: "https://gitlab.com/SmilesDev/appdevicecheck.git", branch: "main"),
-        .package(url: "https://github.com/smilesiosteam/SmilesLocationHandler.git", branch: "address_book")
+        .package(url: "https://github.com/smilesiosteam/SmilesLocationHandler.git", branch: "main")
         
     ],
     targets: [
