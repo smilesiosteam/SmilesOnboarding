@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "googlemaps-sp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/YAtechnologies/GoogleMaps-SP.git",
+      "state" : {
+        "revision" : "684ea6db362feaefdfcff89356e446bec8bcde3d",
+        "version" : "7.2.0"
+      }
+    },
+    {
       "identity" : "lottie-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-ios.git",
@@ -51,7 +60,7 @@
       "location" : "https://github.com/smilesiosteam/NetworkingLayer.git",
       "state" : {
         "branch" : "main",
-        "revision" : "cd38e1008e043a65fd3762cb381cd9e3b926ed69"
+        "revision" : "c8b98037b148244ffb0347748e683b42e1badf1c"
       }
     },
     {
@@ -77,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "fd010e54231331fc19338f81c6d072cd9ace2825",
-        "version" : "5.18.8"
+        "revision" : "59730af512c06fb569c119d737df4c1c499e001d",
+        "version" : "5.18.10"
       }
     },
     {
@@ -141,7 +150,7 @@
       "location" : "https://github.com/smilesiosteam/SmilesLoader.git",
       "state" : {
         "branch" : "main",
-        "revision" : "9f8681ad99ae15d022d691f94617e18e156f1ab8"
+        "revision" : "8ffd156b804769121ab91c3cc729e418efbb540d"
       }
     },
     {
@@ -149,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/smilesiosteam/SmilesLocationHandler.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "74d1cc01a66d96cfd9c4f82e7203b493f5f59dd1"
+        "branch" : "address_book",
+        "revision" : "8c8c8d087db153c47a240d4ff2c99aba6bc03191"
       }
     },
     {
@@ -159,7 +168,7 @@
       "location" : "https://github.com/smilesiosteam/SmilesStorage.git",
       "state" : {
         "branch" : "main",
-        "revision" : "898b5add575151df9a732515438fb5fa5b3af10d"
+        "revision" : "83b0670cfb6ed00a1379ebf8826922589e5dbcbd"
       }
     },
     {
